@@ -259,20 +259,24 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-5 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner">
                             <div>
                                 <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Total Spawners</label>
                                 <input type="number" id="spawn-total-count" readonly placeholder="0" class="w-full p-2 text-sm bg-slate-200 text-slate-700 font-black border border-slate-300 rounded-lg text-center">
                             </div>
                             <div>
-                                <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Sperm Release Time</label>
-                                <input type="time" id="sperm-release-time" class="w-full p-2 text-xs font-bold border border-slate-300 rounded-lg bg-white text-center">
+                                <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Sperm Release (Date & Time)</label>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <input type="date" id="sperm-release-date" class="p-2 text-xs border rounded-lg font-bold bg-white text-slate-800">
+                                    <input type="time" id="sperm-release-time" class="p-2 text-xs border rounded-lg font-bold bg-white text-center text-slate-800">
+                                </div>
                             </div>
-                            <div class="col-span-1 sm:col-span-2">
-                                <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Egg Laying Window (From - To)</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <input type="time" id="egg-laying-from" class="w-full p-2 text-xs font-bold border border-slate-300 rounded-lg bg-white text-center">
-                                    <input type="time" id="egg-laying-to" class="w-full p-2 text-xs font-bold border border-slate-300 rounded-lg bg-white text-center">
+                            <div>
+                                <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Egg Laying Window (Date, From - To)</label>
+                                <div class="grid grid-cols-3 gap-1">
+                                    <input type="date" id="egg-laying-date" class="p-2 text-xs border rounded-lg font-bold bg-white text-slate-800 col-span-1">
+                                    <input type="time" id="egg-laying-from" class="p-2 text-xs border rounded-lg font-bold bg-white text-center text-slate-800 col-span-1">
+                                    <input type="time" id="egg-laying-to" class="p-2 text-xs border rounded-lg font-bold bg-white text-center text-slate-800 col-span-1">
                                 </div>
                             </div>
                         </div>
@@ -468,7 +472,7 @@
                     <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
                         <div id="sub-tabs-logs" class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200 w-full sm:w-auto">
                             <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Spawning Runs</button>
-                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50">Purchase Batches</button>
+                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Purchase Batches</button>
                         </div>
                         
                         <div class="flex gap-2 w-full sm:w-auto">
@@ -560,7 +564,7 @@
                 toggleOutcomeLockState(document.getElementById('spawn-status-outcome').value);
             } else {
                 const today = new Date().toISOString().split('T')[0];
-                ['spawn-date','spawn-start-date','spawn-end-date','pur-date'].forEach(id => {
+                ['spawn-date','spawn-start-date','spawn-end-date','pur-date','sperm-release-date','egg-laying-date'].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.value = today;
                 });
@@ -568,6 +572,9 @@
                 document.getElementById('spawn-end-time').value = "04:00";
                 document.getElementById('c1-hour').value = "22:00";
                 document.getElementById('c2-hour').value = "03:00";
+                document.getElementById('sperm-release-time').value = "01:30";
+                document.getElementById('egg-laying-from').value = "02:30";
+                document.getElementById('egg-laying-to').value = "03:30";
             }
 
             // Bind auto-save tracking
@@ -610,17 +617,16 @@
             }
         }
 
-        // --- FIXED: SPOWNING OUTCOME STYLING CONTROLLER ---
+        // --- SPOWNING OUTCOME STYLING CONTROLLER ---
         function toggleOutcomeLockState(val) {
             const el = document.getElementById('spawn-status-outcome');
             const eggsInput = document.getElementById('total-collected-eggs');
             const qualityInput = document.getElementById('egg-quality');
             
-            // Forces pure color badges regardless of dark code restrictions
             if (val === "Successful") {
-                el.style.backgroundColor = "#d1fae5"; 
-                el.style.borderColor = "#10b981";
-                el.style.color = "#065f46";
+                el.style.backgroundColor = "#10b981"; // Vibrant Solid Emerald
+                el.style.borderColor = "#047857";
+                el.style.color = "#ffffff";
                 eggsInput.disabled = false;
                 qualityInput.disabled = false;
             } else if (val === "") {
@@ -630,9 +636,9 @@
                 eggsInput.disabled = false;
                 qualityInput.disabled = false;
             } else {
-                el.style.backgroundColor = "#fee2e2"; 
-                el.style.borderColor = "#ef4444";
-                el.style.color = "#991b1b";
+                el.style.backgroundColor = "#ef4444"; // High-Contrast Crimson Alert
+                el.style.borderColor = "#b91c1c";
+                el.style.color = "#ffffff";
                 eggsInput.value = 0;
                 eggsInput.disabled = true;
                 qualityInput.value = "None";
@@ -738,6 +744,7 @@
             }
         }
 
+        // Standard App Architecture Navigation Routines
         function switchTab(id) {
             activeTab = id;
             ['spawning', 'purchasing', 'manager'].forEach(t => {
@@ -866,6 +873,11 @@
 
             const shiftStart = document.getElementById('spawn-start-date').value + ' ' + document.getElementById('spawn-start-time').value;
             const shiftEnd = document.getElementById('spawn-end-date').value + ' ' + document.getElementById('spawn-end-time').value;
+            
+            // Full precision timestamp compilation for biological timers
+            const compiledSpermRelease = document.getElementById('sperm-release-date').value + ' ' + document.getElementById('sperm-release-time').value;
+            const compiledEggFrom = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-from').value;
+            const compiledEggTo = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-to').value;
 
             const payload = {
                 action: 'addSpawning',
@@ -894,9 +906,9 @@
                 f4Mat: formatPercent(document.getElementById('sf-mat-4').value), f4Pcs: document.getElementById('sf-pcs-4').value || 0,
                 maleMat: formatPercent(document.getElementById('sm-mat').value), malePcs: document.getElementById('sm-pcs').value || 0,
                 totalSpawners: document.getElementById('spawn-total-count').value,
-                spermTime: document.getElementById('sperm-release-time').value,
-                eggTimeFrom: document.getElementById('egg-laying-from').value,
-                eggTimeTo: document.getElementById('egg-laying-to').value,
+                spermTime: compiledSpermRelease,
+                eggTimeFrom: compiledEggFrom,
+                eggTimeTo: compiledEggTo,
                 statusOutcome: document.getElementById('spawn-status-outcome').value,
                 totalEggs: document.getElementById('total-collected-eggs').value,
                 eggQuality: document.getElementById('egg-quality').value,
@@ -970,7 +982,6 @@
         }
 
         function renderTerminalLogsEngine() {
-            const isDark = document.body.classList.contains('theme-dark');
             if(activeLogTab === 'spawning') {
                 const tbody = document.getElementById('spawning-log-body');
                 if(!cachedSpawning || cachedSpawning.length === 0) {
@@ -990,7 +1001,6 @@
                     const safeDate = formatCleanDateOnly(r.date || r.trialDate);
                     const isSuccess = (r.statusOutcome || '').trim() === "Successful";
                     
-                    // High contrast outcomes regardless of light vs night backgrounds
                     let outcomeBadgeClass = isSuccess 
                         ? "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-500 text-white shadow-sm"
                         : "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-rose-500 text-white shadow-sm";
@@ -1040,12 +1050,12 @@
                         <td class="px-4 py-3 text-rose-500 font-black text-sm">${formatPercent(r.mortality)}</td>
                         <td class="px-4 py-3"><span class="px-2 py-1 border border-slate-400 rounded-md text-[10px] font-black uppercase bg-white text-slate-800 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
                         <td class="px-4 py-3 text-xs">
-                            <div class="font-black text-teal-500">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
+                            <div class="font-black text-teal-950">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
                             <div class="font-extrabold opacity-75 mt-0.5">% of Mass: ${formatPercent(r.femaleWeightRatio)}</div>
                             <div class="opacity-60 font-medium mt-1 whitespace-normal max-w-[180px]">${fBreakdownStr}</div>
                         </td>
                         <td class="px-4 py-3 text-xs">
-                            <div class="font-black text-cyan-400">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
+                            <div class="font-black text-cyan-950">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
                             <div class="font-extrabold opacity-75 mt-0.5">% of Mass: ${formatPercent(r.maleWeightRatio)}</div>
                         </td>
                     </tr>`;

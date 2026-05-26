@@ -12,15 +12,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+        
+        /* Theme Overrides */
+        .theme-light { background-image: linear-gradient(to bottom right, #f8fafc, #f0fdfa); color: #1e293b; }
+        .theme-dark { background-image: none; background-color: #0f172a; color: #f1f5f9; }
+        .theme-dark .bg-white { background-color: #1e293b; border-color: #334155; color: #f1f5f9; }
+        .theme-dark input, .theme-dark select { background-color: #334155; border-color: #475569; color: #fff; }
+        .theme-dark .bg-slate-50, .theme-dark .bg-slate-100 { background-color: #1e293b; }
+        .theme-dark .border-slate-200 { border-color: #334155; }
+        .theme-dark th { background-color: #334155; color: #94a3b8; border-color: #475569; }
+        .theme-dark td { border-color: #334155; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-teal-50 min-h-screen text-slate-800 pb-16">
+<body class="theme-light min-h-screen pb-16">
 
-    <header class="bg-gradient-to-r from-teal-800 to-cyan-900 text-white shadow-md sticky top-0 z-50">
+    <header id="app-header" class="bg-gradient-to-r from-teal-800 to-cyan-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="bg-teal-600/30 p-2 rounded-xl border border-teal-400/30">
@@ -28,7 +38,7 @@
                 </div>
                 <div>
                     <h1 class="font-extrabold text-sm sm:text-base tracking-tight">Haliotis asinina Hatchery</h1>
-                    <p class="text-[9px] sm:text-[10px] text-teal-200 uppercase tracking-widest font-bold mt-0.5">Tropical Abalone Farm</p>
+                    <p id="theme-status" class="text-[9px] sm:text-[10px] text-teal-200 uppercase tracking-widest font-bold mt-0.5">Tropical Abalone Farm</p>
                 </div>
             </div>
             <div>
@@ -47,7 +57,7 @@
             <div class="flex items-center justify-between cursor-pointer" onclick="toggleConfigDrawer()">
                 <div class="flex items-center space-x-3">
                     <i data-lucide="settings-2" class="w-5 h-5 text-teal-600"></i>
-                    <h2 class="text-sm font-bold text-slate-700">Google Apps Script Connection</h2>
+                    <h2 class="text-sm font-bold">Google Apps Script Connection</h2>
                 </div>
                 <div class="flex items-center space-x-2 text-slate-400">
                     <span class="text-xs font-medium" id="config-status-lbl">Click to link database</span>
@@ -65,7 +75,7 @@
             </div>
         </section>
 
-        <div class="flex flex-col sm:flex-row bg-slate-100 p-1.5 rounded-2xl mb-6 shadow-inner border border-slate-200 max-w-6xl mx-auto gap-1.5">
+        <div class="flex flex-col sm:flex-row bg-slate-100 dark-bg-adjust p-1.5 rounded-2xl mb-6 shadow-inner border border-slate-200 max-w-6xl mx-auto gap-1.5">
             <button onclick="switchTab('spawning')" id="tab-btn-spawning" class="flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm border border-slate-200/50">
                 <i data-lucide="sparkles" class="w-4 h-4 text-teal-600"></i>
                 <span>Spawning Trials</span>
@@ -82,13 +92,10 @@
 
         <div id="tab-content-spawning" class="space-y-6 max-w-6xl mx-auto">
             <form id="spawning-form" onsubmit="handleSpawningSubmit(event)" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center">
+                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center header-adjust">
                     <div>
                         <h3 class="text-base font-extrabold text-teal-950 flex items-center gap-2">Spawning Trial Entry <span id="draft-indicator" class="hidden text-[10px] bg-teal-200/50 text-teal-800 px-2 py-0.5 rounded-full">Draft Auto-Saved</span></h3>
                     </div>
-                    <button type="button" onclick="fillMockSpawning()" class="text-[11px] font-bold text-teal-800 bg-teal-200/80 hover:bg-teal-300 px-3 py-1.5 rounded-lg transition-all shadow-sm">
-                        Load Mock Data
-                    </button>
                 </div>
 
                 <div class="p-5 sm:p-6 space-y-6">
@@ -163,7 +170,7 @@
                         <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">2. Water Quality Checks</span>
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-4">
                             <div class="border border-teal-200 rounded-xl overflow-hidden bg-white shadow-sm">
-                                <div class="bg-teal-50 px-4 py-2.5 flex justify-between items-center border-b border-teal-100">
+                                <div class="bg-teal-50 px-4 py-2.5 flex justify-between items-center border-b border-teal-100 header-adjust">
                                     <span class="text-xs font-black text-teal-900 tracking-wider uppercase">WQ Check 1</span>
                                     <input type="time" id="c1-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold">
                                 </div>
@@ -182,7 +189,7 @@
                             </div>
 
                             <div class="border border-cyan-200 rounded-xl overflow-hidden bg-white shadow-sm">
-                                <div class="bg-cyan-50 px-4 py-2.5 flex justify-between items-center border-b border-cyan-100">
+                                <div class="bg-cyan-50 px-4 py-2.5 flex justify-between items-center border-b border-cyan-100 header-adjust">
                                     <span class="text-xs font-black text-cyan-900 tracking-wider uppercase">WQ Check 2</span>
                                     <input type="time" id="c2-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold">
                                 </div>
@@ -272,8 +279,8 @@
                         <span class="text-[10px] font-extrabold text-emerald-900 bg-emerald-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-emerald-300">4. Final Yield Result</span>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <div>
-                                <label class="block text-[10px] font-black text-teal-950 mb-1.5 uppercase tracking-wider">Spawning Outcome</label>
-                                <select id="spawn-status-outcome" required class="w-full p-2.5 text-xs border-2 border-teal-500 bg-teal-50 rounded-lg font-black text-teal-900 shadow-sm">
+                                <label class="block text-[10px] font-black text-slate-700 mb-1.5 uppercase tracking-wider">Spawning Outcome</label>
+                                <select id="spawn-status-outcome" onchange="toggleOutcomeLockState(this.value)" required class="w-full p-2.5 text-xs border-2 rounded-lg font-black transition-colors shadow-sm bg-white border-slate-300 text-slate-800">
                                     <option value="">Choose Outcome</option>
                                     <option value="Successful">Successful</option>
                                     <option value="No Sperm & Eggs">No Sperm & Eggs</option>
@@ -284,15 +291,16 @@
                             <div>
                                 <label class="block text-[10px] font-black text-slate-700 mb-1.5 uppercase tracking-wider">Fertilised Eggs</label>
                                 <div class="relative">
-                                    <input type="number" id="total-collected-eggs" placeholder="4835333" required class="w-full pl-3 pr-14 py-2.5 text-sm border-2 border-slate-300 font-black rounded-lg text-teal-950 shadow-inner">
+                                    <input type="number" id="total-collected-eggs" placeholder="0" required class="w-full pl-3 pr-14 py-2.5 text-sm border-2 border-slate-300 font-black rounded-lg text-slate-800 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed">
                                     <span class="absolute right-3 top-2.5 text-[10px] font-black text-slate-400 uppercase">Eggs</span>
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-[10px] font-black text-slate-700 mb-1.5 uppercase tracking-wider">Quality Grade</label>
-                                <select id="egg-quality" required class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-black text-slate-800">
+                                <select id="egg-quality" required class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-black text-slate-800 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed">
                                     <option value="Good">Good</option>
                                     <option value="Bad">Bad</option>
+                                    <option value="None">None (Failed Run)</option>
                                 </select>
                             </div>
                         </div>
@@ -308,13 +316,10 @@
 
         <div id="tab-content-purchasing" class="hidden space-y-6 max-w-6xl mx-auto">
             <form id="purchasing-form" onsubmit="handlePurchasingSubmit(event)" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center">
+                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center header-adjust">
                     <div>
                         <h3 class="text-base font-extrabold text-teal-950">Abalone Purchase Intake</h3>
                     </div>
-                    <button type="button" onclick="fillMockPurchasing()" class="text-[11px] font-bold text-teal-800 bg-teal-200/80 hover:bg-teal-300 px-3 py-1.5 rounded-lg transition-all shadow-sm">
-                        Load Mock Purchase
-                    </button>
                 </div>
 
                 <div class="p-5 sm:p-6 space-y-6">
@@ -422,7 +427,7 @@
                 </div>
 
                 <div class="bg-slate-50 border-t border-slate-200 px-5 py-4 flex flex-col sm:flex-row gap-3 justify-end">
-                    <button type="button" onclick="resetForm('purchasing-form', false)" class="px-5 py-2 border border-slate-300 bg-white rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
+                    <button type="button" onclick="resetForm('purchasing-form')" class="px-5 py-2 border border-slate-300 bg-white rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
                     <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-black text-xs rounded-lg shadow-md transition-all">Upload Purchase Log</button>
                 </div>
             </form>
@@ -485,8 +490,8 @@
                                 <tr>
                                     <th class="px-4 py-3 border-r border-slate-200">Date</th>
                                     <th class="px-4 py-3">Moon Phase</th>
-                                    <th class="px-4 py-3 bg-emerald-50 text-emerald-900 border-x border-emerald-200">Status Outcome</th>
-                                    <th class="px-4 py-3 bg-teal-50 text-teal-950 border-r border-teal-200 text-right">Fertilised Eggs</th>
+                                    <th class="px-4 py-3 bg-emerald-50 border-x border-emerald-200 text-slate-800">Status Outcome</th>
+                                    <th class="px-4 py-3 bg-teal-50 text-right text-slate-800 border-r border-teal-200">Fertilised Eggs</th>
                                     <th class="px-4 py-3">Staff Registry</th>
                                     <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">WQ Avg (C1 &rarr; C2)</th>
                                     <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Broodstock Sorting</th>
@@ -533,6 +538,7 @@
         let isLogsUnlocked = false;
         
         window.addEventListener('load', () => {
+            applyTimeBasedTheme();
             buildTankInterfaceRows();
             lucide.createIcons();
             
@@ -546,6 +552,8 @@
             if(localStorage.getItem('spawningDraft')) {
                 loadDraft('spawning-form', 'spawningDraft');
                 document.getElementById('draft-indicator').classList.remove('hidden');
+                // Ensure field lock state is updated correctly on load
+                toggleOutcomeLockState(document.getElementById('spawn-status-outcome').value);
             } else {
                 const today = new Date().toISOString().split('T')[0];
                 ['spawn-date','spawn-start-date','spawn-end-date','pur-date'].forEach(id => {
@@ -558,12 +566,26 @@
                 document.getElementById('c2-hour').value = "03:00";
             }
 
-            // Bind the auto-save event to the spawning form
+            // Bind auto-save tracking
             document.getElementById('spawning-form').addEventListener('input', () => saveDraft('spawning-form', 'spawningDraft'));
 
             calculateSpawningAverages(1);
             calculateSpawningAverages(2);
         });
+
+        // --- AUTOMATED MALAYSIAN TIME THEME SWITCHER ---
+        function applyTimeBasedTheme() {
+            const hr = new Date().getHours();
+            const b = document.body;
+            const lbl = document.getElementById('theme-status');
+            if (hr >= 6 && hr < 18) {
+                b.className = "theme-light min-h-screen pb-16";
+                lbl.textContent = "Tropical Abalone Farm • Light Shift Mode";
+            } else {
+                b.className = "theme-dark min-h-screen pb-16";
+                lbl.textContent = "Tropical Abalone Farm • Night Shift Mode";
+            }
+        }
 
         // --- DRAFT AUTO SAVE SYSTEM ---
         function saveDraft(formId, storageKey) {
@@ -583,7 +605,31 @@
                 }
             }
         }
-        // ------------------------------
+
+        // --- SPOWNING LOGIC GUARDRAILS ---
+        function toggleOutcomeLockState(val) {
+            const el = document.getElementById('spawn-status-outcome');
+            const eggsInput = document.getElementById('total-collected-eggs');
+            const qualityInput = document.getElementById('egg-quality');
+            
+            if (val === "Successful") {
+                el.className = "w-full p-2.5 text-xs border-4 rounded-lg font-black bg-emerald-50 border-emerald-500 text-emerald-900";
+                eggsInput.disabled = false;
+                qualityInput.disabled = false;
+            } else if (val === "") {
+                el.className = "w-full p-2.5 text-xs border-2 rounded-lg font-black bg-white border-slate-300 text-slate-800";
+                eggsInput.disabled = false;
+                qualityInput.disabled = false;
+            } else {
+                // High contrast alert red color for failures
+                el.className = "w-full p-2.5 text-xs border-4 rounded-lg font-black bg-rose-50 border-rose-500 text-rose-900";
+                eggsInput.value = 0;
+                eggsInput.disabled = true;
+                qualityInput.value = "None";
+                qualityInput.disabled = true;
+            }
+            saveDraft('spawning-form', 'spawningDraft');
+        }
 
         function buildTankInterfaceRows() {
             const grid1 = document.getElementById('check1-tanks-grid');
@@ -730,8 +776,8 @@
                 b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-800 border border-emerald-500/40 flex items-center space-x-1.5";
                 b.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span><span class="hidden sm:inline">Connected to Sheets</span><span class="sm:hidden">Online</span>`;
             } else {
-                b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-800 border border-amber-500/40 flex items-center space-x-1.5";
-                b.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span><span class="hidden sm:inline">Standalone Mode</span><span class="sm:hidden">Offline</span>`;
+                b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center space-x-1.5";
+                b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span><span class="hidden sm:inline">Standalone Mode</span><span class="sm:hidden">Offline</span>`;
             }
         }
 
@@ -826,11 +872,11 @@
                 c2AvgDo: document.getElementById('c2-avg-do').textContent,
                 c2AvgPh: document.getElementById('c2-avg-ph').textContent,
                 c2AvgSal: document.getElementById('c2-avg-sal').textContent,
-                f1Mat: document.getElementById('sf-mat-1').value, f1Pcs: document.getElementById('sf-pcs-1').value || 0,
-                f2Mat: document.getElementById('sf-mat-2').value, f2Pcs: document.getElementById('sf-pcs-2').value || 0,
-                f3Mat: document.getElementById('sf-mat-3').value, f3Pcs: document.getElementById('sf-pcs-3').value || 0,
-                f4Mat: document.getElementById('sf-mat-4').value, f4Pcs: document.getElementById('sf-pcs-4').value || 0,
-                maleMat: document.getElementById('sm-mat').value, malePcs: document.getElementById('sm-pcs').value || 0,
+                f1Mat: formatPercent(document.getElementById('sf-mat-1').value), f1Pcs: document.getElementById('sf-pcs-1').value || 0,
+                f2Mat: formatPercent(document.getElementById('sf-mat-2').value), f2Pcs: document.getElementById('sf-pcs-2').value || 0,
+                f3Mat: formatPercent(document.getElementById('sf-mat-3').value), f3Pcs: document.getElementById('sf-pcs-3').value || 0,
+                f4Mat: formatPercent(document.getElementById('sf-mat-4').value), f4Pcs: document.getElementById('sf-pcs-4').value || 0,
+                maleMat: formatPercent(document.getElementById('sm-mat').value), malePcs: document.getElementById('sm-pcs').value || 0,
                 totalSpawners: document.getElementById('spawn-total-count').value,
                 spermTime: document.getElementById('sperm-release-time').value,
                 eggTimeFrom: document.getElementById('egg-laying-from').value,
@@ -926,20 +972,26 @@
                     
                     const safeDate = formatCleanDateOnly(r.date || r.trialDate);
 
+                    // Color code outcomes inside the dashboard dynamically
+                    const isSuccess = (r.statusOutcome || '').trim() === "Successful";
+                    const outcomeBadgeClass = isSuccess 
+                        ? "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-200"
+                        : "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-rose-100 text-rose-800 border border-rose-200";
+
                     return `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-4 py-3 font-extrabold bg-slate-50/50 border-r border-slate-200 text-slate-800">${safeDate}</td>
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-4 py-3 font-extrabold bg-slate-50/10 border-r border-slate-200 text-slate-800">${safeDate}</td>
                         <td class="px-4 py-3 text-slate-600 font-bold">${r.moonCycle || ''}</td>
-                        <td class="px-4 py-3 bg-emerald-50/70 border-x border-emerald-100/50">
-                            <span class="px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 shadow-sm border border-emerald-200">${r.statusOutcome || 'Successful'}</span>
+                        <td class="px-4 py-3 bg-emerald-50/10 border-x border-slate-200">
+                            <span class="${outcomeBadgeClass}">${r.statusOutcome || 'Successful'}</span>
                         </td>
-                        <td class="px-4 py-3 font-black text-teal-950 text-right bg-teal-50/50 text-sm border-r border-teal-100/50">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-bold text-slate-500 text-[10px] mt-0.5">Quality: ${r.eggQuality || ''}</span></td>
+                        <td class="px-4 py-3 font-black text-teal-950 text-right bg-teal-50/10 text-sm border-r border-slate-200">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-bold text-slate-500 text-[10px] mt-0.5">Quality: ${r.eggQuality || ''}</span></td>
                         <td class="px-4 py-3 text-slate-800 font-bold">${r.inCharge || ''} <span class="block text-[10px] text-slate-500 font-medium mt-0.5">Team: ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
-                        <td class="px-4 py-3 text-slate-700 bg-slate-50 border-l border-slate-200">
+                        <td class="px-4 py-3 text-slate-700 bg-slate-50/10 border-l border-slate-200">
                             <div class="text-teal-800 font-black text-[11px]">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'} | pH ${r.wq1AvgPh || '0.00'} | Sal ${r.wq1AvgSal || '0.0'}</div>
                             <div class="text-cyan-800 font-black text-[11px] mt-1.5">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'} | pH ${r.wq2AvgPh || '0.00'} | Sal ${r.wq2AvgSal || '0.0'}</div>
                         </td>
-                        <td class="px-4 py-3 bg-slate-50 border-l border-slate-200">
+                        <td class="px-4 py-3 bg-slate-50/10 border-l border-slate-200">
                             <div class="text-[11px] text-slate-700 font-medium"><span class="font-black text-teal-800">F:</span> ${fStr} <br/><span class="text-slate-500 mt-1 inline-block">(Total: ${r.totalSpawners ? parseInt(r.totalSpawners)-parseInt(r.malePcs||0) : '0'} pcs)</span></div>
                             <div class="text-[11px] text-slate-700 font-medium mt-1 pt-1 border-t border-slate-200"><span class="font-black text-cyan-800">M:</span> ${mStr}</div>
                         </td>
@@ -963,77 +1015,25 @@
                     const safeDate = formatCleanDateOnly(r.date || r.purchaseDate || r.intakeDate);
 
                     return `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-4 py-3 font-extrabold bg-slate-50/50 border-r border-slate-200 text-slate-800">${safeDate}</td>
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-4 py-3 font-extrabold bg-slate-50/10 border-r border-slate-200 text-slate-800">${safeDate}</td>
                         <td class="px-4 py-3 font-extrabold text-slate-800">${r.supplierCategory || ''} <span class="block font-medium text-slate-500 text-[10px] mt-0.5">Moon: ${r.moonPhase || ''}</span></td>
-                        <td class="px-4 py-3 bg-teal-50/50 text-teal-950 font-black text-sm border-l border-teal-100/50">${r.totalBatchWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3 bg-rose-50/50 text-rose-950 font-bold border-l border-rose-100/50">${r.deadWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3 text-rose-600 font-black text-sm bg-rose-100/40 border-r border-rose-200">${r.mortality || '0.00%'}</td>
+                        <td class="px-4 py-3 bg-teal-50/10 text-slate-800 font-black text-sm border-l border-slate-200">${r.totalBatchWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3 bg-rose-50/10 text-slate-800 font-bold border-l border-slate-200">${r.deadWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3 text-rose-600 font-black text-sm bg-rose-100/10 border-r border-slate-200">${formatPercent(r.mortality)}</td>
                         <td class="px-4 py-3"><span class="px-2 py-1 border border-slate-300 rounded-md text-[10px] font-black uppercase bg-white text-slate-700 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
-                        <td class="px-4 py-3 bg-slate-50 border-l border-slate-200">
+                        <td class="px-4 py-3 bg-slate-50/10 border-l border-slate-200">
                             <div class="text-[11px] font-black text-teal-900">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
-                            <div class="text-[10px] font-extrabold text-teal-600 mt-1">% of Mass: ${r.femaleWeightRatio || '0.00%'}</div>
+                            <div class="text-[10px] font-extrabold text-teal-600 mt-1">% of Mass: ${formatPercent(r.femaleWeightRatio)}</div>
                             <div class="text-[10px] text-slate-500 font-bold mt-1.5 border-t border-slate-200 pt-1 max-w-[180px] whitespace-normal leading-relaxed">${fBreakdownStr}</div>
                         </td>
-                        <td class="px-4 py-3 bg-slate-50 border-l border-slate-200">
+                        <td class="px-4 py-3 bg-slate-50/10 border-l border-slate-200">
                             <div class="text-[11px] font-black text-cyan-900">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
-                            <div class="text-[10px] font-extrabold text-cyan-600 mt-1">% of Mass: ${r.maleWeightRatio || '0.00%'}</div>
+                            <div class="text-[10px] font-extrabold text-cyan-600 mt-1">% of Mass: ${formatPercent(r.maleWeightRatio)}</div>
                         </td>
                     </tr>`;
                 }).join('');
             }
-        }
-
-        function fillMockSpawning() {
-            document.getElementById('spawn-in-charge').value = "Popo";
-            document.getElementById('spawn-assistant-1').value = "Irwanshah";
-            document.getElementById('spawn-assistant-2').value = "Dennivis";
-            document.getElementById('spawn-assistant-3').value = "";
-            document.getElementById('spawn-moon-cycle').value = "New Moon";
-            document.getElementById('spawn-weather').value = "Dark sky";
-            
-            const c1Temps = [30.1, 30.1, 30.1, 30.1, 30.1, 30.1];
-            const c1Dos = [5.67, 5.72, 5.68, 5.57, 5.60, 5.68];
-            const c1Phs = [8.3, 8.3, 8.4, 8.3, 8.3, 8.4];
-            const c1Sals = [34.2, 34.0, 34.1, 34.5, 34.0, 34.2];
-
-            const c2Temps = [30.4, 30.4, 30.4, 30.4, 30.4, 30.4];
-            const c2Dos = [5.63, 5.76, 5.76, 5.61, 5.80, 5.57];
-            const c2Phs = [8.2, 8.3, 8.2, 8.2, 8.3, 8.2];
-            const c2Sals = [34.0, 34.1, 34.0, 34.2, 34.1, 34.0];
-
-            tanksList.forEach((t, idx) => {
-                document.getElementById(`c1-t-${t}`).value = c1Temps[idx]; 
-                document.getElementById(`c1-d-${t}`).value = c1Dos[idx]; 
-                document.getElementById(`c1-p-${t}`).value = c1Phs[idx]; 
-                document.getElementById(`c1-s-${t}`).value = c1Sals[idx];
-                
-                document.getElementById(`c2-t-${t}`).value = c2Temps[idx]; 
-                document.getElementById(`c2-d-${t}`).value = c2Dos[idx]; 
-                document.getElementById(`c2-p-${t}`).value = c2Phs[idx]; 
-                document.getElementById(`c2-s-${t}`).value = c2Sals[idx];
-            });
-            
-            document.getElementById('sf-mat-1').value = "80%";
-            document.getElementById('sf-pcs-1').value = 16;
-            document.getElementById('sf-pcs-2').value = "";
-            document.getElementById('sf-pcs-3').value = "";
-            document.getElementById('sf-pcs-4').value = "";
-            
-            document.getElementById('sm-mat').value = "80%";
-            document.getElementById('sm-pcs').value = 10;
-            
-            document.getElementById('sperm-release-time').value = "01:30";
-            document.getElementById('egg-laying-from').value = "02:30";
-            document.getElementById('egg-laying-to').value = "03:30";
-            document.getElementById('spawn-status-outcome').value = "Successful";
-            document.getElementById('total-collected-eggs').value = 4835333;
-            document.getElementById('egg-quality').value = "Good";
-            
-            calculateSpawningAverages(1); 
-            calculateSpawningAverages(2); 
-            calculateTotalSpawnersLive();
-            showSystemToast('success', 'Report Loaded', 'Loaded the official Spawning parameters from April 16th.');
         }
 
         function resetForm(id, isSpawning) {
@@ -1041,6 +1041,9 @@
             if(isSpawning) { 
                 localStorage.removeItem('spawningDraft');
                 document.getElementById('draft-indicator').classList.add('hidden');
+                document.getElementById('spawn-status-outcome').className = "w-full p-2.5 text-xs border-2 rounded-lg font-black bg-white border-slate-300 text-slate-800";
+                document.getElementById('total-collected-eggs').disabled = false;
+                document.getElementById('egg-quality').disabled = false;
                 buildTankInterfaceRows(); 
                 calculateSpawningAverages(1); 
                 calculateSpawningAverages(2); 

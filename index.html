@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haliotis asinina Hatchery Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-teal-50 min-h-screen text-slate-800 pb-16">
+
+    <header class="bg-gradient-to-r from-teal-800 to-cyan-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-teal-600/30 p-2 rounded-xl border border-teal-400/30">
+                    <i data-lucide="shell" class="w-6 h-6 text-teal-300"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base tracking-tight sm:text-lg">Haliotis asinina Hatchery</h1>
+                    <p class="text-[10px] text-teal-200 uppercase tracking-widest font-semibold">TROPICAL ABALONE FARM OPERATIONS</p>
+                </div>
+            </div>
+            <div>
+                <span id="conn-badge" class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span>Standalone Mode</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 mt-6">
+
+        <section class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-6">
+            <div class="flex items-center justify-between cursor-pointer" onclick="toggleConfigDrawer()">
+                <div class="flex items-center space-x-2.5">
+                    <i data-lucide="settings-2" class="w-5 h-5 text-teal-600"></i>
+                    <h2 class="text-sm font-bold text-slate-700">Google Apps Script Web App Connection</h2>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-400">
+                    <span class="text-xs font-medium" id="config-status-lbl">Click to verify link</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200" id="config-chevron"></i>
+                </div>
+            </div>
+            <div id="config-drawer" class="hidden mt-4 pt-4 border-t border-slate-100">
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="password" id="gas-url" placeholder="Paste Stage 2 /exec Web App deployment link here..." 
+                           class="flex-grow p-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <button onclick="saveGasUrl()" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
+                        Save Link URL
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-6 shadow-sm border border-slate-200/50">
+            <button onclick="switchTab('spawning')" id="tab-btn-spawning" class="flex-1 py-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm">
+                <i data-lucide="sparkles" class="w-4 h-4 text-teal-600"></i>
+                <span>Spawning Trial Log</span>
+            </button>
+            <button onclick="switchTab('purchasing')" id="tab-btn-purchasing" class="flex-1 py-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800">
+                <i data-lucide="shopping-bag" class="w-4 h-4 text-slate-400"></i>
+                <span>Broodstock Purchases</span>
+            </button>
+        </div>
+
+        <div id="tab-content-spawning" class="space-y-6">
+            <form id="spawning-form" onsubmit="handleSpawningSubmit(event)" class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100/50 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-base font-extrabold text-teal-900">Spawning Trial Log</h3>
+                        <p class="text-xs text-slate-500">Log dual water parameters, attendance registries, and egg yield output.</p>
+                    </div>
+                    <button type="button" onclick="fillMockSpawning()" class="text-[11px] font-bold text-teal-700 bg-teal-100/60 hover:bg-teal-100 px-3 py-1.5 rounded-lg transition-all">
+                        Load 16th April Mock Data
+                    </button>
+                </div>
+
+                <div class="p-5 sm:p-6 space-y-6">
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">1. Timeline, Staff Registry & Environment</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Date of Trial</label>
+                                <input type="date" id="spawn-date" required class="w-full px-2.5 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Trial Period: Start (Date / Time)</label>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <input type="date" id="spawn-period-start-date" required class="w-full px-2 py-1.5 text-xs border border-slate-200 rounded-lg">
+                                    <select id="spawn-period-start-hour" required class="w-full px-2 py-1.5 text-xs border border-slate-200 bg-white rounded-lg"></select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Trial Period: End (Date / Time)</label>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <input type="date" id="spawn-period-end-date" required class="w-full px-2 py-1.5 text-xs border border-slate-200 rounded-lg">
+                                    <select id="spawn-period-end-hour" required class="w-full px-2 py-1.5 text-xs border border-slate-200 bg-white rounded-lg"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Operator in Charge</label>
+                                <input type="text" id="spawn-in-charge" placeholder="Popo" required class="w-full px-2.5 py-2 text-xs border border-slate-200 rounded-xl focus:ring-1 focus:ring-teal-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Assistant 1</label>
+                                <input type="text" id="spawn-assistant-1" placeholder="Irwanshah" class="w-full px-2.5 py-2 text-xs border border-slate-200 rounded-xl focus:ring-1 focus:ring-teal-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Assistant 2</label>
+                                <input type="text" id="spawn-assistant-2" placeholder="Dennivis" class="w-full px-2.5 py-2 text-xs border border-slate-200 rounded-xl focus:ring-1 focus:ring-teal-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-1">Assistant 3</label>
+                                <input type="text" id="spawn-assistant-3" placeholder="Additional Worker" class="w-full px-2.5 py-2 text-xs border border-slate-200 rounded-xl focus:ring-1 focus:ring-teal-500 focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Moon Cycle Phase</label>
+                                <select id="spawn-moon-cycle" required class="w-full px-2.5 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none">
+                                    <option value="New Moon">New Moon</option>
+                                    <option value="Full Moon">Full Moon</option>
+                                    <option value="First Quarter">First Quarter</option>
+                                    <option value="Third Quarter">Third Quarter</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Weather Condition</label>
+                                <select id="spawn-weather" required class="w-full px-2.5 py-2 text-xs border border-slate-200 rounded-xl bg-white focus:outline-none">
+                                    <option value="Dark sky">Dark Sky / Night</option>
+                                    <option value="Clear sky">Clear Sky</option>
+                                    <option value="Rainy">Rainy</option>
+                                    <option value="Overcast">Overcast</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">2. Water Quality (WQ) Parameter Audits</span>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                            <div class="border border-teal-100 rounded-2xl overflow-hidden bg-slate-50/50">
+                                <div class="bg-teal-700/10 px-4 py-2 flex justify-between items-center border-b border-teal-100">
+                                    <span class="text-xs font-extrabold text-teal-900 tracking-wider uppercase">WQ Check 1</span>
+                                    <div class="flex items-center space-x-1">
+                                        <input type="date" id="c1-date" class="px-1.5 py-0.5 text-[10px] border border-slate-200 rounded bg-white">
+                                        <select id="c1-hour" class="px-1.5 py-0.5 text-[10px] border border-slate-200 rounded bg-white"></select>
+                                    </div>
+                                </div>
+                                <div class="p-3 space-y-2">
+                                    <div class="grid grid-cols-5 gap-1 text-[9px] font-extrabold text-slate-500 uppercase text-center">
+                                        <div>Tank</div><div>Temp (°C)</div><div>DO (mg/L)</div><div>pH</div><div>Sal (ppt)</div>
+                                    </div>
+                                    <div id="check1-tanks-grid" class="space-y-1"></div>
+                                    <div class="bg-teal-50/80 p-2 rounded-xl grid grid-cols-4 gap-1 text-center text-[10px] font-extrabold text-teal-950 mt-2">
+                                        <div>T: <span id="c1-avg-temp" class="text-teal-700 block font-bold">0.0°C</span></div>
+                                        <div>DO: <span id="c1-avg-do" class="text-teal-700 block font-bold">0.00</span></div>
+                                        <div>pH: <span id="c1-avg-ph" class="text-teal-700 block font-bold">0.00</span></div>
+                                        <div>Sal: <span id="c1-avg-sal" class="text-teal-700 block font-bold">0.0</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-cyan-100 rounded-2xl overflow-hidden bg-slate-50/50">
+                                <div class="bg-cyan-700/10 px-4 py-2 flex justify-between items-center border-b border-cyan-100">
+                                    <span class="text-xs font-extrabold text-cyan-900 tracking-wider uppercase">WQ Check 2</span>
+                                    <div class="flex items-center space-x-1">
+                                        <input type="date" id="c2-date" class="px-1.5 py-0.5 text-[10px] border border-slate-200 rounded bg-white">
+                                        <select id="c2-hour" class="px-1.5 py-0.5 text-[10px] border border-slate-200 rounded bg-white"></select>
+                                    </div>
+                                </div>
+                                <div class="p-3 space-y-2">
+                                    <div class="grid grid-cols-5 gap-1 text-[9px] font-extrabold text-slate-500 uppercase text-center">
+                                        <div>Tank</div><div>Temp (°C)</div><div>DO (mg/L)</div><div>pH</div><div>Sal (ppt)</div>
+                                    </div>
+                                    <div id="check2-tanks-grid" class="space-y-1"></div>
+                                    <div class="bg-cyan-50/80 p-2 rounded-xl grid grid-cols-4 gap-1 text-center text-[10px] font-extrabold text-cyan-950 mt-2">
+                                        <div>T: <span id="c2-avg-temp" class="text-cyan-700 block font-bold">0.0°C</span></div>
+                                        <div>DO: <span id="c2-avg-do" class="text-cyan-700 block font-bold">0.00</span></div>
+                                        <div>pH: <span id="c2-avg-ph" class="text-cyan-700 block font-bold">0.00</span></div>
+                                        <div>Sal: <span id="c2-avg-sal" class="text-cyan-700 block font-bold">0.0</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">3. Broodstock Maturation Sorting Profile</span>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                            <div class="border border-teal-100 rounded-2xl p-4 bg-teal-50/20 space-y-3">
+                                <h4 class="text-xs font-extrabold text-teal-900 flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-teal-500"></span> Female Maturation Allocations
+                                </h4>
+                                <div class="grid grid-cols-2 gap-4 text-[10px] font-bold text-slate-500 uppercase text-center">
+                                    <div>Maturation % Selector</div><div>Female Pieces (pcs)</div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <select id="sf-mat-1" class="p-1.5 text-xs border bg-white rounded-xl font-medium"><option value="80%">80% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="90%">90%</option></select>
+                                        <input type="number" id="sf-pcs-1" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-1.5 text-xs text-center border rounded-xl font-bold">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <select id="sf-mat-2" class="p-1.5 text-xs border bg-white rounded-xl font-medium"><option value="70%">70% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="80%">80%</option><option value="90%">90%</option></select>
+                                        <input type="number" id="sf-pcs-2" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-1.5 text-xs text-center border rounded-xl font-bold">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <select id="sf-mat-3" class="p-1.5 text-xs border bg-white rounded-xl font-medium"><option value="90%">90% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="80%">80%</option></select>
+                                        <input type="number" id="sf-pcs-3" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-1.5 text-xs text-center border rounded-xl font-bold">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <select id="sf-mat-4" class="p-1.5 text-xs border bg-white rounded-xl font-medium"><option value="60%">60% Maturity</option><option value="50%">50%</option><option value="70%">70%</option><option value="80%">80%</option><option value="90%">90%</option></select>
+                                        <input type="number" id="sf-pcs-4" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-1.5 text-xs text-center border rounded-xl font-bold">
+                                    </div>
+                                </div>
+                                <div class="text-xs font-bold text-teal-900 bg-teal-100/50 p-2 rounded-xl flex justify-between">
+                                    <span>Females Combined:</span><span id="display-female-total">0 pcs</span>
+                                </div>
+                            </div>
+
+                            <div class="border border-cyan-100 rounded-2xl p-4 bg-cyan-50/20 flex flex-col justify-between">
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-extrabold text-cyan-900 flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-cyan-500"></span> Male Maturation Allocation
+                                    </h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-[10px] text-slate-500 font-bold mb-1">Maturity %</label>
+                                            <select id="sm-mat" class="w-full p-2 text-xs border bg-white rounded-xl font-medium"><option value="80%">80% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="90%">90%</option></select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] text-slate-500 font-bold mb-1">Male Pieces (pcs)</label>
+                                            <input type="number" id="sm-pcs" placeholder="0" oninput="calculateTotalSpawnersLive()" class="w-full p-1.5 text-xs text-center border rounded-xl font-bold">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-xs font-bold text-cyan-900 bg-cyan-100/50 p-2 rounded-xl flex justify-between mt-4">
+                                    <span>Males Combined:</span><span id="display-male-total">0 pcs</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Total Spawners Result</label>
+                                <input type="number" id="spawn-total-count" readonly placeholder="0" class="w-full p-2 text-xs bg-slate-100 text-slate-500 font-extrabold border rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">First Sperm Release</label>
+                                <input type="time" id="sperm-release-time" class="w-full p-2 text-xs border rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Egg Laying Window (From/To)</label>
+                                <div class="grid grid-cols-2 gap-1.5">
+                                    <input type="time" id="egg-laying-from" class="w-full p-1.5 text-xs border rounded-lg">
+                                    <input type="time" id="egg-laying-to" class="w-full p-1.5 text-xs border rounded-lg">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-extrabold text-teal-950 mb-1">Spawning Status Outcome</label>
+                                <select id="spawn-status-outcome" required class="w-full p-2 text-xs border bg-white rounded-xl font-bold text-slate-800">
+                                    <option value="">Choose Outcome</option>
+                                    <option value="Successful">Successful</option>
+                                    <option value="No Sperm & Eggs">No Sperm & Eggs</option>
+                                    <option value="Only sperm, no eggs">Only sperm, no eggs</option>
+                                    <option value="Only eggs no sperm">Only eggs no sperm</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">4. Larval Yield Log</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Total Collected Eggs</label>
+                                <div class="relative">
+                                    <input type="number" id="total-collected-eggs" placeholder="4835333" required class="w-full pl-3 pr-12 py-2.5 text-xs border font-extrabold rounded-xl text-teal-950">
+                                    <span class="absolute right-3 top-3 text-[10px] font-bold text-slate-400 uppercase">Eggs</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Egg Quality</label>
+                                <select id="egg-quality" required class="w-full p-2.5 text-xs border bg-white rounded-xl font-bold text-slate-800">
+                                    <option value="Good">Good</option>
+                                    <option value="Bad">Bad</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border-t px-6 py-4 flex gap-2 justify-end">
+                    <button type="button" onclick="resetForm('spawning-form')" class="px-4 py-2 border rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Reset</button>
+                    <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs rounded-xl shadow-sm">Upload Spawning Log</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="tab-content-purchasing" class="hidden space-y-6">
+            <form id="purchasing-form" onsubmit="handlePurchasingSubmit(event)" class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100/50 flex justify-between items-center">
+                    <div>
+                        <h3 class="text-base font-extrabold text-teal-900">Abalone Purchase Intake Record</h3>
+                        <p class="text-xs text-slate-500">Track supplier category metrics, health evaluations, and batch weight distributions.</p>
+                    </div>
+                    <button type="button" onclick="fillMockPurchasing()" class="text-[11px] font-bold text-teal-700 bg-teal-100/60 hover:bg-teal-100 px-3 py-1.5 rounded-lg transition-all">
+                        Load Mock Purchase Data
+                    </button>
+                </div>
+
+                <div class="p-5 sm:p-6 space-y-6">
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">1. Logistics Setup</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Purchase Date</label>
+                                <input type="date" id="pur-date" required class="w-full px-2.5 py-2 text-xs border rounded-xl font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Supplier Category</label>
+                                <select id="pur-supplier-cat" required class="w-full px-2.5 py-2 text-xs border rounded-xl bg-white">
+                                    <option value="Existing Supplier">Existing Supplier</option>
+                                    <option value="New Supplier">New Supplier</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Moon Phase at Purchase</label>
+                                <select id="pur-moon" required class="w-full px-2.5 py-2 text-xs border rounded-xl bg-white">
+                                    <option value="New Moon">New Moon</option>
+                                    <option value="Full Moon">Full Moon</option>
+                                    <option value="First Quarter">First Quarter</option>
+                                    <option value="Third Quarter">Third Quarter</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">2. Mass & Transit Health Assessment</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Total Weight Bought (kg)</label>
+                                <input type="number" step="0.01" id="pur-total-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-2 text-xs border rounded-xl font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Dead Abalone Weight (kg)</label>
+                                <input type="number" step="0.01" id="pur-dead-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-2 text-xs border rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Transit Mortality Rate (%)</label>
+                                <input type="text" id="pur-dead-pct" readonly placeholder="0.00%" class="w-full p-2 text-xs bg-slate-50 text-slate-500 border rounded-xl font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Overall Batch Quality</label>
+                                <select id="pur-quality" required class="w-full p-2 text-xs border bg-white rounded-xl">
+                                    <option value="Excellent">Excellent</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100">
+
+                    <div>
+                        <span class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full uppercase tracking-wider">3. Gender & Maturity Matrix</span>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                            <div class="border border-teal-100 rounded-2xl p-4 bg-teal-50/10 space-y-3">
+                                <h4 class="text-xs font-extrabold text-teal-800 flex items-center gap-1"><i data-lucide="venus" class="w-4 h-4"></i> Female Maturity Breakdown</h4>
+                                <div class="grid grid-cols-3 gap-2 text-[10px] font-extrabold text-slate-500 text-center uppercase">
+                                    <div>Maturity</div><div>Pieces (pcs)</div><div>Weight (kg)</div>
+                                </div>
+                                <div class="space-y-2" id="female-purchase-rows">
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-semibold text-slate-600">50% Tier</span><input type="number" id="pf-50-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-1 text-xs border rounded text-center"><input type="number" step="0.01" id="pf-50-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-1 text-xs border rounded text-center"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-semibold text-slate-600">60% Tier</span><input type="number" id="pf-60-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-1 text-xs border rounded text-center"><input type="number" step="0.01" id="pf-60-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-1 text-xs border rounded text-center"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-semibold text-slate-600">70% Tier</span><input type="number" id="pf-70-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-1 text-xs border rounded text-center"><input type="number" step="0.01" id="pf-70-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-1 text-xs border rounded text-center"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-semibold text-slate-600">80% Tier</span><input type="number" id="pf-80-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-1 text-xs border rounded text-center"><input type="number" step="0.01" id="pf-80-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-1 text-xs border rounded text-center"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-semibold text-slate-600">90% Tier</span><input type="number" id="pf-90-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-1 text-xs border rounded text-center"><input type="number" step="0.01" id="pf-90-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-1 text-xs border rounded text-center"></div>
+                                </div>
+                                <div class="bg-teal-100/50 p-2.5 rounded-xl text-[10px] font-bold text-teal-950 grid grid-cols-3 gap-1 text-center mt-2">
+                                    <div>Pcs: <span id="f-sum-pcs" class="block text-xs text-teal-800">0</span></div>
+                                    <div>Weight: <span id="f-sum-kg" class="block text-xs text-teal-800">0.00 kg</span></div>
+                                    <div>Ratio: <span id="f-sum-ratio" class="block text-xs text-teal-800">0.00%</span></div>
+                                </div>
+                            </div>
+
+                            <div class="border border-cyan-100 rounded-2xl p-4 bg-cyan-50/10 flex flex-col justify-between">
+                                <div class="space-y-4">
+                                    <h4 class="text-xs font-extrabold text-cyan-800 flex items-center gap-1"><i data-lucide="mars" class="w-4 h-4"></i> Male Profile Aggregate</h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-xs font-semibold text-slate-600 mb-1">Male Pieces (pcs)</label>
+                                            <input type="number" id="pm-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="w-full p-2 text-xs border rounded-xl text-center font-bold">
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-semibold text-slate-600 mb-1">Male Weight (kg)</label>
+                                            <input type="number" step="0.01" id="pm-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="w-full p-2 text-xs border rounded-xl text-center font-bold">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-cyan-100/50 p-2.5 rounded-xl text-[10px] font-bold text-cyan-950 grid grid-cols-3 gap-1 text-center mt-6">
+                                    <div>Pcs: <span id="m-sum-pcs" class="block text-xs text-cyan-800">0</span></div>
+                                    <div>Weight: <span id="m-sum-kg" class="block text-xs text-cyan-800">0.00 kg</span></div>
+                                    <div>Ratio: <span id="m-sum-ratio" class="block text-xs text-cyan-800">0.00%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border-t px-6 py-4 flex gap-2 justify-end">
+                    <button type="button" onclick="resetForm('purchasing-form')" class="px-4 py-2 border rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100">Reset</button>
+                    <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-extrabold text-xs rounded-xl shadow-sm">Upload Purchase Log</button>
+                </div>
+            </form>
+        </div>
+
+        <section class="mt-8 bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden">
+            <div class="p-5 bg-slate-50 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center space-x-2.5">
+                    <div class="bg-teal-100 p-2 rounded-lg"><i data-lucide="database" class="w-5 h-5 text-teal-700"></i></div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-slate-800">Master Cloud Live Records</h3>
+                        <p class="text-[11px] text-slate-500">Real-time terminal mirror of your Google Sheet workbook.</p>
+                    </div>
+                </div>
+                <div id="sub-tabs-logs" class="flex bg-slate-200 p-1 rounded-xl text-xs font-bold">
+                    <button onclick="switchLogView('spawning')" id="lv-spawn" class="px-3 py-1.5 rounded-lg bg-white text-teal-800 shadow-sm">Spawning</button>
+                    <button onclick="switchLogView('purchasing')" id="lv-purch" class="px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800">Purchases</button>
+                </div>
+            </div>
+
+            <div id="pin-barrier" class="p-12 text-center flex flex-col items-center justify-center max-w-xs mx-auto">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-3 border border-rose-100"><i data-lucide="lock" class="w-5 h-5"></i></div>
+                <h4 class="text-sm font-bold text-slate-800 mb-1">Historical Records Locked</h4>
+                <p class="text-xs text-slate-400 mb-4">Enter your 4-digit manager authorization code to read raw data grids.</p>
+                <div class="flex flex-col w-full gap-2">
+                    <input type="password" id="manager-pin" maxlength="4" placeholder="••••" class="w-full text-center text-lg font-bold py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <button onclick="unlockTerminalLogs()" class="py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition-all">Authorize Access</button>
+                </div>
+            </div>
+
+            <div id="logs-unlocked-panel" class="hidden">
+                <div class="px-5 py-2.5 bg-teal-50/60 border-b flex justify-between items-center text-xs">
+                    <span class="text-teal-900 font-bold flex items-center gap-1"><i data-lucide="unlock" class="w-3.5 h-3.5 text-teal-600 animate-pulse"></i> Manager Session Active</span>
+                    <button onclick="lockTerminalLogs()" class="text-rose-600 hover:text-rose-800 font-bold text-[10px] uppercase tracking-wider">Lock Terminal</button>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-xs font-bold text-slate-700" id="current-log-label">Spawning Trials Workbook</span>
+                        <button onclick="fetchLatestLogs()" class="p-1.5 bg-teal-100 text-teal-700 hover:bg-teal-200 rounded-lg transition-all"><i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                    <div class="overflow-x-auto custom-scrollbar border rounded-xl">
+                        <table id="spawning-log-table" class="min-w-full text-xs text-left text-slate-600">
+                            <thead class="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b">
+                                <tr>
+                                    <th class="px-4 py-3">Trial Date</th><th class="px-4 py-3">Shift window</th><th class="px-4 py-3">Moon/Weather</th><th class="px-4 py-3">Staff Registry</th><th class="px-4 py-3">WQ1 Avg Grid</th><th class="px-4 py-3">WQ2 Avg Grid</th><th class="px-4 py-3">Response Profiles</th><th class="px-4 py-3 text-right">Larval Yield</th>
+                                </tr>
+                            </thead>
+                            <tbody id="spawning-log-body" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                        <table id="purchasing-log-table" class="min-w-full text-xs text-left text-slate-600 hidden">
+                            <thead class="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b">
+                                <tr>
+                                    <th class="px-4 py-3">Intake Date</th><th class="px-4 py-3">Supplier Type</th><th class="px-4 py-3">Moon phase</th><th class="px-4 py-3">Bulk Mass</th><th class="px-4 py-3">Transit Loss</th><th class="px-4 py-3">Quality</th><th class="px-4 py-3">Females Total</th><th class="px-4 py-3">Males Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="purchasing-log-body" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="alert-banner" class="fixed bottom-5 right-5 z-50 transform translate-y-12 opacity-0 transition-all duration-300 max-w-sm w-full bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-start space-x-3 text-xs">
+        <div id="alert-icon-container" class="p-1 rounded-lg text-teal-400"></div>
+        <div class="flex-grow">
+            <h5 id="alert-title" class="font-extrabold">System Alert</h5>
+            <p id="alert-msg" class="text-slate-300 mt-0.5 leading-relaxed"></p>
+        </div>
+    </div>
+
+    <script>
+        const tanksList = ['A', 'B', 'C', 'D', 'E', 'F'];
+        
+        window.addEventListener('load', () => {
+            initializeLayoutHours();
+            buildTankInterfaceRows();
+            lucide.createIcons();
+            
+            const storedUrl = localStorage.getItem('abalone_gas_url');
+            if (storedUrl) {
+                document.getElementById('gas-url').value = storedUrl;
+                toggleConnectionBadgeState(true);
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            ['spawn-date','spawn-period-start-date','spawn-period-end-date','c1-date','c2-date','pur-date'].forEach(id => {
+                document.getElementById(id).value = today;
+            });
+
+            document.getElementById('spawn-period-start-hour').value = "22:00";
+            document.getElementById('spawn-period-end-hour').value = "04:00";
+            document.getElementById('c1-hour').value = "22:00";
+            document.getElementById('c2-hour').value = "03:00";
+
+            calculateSpawningAverages(1);
+            calculateSpawningAverages(2);
+        });
+
+        function initializeLayoutHours() {
+            ['spawn-period-start-hour', 'spawn-period-end-hour', 'c1-hour', 'c2-hour'].forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = '';
+                for(let h=0; h<24; h++) {
+                    let formatted = (h < 10 ? '0' : '') + h + ':00';
+                    select.innerHTML += `<option value="${formatted}">${formatted}</option>`;
+                }
+            });
+        }
+
+        function buildTankInterfaceRows() {
+            const grid1 = document.getElementById('check1-tanks-grid');
+            const grid2 = document.getElementById('check2-tanks-grid');
+            grid1.innerHTML = ''; grid2.innerHTML = '';
+
+            tanksList.forEach(t => {
+                grid1.innerHTML += `
+                    <div class="grid grid-cols-5 gap-1 items-center">
+                        <span class="text-xs font-bold text-teal-800 text-center">Tank ${t}</span>
+                        <input type="number" step="0.1" id="c1-t-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1 text-xs text-center border rounded">
+                        <input type="number" step="0.01" id="c1-d-${t}" oninput="calculateSpawningAverages(1); evaluateDoLimit(this);" placeholder="5.5" class="p-1 text-xs text-center border rounded">
+                        <input type="number" step="0.1" id="c1-p-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1 text-xs text-center border rounded">
+                        <input type="number" step="0.1" id="c1-s-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1 text-xs text-center border rounded">
+                    </div>`;
+                grid2.innerHTML += `
+                    <div class="grid grid-cols-5 gap-1 items-center">
+                        <span class="text-xs font-bold text-cyan-800 text-center">Tank ${t}</span>
+                        <input type="number" step="0.1" id="c2-t-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1 text-xs text-center border rounded">
+                        <input type="number" step="0.01" id="c2-d-${t}" oninput="calculateSpawningAverages(2); evaluateDoLimit(this);" placeholder="5.5" class="p-1 text-xs text-center border rounded">
+                        <input type="number" step="0.1" id="c2-p-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1 text-xs text-center border rounded">
+                        <input type="number" step="0.1" id="c2-s-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1 text-xs text-center border rounded">
+                    </div>`;
+            });
+        }
+
+        function calculateSpawningAverages(num) {
+            const p = `c${num}`;
+            let tS=0, tC=0, dS=0, dC=0, pS=0, pC=0, sS=0, sC=0;
+            tanksList.forEach(t => {
+                const temp = parseFloat(document.getElementById(`${p}-t-${t}`).value);
+                const doVal = parseFloat(document.getElementById(`${p}-d-${t}`).value);
+                const phVal = parseFloat(document.getElementById(`${p}-p-${t}`).value);
+                const sal  = parseFloat(document.getElementById(`${p}-s-${t}`).value);
+                if(!isNaN(temp)){ tS+=temp; tC++; }
+                if(!isNaN(doVal)){ dS+=doVal; dC++; }
+                if(!isNaN(phVal)){ pS+=phVal; pC++; }
+                if(!isNaN(sal)){ sS+=sal; sC++; }
+            });
+            document.getElementById(`${p}-avg-temp`).textContent = tC > 0 ? (tS/tC).toFixed(1)+'°C' : '0.0°C';
+            document.getElementById(`${p}-avg-do`).textContent = dC > 0 ? (dS/dC).toFixed(2) : '0.00';
+            document.getElementById(`${p}-avg-ph`).textContent = pC > 0 ? (pS/pC).toFixed(2) : '0.00';
+            document.getElementById(`${p}-avg-sal`).textContent = sC > 0 ? (sS/sC).toFixed(1)+' ppt' : '0.0 ppt';
+        }
+
+        function calculateTotalSpawnersLive() {
+            let fSum = 0;
+            for(let i=1; i<=4; i++) { fSum += parseInt(document.getElementById(`sf-pcs-${i}`).value) || 0; }
+            let mSum = parseInt(document.getElementById('sm-pcs').value) || 0;
+            document.getElementById('display-female-total').textContent = fSum + " pcs";
+            document.getElementById('display-male-total').textContent = mSum + " pcs";
+            document.getElementById('spawn-total-count').value = fSum + mSum;
+        }
+
+        function calculatePurchasingMetricsLive() {
+            const total = parseFloat(document.getElementById('pur-total-kg').value) || 0;
+            const dead = parseFloat(document.getElementById('pur-dead-kg').value) || 0;
+            if (total > 0) {
+                const mort = (dead / total) * 100;
+                document.getElementById('pur-dead-pct').value = mort.toFixed(2) + "%";
+            }
+            
+            let fPcs=0, fKg=0;
+            ['50','60','70','80','90'].forEach(pct => {
+                fPcs += parseInt(document.getElementById(`pf-${pct}-pcs`).value) || 0;
+                fKg += parseFloat(document.getElementById(`pf-${pct}-kg`).value) || 0;
+            });
+            document.getElementById('f-sum-pcs').textContent = fPcs;
+            document.getElementById('f-sum-kg').textContent = fKg.toFixed(2) + " kg";
+            document.getElementById('f-sum-ratio').textContent = total > 0 ? ((fKg/total)*100).toFixed(2) + "%" : "0.00%";
+
+            const mPcs = parseInt(document.getElementById('pm-pcs').value) || 0;
+            const mKg = parseFloat(document.getElementById('pm-kg').value) || 0;
+            document.getElementById('m-sum-pcs').textContent = mPcs;
+            document.getElementById('m-sum-kg').textContent = mKg.toFixed(2) + " kg";
+            document.getElementById('m-sum-ratio').textContent = total > 0 ? ((mKg/total)*100).toFixed(2) + "%" : "0.00%";
+        }
+
+        function evaluateDoLimit(el) {
+            const v = parseFloat(el.value);
+            if(!isNaN(v) && v < 5.0) el.className = "p-1 text-xs text-center border rounded bg-rose-100 text-rose-700 font-bold border-rose-300 animate-pulse";
+            else el.className = "p-1 text-xs text-center border rounded";
+        }
+
+        function evaluateLimits(el, min, max) {
+            const v = parseFloat(el.value);
+            if(!isNaN(v) && (v < min || v > max)) el.className = "p-1 text-xs text-center border rounded bg-rose-100 text-rose-700 font-bold border-rose-300";
+            else el.className = "p-1 text-xs text-center border rounded";
+        }
+
+        function switchTab(id) {
+            activeTab = id;
+            document.getElementById('tab-btn-spawning').className = id === 'spawning' ? "flex-1 py-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm" : "flex-1 py-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800";
+            document.getElementById('tab-btn-purchasing').className = id === 'purchasing' ? "flex-1 py-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm" : "flex-1 py-3 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800";
+            document.getElementById('tab-content-spawning').className = id === 'spawning' ? "space-y-6" : "hidden";
+            document.getElementById('tab-content-purchasing').className = id === 'purchasing' ? "space-y-6" : "hidden";
+        }
+
+        function switchLogView(type) {
+            activeLogTab = type;
+            document.getElementById('lv-spawn').className = type === 'spawning' ? "px-3 py-1.5 rounded-lg bg-white text-teal-800 shadow-sm" : "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800";
+            document.getElementById('lv-purch').className = type === 'purchasing' ? "px-3 py-1.5 rounded-lg bg-white text-teal-800 shadow-sm" : "px-3 py-1.5 rounded-lg text-slate-500 hover:text-slate-800";
+            document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-xs text-left text-slate-600" : "hidden";
+            document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-xs text-left text-slate-600" : "hidden";
+            document.getElementById('current-log-label').textContent = type === 'spawning' ? "Spawning Trials Workbook" : "Abalone Purchases Workbook";
+            if(isLogsUnlocked) renderTerminalLogsEngine();
+        }
+
+        function toggleConfigDrawer() {
+            const drawer = document.getElementById('config-drawer');
+            const chevron = document.getElementById('config-chevron');
+            drawer.classList.toggle('hidden');
+            chevron.style.transform = drawer.classList.contains('hidden') ? "rotate(0deg)" : "rotate(180deg)";
+        }
+
+        function saveGasUrl() {
+            const url = document.getElementById('gas-url').value.trim();
+            if(url) {
+                localStorage.setItem('abalone_gas_url', url);
+                toggleConnectionBadgeState(true);
+                showSystemToast('success', 'Connection Established', 'Google Sheet secure log synchronization code saved.');
+                toggleConfigDrawer();
+            } else {
+                localStorage.removeItem('abalone_gas_url');
+                toggleConnectionBadgeState(false);
+            }
+        }
+
+        function toggleConnectionBadgeState(state) {
+            const b = document.getElementById('conn-badge');
+            if(state) {
+                b.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center space-x-1";
+                b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span>Connected to Sheets</span>`;
+            } else {
+                b.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center space-x-1";
+                b.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span><span>Standalone Mode</span>`;
+            }
+        }
+
+        function showSystemToast(type, title, msg) {
+            const b = document.getElementById('alert-banner');
+            const icon = document.getElementById('alert-icon-container');
+            document.getElementById('alert-title').textContent = title;
+            document.getElementById('alert-msg').textContent = msg;
+            icon.className = type === 'success' ? "p-1 rounded-lg text-emerald-400 bg-emerald-500/10" : "p-1 rounded-lg text-rose-400 bg-rose-500/10";
+            icon.innerHTML = type === 'success' ? `<i data-lucide="check-circle-2" class="w-4 h-4"></i>` : `<i data-lucide="alert-octagon" class="w-4 h-4"></i>`;
+            lucide.createIcons();
+            b.classList.remove('translate-y-12','opacity-0');
+            setTimeout(() => b.classList.add('translate-y-12','opacity-0'), 4000);
+        }
+
+        function unlockTerminalLogs() {
+            if(document.getElementById('manager-pin').value === '3653') {
+                isLogsUnlocked = true;
+                document.getElementById('pin-barrier').classList.add('hidden');
+                document.getElementById('logs-unlocked-panel').classList.remove('hidden');
+                document.getElementById('manager-pin').value = '';
+                fetchLatestLogs();
+            } else {
+                showSystemToast('error', 'Security Rejection', 'Invalid security token passcode.');
+            }
+        }
+
+        function lockTerminalLogs() {
+            isLogsUnlocked = false;
+            document.getElementById('logs-unlocked-panel').classList.add('hidden');
+            document.getElementById('pin-barrier').classList.remove('hidden');
+        }
+
+        function handleSpawningSubmit(e) {
+            e.preventDefault();
+            const url = localStorage.getItem('abalone_gas_url');
+            if(!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
+            
+            const c1Raw = {}, c2Raw = {};
+            tanksList.forEach(t => {
+                c1Raw[t] = { temp: document.getElementById(`c1-t-${t}`).value, do: document.getElementById(`c1-d-${t}`).value, ph: document.getElementById(`c1-p-${t}`).value, sal: document.getElementById(`c1-s-${t}`).value };
+                c2Raw[t] = { temp: document.getElementById(`c2-t-${t}`).value, do: document.getElementById(`c2-d-${t}`).value, ph: document.getElementById(`c2-p-${t}`).value, sal: document.getElementById(`c2-s-${t}`).value };
+            });
+
+            const payload = {
+                action: 'addSpawning',
+                date: document.getElementById('spawn-date').value,
+                periodStart: `${document.getElementById('spawn-period-start-date').value} ${document.getElementById('spawn-period-start-hour').value}`,
+                periodEnd: `${document.getElementById('spawn-period-end-date').value} ${document.getElementById('spawn-period-end-hour').value}`,
+                moonCycle: document.getElementById('spawn-moon-cycle').value,
+                weather: document.getElementById('spawn-weather').value,
+                inCharge: document.getElementById('spawn-in-charge').value,
+                assistant1: document.getElementById('spawn-assistant-1').value,
+                assistant2: document.getElementById('spawn-assistant-2').value,
+                assistant3: document.getElementById('spawn-assistant-3').value,
+                c1Time: `${document.getElementById('c1-date').value} ${document.getElementById('c1-hour').value}`,
+                c1AvgTemp: document.getElementById('c1-avg-temp').textContent,
+                c1AvgDo: document.getElementById('c1-avg-do').textContent,
+                c1AvgPh: document.getElementById('c1-avg-ph').textContent,
+                c1AvgSal: document.getElementById('c1-avg-sal').textContent,
+                c2Time: `${document.getElementById('c2-date').value} ${document.getElementById('c2-hour').value}`,
+                c2AvgTemp: document.getElementById('c2-avg-temp').textContent,
+                c2AvgDo: document.getElementById('c2-avg-do').textContent,
+                c2AvgPh: document.getElementById('c2-avg-ph').textContent,
+                c2AvgSal: document.getElementById('c2-avg-sal').textContent,
+                f1Mat: document.getElementById('sf-mat-1').value, f1Pcs: document.getElementById('sf-pcs-1').value || 0,
+                f2Mat: document.getElementById('sf-mat-2').value, f2Pcs: document.getElementById('sf-pcs-2').value || 0,
+                f3Mat: document.getElementById('sf-mat-3').value, f3Pcs: document.getElementById('sf-pcs-3').value || 0,
+                f4Mat: document.getElementById('sf-mat-4').value, f4Pcs: document.getElementById('sf-pcs-4').value || 0,
+                maleMat: document.getElementById('spawn-male-mat').value, malePcs: document.getElementById('sm-pcs').value || 0,
+                totalSpawners: document.getElementById('spawn-total-count').value,
+                spermTime: document.getElementById('sperm-release-time').value,
+                eggTimeFrom: document.getElementById('egg-laying-from').value,
+                eggTimeTo: document.getElementById('egg-laying-to').value,
+                statusOutcome: document.getElementById('spawn-status-outcome').value,
+                totalEggs: document.getElementById('total-collected-eggs').value,
+                eggQuality: document.getElementById('egg-quality').value,
+                c1Raw: JSON.stringify(c1Raw), c2Raw: JSON.stringify(c2Raw)
+            };
+            transmitToCloud(url, payload, () => resetForm('spawning-form'));
+        }
+
+        function handlePurchasingSubmit(e) {
+            e.preventDefault();
+            const url = localStorage.getItem('abalone_gas_url');
+            if(!url) return;
+            const payload = {
+                action: 'addPurchasing',
+                date: document.getElementById('pur-date').value,
+                supplierCat: document.getElementById('pur-supplier-cat').value,
+                moon: document.getElementById('pur-moon').value,
+                totalKg: document.getElementById('pur-total-kg').value,
+                deadKg: document.getElementById('pur-dead-kg').value,
+                deadPct: document.getElementById('pur-dead-pct').value,
+                quality: document.getElementById('pur-quality').value,
+                f50Pcs: document.getElementById('pf-50-pcs').value || 0, f50Kg: document.getElementById('pf-50-kg').value || 0,
+                f60Pcs: document.getElementById('pf-60-pcs').value || 0, f60Kg: document.getElementById('pf-60-kg').value || 0,
+                f70Pcs: document.getElementById('pf-70-pcs').value || 0, f70Kg: document.getElementById('pf-70-kg').value || 0,
+                f80Pcs: document.getElementById('pf-80-pcs').value || 0, f80Kg: document.getElementById('pf-80-kg').value || 0,
+                f90Pcs: document.getElementById('pf-90-pcs').value || 0, f90Kg: document.getElementById('pf-90-kg').value || 0,
+                femaleSumPcs: document.getElementById('f-sum-pcs').textContent,
+                femaleSumKg: document.getElementById('f-sum-kg').textContent,
+                femaleSumRatio: document.getElementById('f-sum-ratio').textContent,
+                malePcs: document.getElementById('pm-pcs').value || 0,
+                maleKg: document.getElementById('pm-kg').value || 0,
+                maleSumRatio: document.getElementById('m-sum-ratio').textContent
+            };
+            transmitToCloud(url, payload, () => resetForm('purchasing-form'));
+        }
+
+        function transmitToCloud(url, p, cb) {
+            showSystemToast('success', 'Sync Active', 'Transmitting package to private server endpoint...');
+            const param = new URLSearchParams({ payload: JSON.stringify(p) }).toString();
+            fetch(`${url}?${param}`, { method: 'GET', mode: 'cors' })
+            .then(res => res.json())
+            .then(d => {
+                if(d.status === 'success') { showSystemToast('success', 'Approved', 'Row written to Google Sheet.'); cb(); if(isLogsUnlocked) fetchLatestLogs(); }
+                else showSystemToast('error', 'Execution Fail', d.message);
+            }).catch(err => showSystemToast('error', 'Interface Lost', 'Network link exception. Check script permissions.'));
+        }
+
+        function fetchLatestLogs() {
+            const url = localStorage.getItem('abalone_gas_url');
+            if(!url) return;
+            fetch(`${url}?action=getLogs&pin=3653`, { method: 'GET', mode: 'cors' })
+            .then(res => res.json()).then(d => {
+                if(d.status === 'success') { cachedSpawning = d.spawning; cachedPurchasing = d.purchasing; renderTerminalLogsEngine(); }
+            });
+        }
+
+        function renderTerminalLogsEngine() {
+            if(activeLogTab === 'spawning') {
+                const tbody = document.getElementById('spawning-log-body');
+                tbody.innerHTML = cachedSpawning.map(r => `
+                    <tr class="hover:bg-slate-50 border-b">
+                        <td class="px-4 py-3 font-bold">${r.date}</td>
+                        <td class="px-4 py-3 text-slate-500">${r.periodStart} to ${r.periodEnd}</td>
+                        <td class="px-4 py-3">${r.moonCycle} <span class="block text-[10px] text-slate-400">${r.weather}</span></td>
+                        <td class="px-4 py-3 font-medium">${r.inCharge} <span class="block text-[10px] text-slate-400">${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
+                        <td class="px-4 py-3 text-teal-700 font-bold">${r.wq1AvgDo} / ${r.wq1AvgTemp}</td>
+                        <td class="px-4 py-3 text-cyan-700 font-bold">${r.wq2AvgDo} / ${r.wq2AvgTemp}</td>
+                        <td class="px-4 py-3 font-semibold"><span class="px-1.5 py-0.5 rounded text-[10px] uppercase bg-teal-100 text-teal-800">${r.statusOutcome}</span></td>
+                        <td class="px-4 py-3 font-extrabold text-teal-950 text-right">${Number(r.totalEggs).toLocaleString()} <span class="block font-medium text-slate-400 text-[10px]">Quality: ${r.eggQuality}</span></td>
+                    </tr>`).join('');
+            } else {
+                const tbody = document.getElementById('purchasing-log-body');
+                tbody.innerHTML = cachedPurchasing.map(r => `
+                    <tr class="hover:bg-slate-50 border-b">
+                        <td class="px-4 py-3 font-bold">${r.date}</td>
+                        <td class="px-4 py-3 font-medium">${r.supplierCategory}</td>
+                        <td class="px-4 py-3 text-slate-400">${r.moonPhase}</td>
+                        <td class="px-4 py-3 font-bold">${r.totalBatchWeightKg} kg</td>
+                        <td class="px-4 py-3">${r.deadWeightKg} kg</td>
+                        <td class="px-4 py-3 text-rose-600 font-bold">${r.mortality}</td>
+                        <td class="px-4 py-3"><span class="px-2 py-0.5 border rounded text-[10px] font-bold bg-slate-50">${r.overallQuality}</span></td>
+                        <td class="px-4 py-3 text-teal-900 font-extrabold">${r.totalFemalesPcs} <span class="block font-normal text-slate-400 text-[10px]">${r.totalFemalesKg} (${r.femaleWeightRatio})</span></td>
+                        <td class="px-4 py-3 text-cyan-900 font-extrabold">${r.totalMalesPcs} <span class="block font-normal text-slate-400 text-[10px]">${r.totalMalesKg} (${r.maleWeightRatio})</span></td>
+                    </tr>`).join('');
+            }
+        }
+
+        function fillMockSpawning() {
+            document.getElementById('spawn-in-charge').value = "Popo";
+            document.getElementById('spawn-assistant-1').value = "Irwanshah";
+            document.getElementById('spawn-assistant-2').value = "Dennivis";
+            document.getElementById('spawn-moon-cycle').value = "New Moon";
+            document.getElementById('spawn-weather').value = "Dark sky";
+            tanksList.forEach(t => {
+                document.getElementById(`c1-t-${t}`).value = 30.1; document.getElementById(`c1-d-${t}`).value = 5.65; document.getElementById(`c1-p-${t}`).value = 8.3; document.getElementById(`c1-s-${t}`).value = 34.0;
+                document.getElementById(`c2-t-${t}`).value = 30.4; document.getElementById(`c2-d-${t}`).value = 5.70; document.getElementById(`c2-p-${t}`).value = 8.2; document.getElementById(`c2-s-${t}`).value = 34.1;
+            });
+            document.getElementById('sf-pcs-1').value = 16;
+            document.getElementById('sm-pcs').value = 10;
+            document.getElementById('sperm-release-time').value = "01:30";
+            document.getElementById('egg-laying-from').value = "02:30";
+            document.getElementById('egg-laying-to').value = "03:30";
+            document.getElementById('spawn-status-outcome').value = "Successful";
+            document.getElementById('total-collected-eggs').value = 4835333;
+            document.getElementById('egg-quality').value = "Good";
+            calculateSpawningAverages(1); calculateSpawningAverages(2); calculateTotalSpawnersLive();
+        }
+
+        function fillMockPurchasing() {
+            document.getElementById('pur-supplier-cat').value = "Existing Supplier";
+            document.getElementById('pur-moon').value = "Full Moon";
+            document.getElementById('pur-total-kg').value = 25.0;
+            document.getElementById('pur-dead-kg').value = 0.85;
+            document.getElementById('pur-quality').value = "Excellent";
+            document.getElementById('pf-80-pcs').value = 84; document.getElementById('pf-80-kg').value = 12.4;
+            document.getElementById('pm-pcs').value = 40; document.getElementById('pm-kg').value = 3.8;
+            calculatePurchasingMetricsLive();
+        }
+
+        function resetForm(id) {
+            document.getElementById(id).reset();
+            if(id === 'spawning-form') { buildTankInterfaceRows(); calculateSpawningAverages(1); calculateSpawningAverages(2); calculateTotalSpawnersLive(); }
+            else calculatePurchasingMetricsLive();
+        }
+    </script>
+</body>
+</html>

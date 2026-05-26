@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -188,7 +188,7 @@
                                         <div>Tank</div><div>Temp (°C)</div><div>DO (mg/L)</div><div>pH</div><div>Sal (ppt)</div>
                                     </div>
                                     <div id="check2-tanks-grid" class="space-y-1"></div>
-                                    <div class="bg-cyan-50/80 p-2 rounded-xl grid grid-cols-4 gap-1 text-center text-[10px] font-extrabold text-cyan-950 mt-2">
+                                    <div class="bg-cyan-50/80 p-2 rounded-xl grid grid-cols-4 gap-1 text-center text-[10px] font-extrabold text-cyan-955 mt-2">
                                         <div>T: <span id="c2-avg-temp" class="text-cyan-700 block font-bold">0.0°C</span></div>
                                         <div>DO: <span id="c2-avg-do" class="text-cyan-700 block font-bold">0.00</span></div>
                                         <div>pH: <span id="c2-avg-ph" class="text-cyan-700 block font-bold">0.00</span></div>
@@ -485,7 +485,15 @@
                         <table id="purchasing-log-table" class="min-w-full text-xs text-left text-slate-600 hidden">
                             <thead class="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b">
                                 <tr>
-                                    <th class="px-4 py-3">Intake Date</th><th class="px-4 py-3">Supplier Type</th><th class="px-4 py-3">Moon phase</th><th class="px-4 py-3">Bulk Mass</th><th class="px-4 py-3">Transit Loss</th><th class="px-4 py-3">Quality</th><th class="px-4 py-3">Females Total</th><th class="px-4 py-3">Males Total</th>
+                                    <th class="px-4 py-3">Intake Date</th>
+                                    <th class="px-4 py-3">Supplier Type</th>
+                                    <th class="px-4 py-3">Moon phase</th>
+                                    <th class="px-4 py-3">Bulk Mass</th>
+                                    <th class="px-4 py-3">Dead Weight</th>
+                                    <th class="px-4 py-3">Mortality %</th>
+                                    <th class="px-4 py-3">Quality</th>
+                                    <th class="px-4 py-3">Females Total</th>
+                                    <th class="px-4 py-3">Males Total</th>
                                 </tr>
                             </thead>
                             <tbody id="purchasing-log-body" class="divide-y divide-slate-100"></tbody>
@@ -506,6 +514,11 @@
 
     <script>
         const tanksList = ['A', 'B', 'C', 'D', 'E', 'F'];
+        let cachedSpawning = [];
+        let cachedPurchasing = [];
+        let activeTab = 'spawning';
+        let activeLogTab = 'spawning';
+        let isLogsUnlocked = false;
         
         window.addEventListener('load', () => {
             initializeLayoutHours();
@@ -747,7 +760,7 @@
                 f2Mat: document.getElementById('sf-mat-2').value, f2Pcs: document.getElementById('sf-pcs-2').value || 0,
                 f3Mat: document.getElementById('sf-mat-3').value, f3Pcs: document.getElementById('sf-pcs-3').value || 0,
                 f4Mat: document.getElementById('sf-mat-4').value, f4Pcs: document.getElementById('sf-pcs-4').value || 0,
-                maleMat: document.getElementById('spawn-male-mat').value, malePcs: document.getElementById('sm-pcs').value || 0,
+                maleMat: document.getElementById('sm-mat').value, malePcs: document.getElementById('sm-pcs').value || 0,
                 totalSpawners: document.getElementById('spawn-total-count').value,
                 spermTime: document.getElementById('sperm-release-time').value,
                 eggTimeFrom: document.getElementById('egg-laying-from').value,
@@ -794,7 +807,13 @@
             fetch(`${url}?${param}`, { method: 'GET', mode: 'cors' })
             .then(res => res.json())
             .then(d => {
-                if(d.status === 'success') { showSystemToast('success', 'Approved', 'Row written to Google Sheet.'); cb(); if(isLogsUnlocked) fetchLatestLogs(); }
+                if(d.status === 'success') { 
+                    showSystemToast('success', 'Approved', 'Row written to Google Sheet.'); 
+                    cb(); 
+                    if(isLogsUnlocked) {
+                        fetchLatestLogs(); 
+                    }
+                }
                 else showSystemToast('error', 'Execution Fail', d.message);
             }).catch(err => showSystemToast('error', 'Interface Lost', 'Network link exception. Check script permissions.'));
         }
@@ -802,39 +821,72 @@
         function fetchLatestLogs() {
             const url = localStorage.getItem('abalone_gas_url');
             if(!url) return;
+            
+            document.getElementById('spawning-log-body').innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-teal-600 font-bold animate-pulse">Syncing dynamic logs...</td></tr>`;
+            document.getElementById('purchasing-log-body').innerHTML = `<tr><td colspan="9" class="px-4 py-8 text-center text-teal-600 font-bold animate-pulse">Syncing dynamic logs...</td></tr>`;
+
             fetch(`${url}?action=getLogs&pin=3653`, { method: 'GET', mode: 'cors' })
             .then(res => res.json()).then(d => {
-                if(d.status === 'success') { cachedSpawning = d.spawning; cachedPurchasing = d.purchasing; renderTerminalLogsEngine(); }
+                if(d.status === 'success') { 
+                    cachedSpawning = d.spawning || []; 
+                    cachedPurchasing = d.purchasing || []; 
+                    renderTerminalLogsEngine(); 
+                }
+            }).catch(err => {
+                showSystemToast('error', 'Terminal Read Exception', 'Error reading dataset rows from spreadsheet.');
             });
         }
 
         function renderTerminalLogsEngine() {
             if(activeLogTab === 'spawning') {
                 const tbody = document.getElementById('spawning-log-body');
-                tbody.innerHTML = cachedSpawning.map(r => `
+                if(!cachedSpawning || cachedSpawning.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-slate-400 font-medium">No recorded Spawning logs located inside spreadsheet.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = cachedSpawning.map(r => {
+                    const fNotes = [];
+                    if (r.f1Pcs && parseInt(r.f1Pcs) > 0) fNotes.push(`${r.f1Mat}: ${r.f1Pcs}pcs`);
+                    if (r.f2Pcs && parseInt(r.f2Pcs) > 0) fNotes.push(`${r.f2Mat}: ${r.f2Pcs}pcs`);
+                    if (r.f3Pcs && parseInt(r.f3Pcs) > 0) fNotes.push(`${r.f3Mat}: ${r.f3Pcs}pcs`);
+                    if (r.f4Pcs && parseInt(r.f4Pcs) > 0) fNotes.push(`${r.f4Mat}: ${r.f4Pcs}pcs`);
+                    const fStr = fNotes.join(' | ') || 'None';
+                    const mStr = r.malePcs && parseInt(r.malePcs) > 0 ? `${r.maleMat || '80%'}: ${r.malePcs}pcs` : 'None';
+
+                    return `
                     <tr class="hover:bg-slate-50 border-b">
-                        <td class="px-4 py-3 font-bold">${r.date}</td>
-                        <td class="px-4 py-3 text-slate-500">${r.periodStart} to ${r.periodEnd}</td>
-                        <td class="px-4 py-3">${r.moonCycle} <span class="block text-[10px] text-slate-400">${r.weather}</span></td>
-                        <td class="px-4 py-3 font-medium">${r.inCharge} <span class="block text-[10px] text-slate-400">${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
-                        <td class="px-4 py-3 text-teal-700 font-bold">${r.wq1AvgDo} / ${r.wq1AvgTemp}</td>
-                        <td class="px-4 py-3 text-cyan-700 font-bold">${r.wq2AvgDo} / ${r.wq2AvgTemp}</td>
-                        <td class="px-4 py-3 font-semibold"><span class="px-1.5 py-0.5 rounded text-[10px] uppercase bg-teal-100 text-teal-800">${r.statusOutcome}</span></td>
-                        <td class="px-4 py-3 font-extrabold text-teal-950 text-right">${Number(r.totalEggs).toLocaleString()} <span class="block font-medium text-slate-400 text-[10px]">Quality: ${r.eggQuality}</span></td>
-                    </tr>`).join('');
+                        <td class="px-4 py-3 font-bold">${r.date || ''}</td>
+                        <td class="px-4 py-3 text-slate-500">${r.periodStart || ''} to ${r.periodEnd || ''}</td>
+                        <td class="px-4 py-3">${r.moonCycle || ''} <span class="block text-[10px] text-slate-400">${r.weather || ''}</span></td>
+                        <td class="px-4 py-3 font-medium">${r.inCharge || ''} <span class="block text-[10px] text-slate-400">${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
+                        <td class="px-4 py-3 text-teal-700 font-bold">${r.c1AvgDo || '0.00'} / ${r.c1AvgTemp || '0.0°C'}</td>
+                        <td class="px-4 py-3 text-cyan-700 font-bold">${r.c2AvgDo || '0.00'} / ${r.c2AvgTemp || '0.0°C'}</td>
+                        <td class="px-4 py-3">
+                            <span class="px-1.5 py-0.5 rounded text-[10px] uppercase font-bold bg-teal-100 text-teal-800">${r.statusOutcome || 'Unknown'}</span>
+                            <div class="text-[10px] text-slate-400 mt-1">F: ${fStr}</div>
+                            <div class="text-[10px] text-slate-400">M: ${mStr}</div>
+                            <div class="text-[10px] font-bold text-slate-700">Total Spawners: ${r.totalSpawners || '0'}</div>
+                        </td>
+                        <td class="px-4 py-3 font-extrabold text-teal-950 text-right">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-medium text-slate-400 text-[10px]">Quality: ${r.eggQuality || ''}</span></td>
+                    </tr>`;
+                }).join('');
             } else {
                 const tbody = document.getElementById('purchasing-log-body');
+                if(!cachedPurchasing || cachedPurchasing.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="9" class="px-4 py-8 text-center text-slate-400 font-medium">No recorded Purchasing logs located inside spreadsheet.</td></tr>`;
+                    return;
+                }
                 tbody.innerHTML = cachedPurchasing.map(r => `
                     <tr class="hover:bg-slate-50 border-b">
-                        <td class="px-4 py-3 font-bold">${r.date}</td>
-                        <td class="px-4 py-3 font-medium">${r.supplierCategory}</td>
-                        <td class="px-4 py-3 text-slate-400">${r.moonPhase}</td>
-                        <td class="px-4 py-3 font-bold">${r.totalBatchWeightKg} kg</td>
-                        <td class="px-4 py-3">${r.deadWeightKg} kg</td>
-                        <td class="px-4 py-3 text-rose-600 font-bold">${r.mortality}</td>
-                        <td class="px-4 py-3"><span class="px-2 py-0.5 border rounded text-[10px] font-bold bg-slate-50">${r.overallQuality}</span></td>
-                        <td class="px-4 py-3 text-teal-900 font-extrabold">${r.totalFemalesPcs} <span class="block font-normal text-slate-400 text-[10px]">${r.totalFemalesKg} (${r.femaleWeightRatio})</span></td>
-                        <td class="px-4 py-3 text-cyan-900 font-extrabold">${r.totalMalesPcs} <span class="block font-normal text-slate-400 text-[10px]">${r.totalMalesKg} (${r.maleWeightRatio})</span></td>
+                        <td class="px-4 py-3 font-bold">${r.date || ''}</td>
+                        <td class="px-4 py-3 font-medium">${r.supplierCategory || ''}</td>
+                        <td class="px-4 py-3 text-slate-400">${r.moonPhase || ''}</td>
+                        <td class="px-4 py-3 font-bold">${r.totalBatchWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3">${r.deadWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3 text-rose-600 font-bold">${r.mortality || '0.00%'}</td>
+                        <td class="px-4 py-3"><span class="px-2 py-0.5 border rounded text-[10px] font-bold bg-slate-50">${r.overallQuality || ''}</span></td>
+                        <td class="px-4 py-3 text-teal-900 font-extrabold">${r.totalFemalesPcs || '0'} pcs <span class="block font-normal text-slate-400 text-[10px]">${r.totalFemalesKg || '0.00 kg'} (${r.femaleWeightRatio || '0.00%'})</span></td>
+                        <td class="px-4 py-3 text-cyan-900 font-extrabold">${r.totalMalesPcs || '0'} pcs <span class="block font-normal text-slate-400 text-[10px]">${r.totalMalesKg || '0.00 kg'} (${r.maleWeightRatio || '0.00%'})</span></td>
                     </tr>`).join('');
             }
         }
@@ -843,21 +895,52 @@
             document.getElementById('spawn-in-charge').value = "Popo";
             document.getElementById('spawn-assistant-1').value = "Irwanshah";
             document.getElementById('spawn-assistant-2').value = "Dennivis";
+            document.getElementById('spawn-assistant-3').value = "";
             document.getElementById('spawn-moon-cycle').value = "New Moon";
             document.getElementById('spawn-weather').value = "Dark sky";
-            tanksList.forEach(t => {
-                document.getElementById(`c1-t-${t}`).value = 30.1; document.getElementById(`c1-d-${t}`).value = 5.65; document.getElementById(`c1-p-${t}`).value = 8.3; document.getElementById(`c1-s-${t}`).value = 34.0;
-                document.getElementById(`c2-t-${t}`).value = 30.4; document.getElementById(`c2-d-${t}`).value = 5.70; document.getElementById(`c2-p-${t}`).value = 8.2; document.getElementById(`c2-s-${t}`).value = 34.1;
+            
+            const c1Temps = [30.1, 30.1, 30.1, 30.1, 30.1, 30.1];
+            const c1Dos = [5.67, 5.72, 5.68, 5.57, 5.60, 5.68];
+            const c1Phs = [8.3, 8.3, 8.4, 8.3, 8.3, 8.4];
+            const c1Sals = [34.2, 34.0, 34.1, 34.5, 34.0, 34.2];
+
+            const c2Temps = [30.4, 30.4, 30.4, 30.4, 30.4, 30.4];
+            const c2Dos = [5.63, 5.76, 5.76, 5.61, 5.80, 5.57];
+            const c2Phs = [8.2, 8.3, 8.2, 8.2, 8.3, 8.2];
+            const c2Sals = [34.0, 34.1, 34.0, 34.2, 34.1, 34.0];
+
+            tanksList.forEach((t, idx) => {
+                document.getElementById(`c1-t-${t}`).value = c1Temps[idx]; 
+                document.getElementById(`c1-d-${t}`).value = c1Dos[idx]; 
+                document.getElementById(`c1-p-${t}`).value = c1Phs[idx]; 
+                document.getElementById(`c1-s-${t}`).value = c1Sals[idx];
+                
+                document.getElementById(`c2-t-${t}`).value = c2Temps[idx]; 
+                document.getElementById(`c2-d-${t}`).value = c2Dos[idx]; 
+                document.getElementById(`c2-p-${t}`).value = c2Phs[idx]; 
+                document.getElementById(`c2-s-${t}`).value = c2Sals[idx];
             });
+            
+            document.getElementById('sf-mat-1').value = "80%";
             document.getElementById('sf-pcs-1').value = 16;
+            document.getElementById('sf-pcs-2').value = "";
+            document.getElementById('sf-pcs-3').value = "";
+            document.getElementById('sf-pcs-4').value = "";
+            
+            document.getElementById('sm-mat').value = "80%";
             document.getElementById('sm-pcs').value = 10;
+            
             document.getElementById('sperm-release-time').value = "01:30";
             document.getElementById('egg-laying-from').value = "02:30";
             document.getElementById('egg-laying-to').value = "03:30";
             document.getElementById('spawn-status-outcome').value = "Successful";
             document.getElementById('total-collected-eggs').value = 4835333;
             document.getElementById('egg-quality').value = "Good";
-            calculateSpawningAverages(1); calculateSpawningAverages(2); calculateTotalSpawnersLive();
+            
+            calculateSpawningAverages(1); 
+            calculateSpawningAverages(2); 
+            calculateTotalSpawnersLive();
+            showSystemToast('success', 'Report Loaded', 'Loaded the official Spawning parameters from April 16th.');
         }
 
         function fillMockPurchasing() {
@@ -866,15 +949,24 @@
             document.getElementById('pur-total-kg').value = 25.0;
             document.getElementById('pur-dead-kg').value = 0.85;
             document.getElementById('pur-quality').value = "Excellent";
-            document.getElementById('pf-80-pcs').value = 84; document.getElementById('pf-80-kg').value = 12.4;
-            document.getElementById('pm-pcs').value = 40; document.getElementById('pm-kg').value = 3.8;
+            document.getElementById('pf-80-pcs').value = 84; 
+            document.getElementById('pf-80-kg').value = 12.4;
+            document.getElementById('pm-pcs').value = 40; 
+            document.getElementById('pm-kg').value = 3.8;
             calculatePurchasingMetricsLive();
+            showSystemToast('success', 'Intake Loaded', 'Loaded mock purchasing metrics and batch distribution.');
         }
 
         function resetForm(id) {
             document.getElementById(id).reset();
-            if(id === 'spawning-form') { buildTankInterfaceRows(); calculateSpawningAverages(1); calculateSpawningAverages(2); calculateTotalSpawnersLive(); }
-            else calculatePurchasingMetricsLive();
+            if(id === 'spawning-form') { 
+                buildTankInterfaceRows(); 
+                calculateSpawningAverages(1); 
+                calculateSpawningAverages(2); 
+                calculateTotalSpawnersLive(); 
+            } else {
+                calculatePurchasingMetricsLive();
+            }
         }
     </script>
 </body>

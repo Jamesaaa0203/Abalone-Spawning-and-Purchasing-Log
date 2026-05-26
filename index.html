@@ -12,20 +12,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.2s, color 0.2s; }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
         
-        /* Theme Overrides */
+        /* High-Contrast Premium Dark Theme Rules */
         .theme-light { background-image: linear-gradient(to bottom right, #f8fafc, #f0fdfa); color: #1e293b; }
-        .theme-dark { background-image: none; background-color: #0f172a; color: #f1f5f9; }
-        .theme-dark .bg-white { background-color: #1e293b; border-color: #334155; color: #f1f5f9; }
-        .theme-dark input, .theme-dark select { background-color: #334155; border-color: #475569; color: #fff; }
-        .theme-dark .bg-slate-50, .theme-dark .bg-slate-100 { background-color: #1e293b; }
-        .theme-dark .border-slate-200 { border-color: #334155; }
-        .theme-dark th { background-color: #334155; color: #94a3b8; border-color: #475569; }
-        .theme-dark td { border-color: #334155; }
+        
+        .theme-dark { background-color: #0f172a; color: #f8fafc; }
+        .theme-dark .bg-white { background-color: #1e293b !important; border-color: #334155 !important; color: #f8fafc !important; }
+        .theme-dark input, .theme-dark select { background-color: #1e293b !important; border-color: #475569 !important; color: #ffffff !important; }
+        .theme-dark label { color: #cbd5e1 !important; }
+        .theme-dark span.text-slate-700, .theme-dark span.text-slate-500 { color: #94a3b8 !important; }
+        .theme-dark .bg-slate-50, .theme-dark .bg-slate-100 { background-color: #1e293b !important; border-color: #334155 !important; }
+        .theme-dark .border-slate-200 { border-color: #334155 !important; }
+        .theme-dark th { background-color: #334155 !important; color: #cbd5e1 !important; border-color: #475569 !important; }
+        .theme-dark td { border-color: #334155 !important; color: #e2e8f0 !important; }
+        .theme-dark tr:hover { background-color: #334155 / 50 !important; }
+        .theme-dark hr { border-color: #334155 !important; }
     </style>
 </head>
 <body class="theme-light min-h-screen pb-16">
@@ -75,7 +80,7 @@
             </div>
         </section>
 
-        <div class="flex flex-col sm:flex-row bg-slate-100 dark-bg-adjust p-1.5 rounded-2xl mb-6 shadow-inner border border-slate-200 max-w-6xl mx-auto gap-1.5">
+        <div class="flex flex-col sm:flex-row bg-slate-100 p-1.5 rounded-2xl mb-6 shadow-inner border border-slate-200 max-w-6xl mx-auto gap-1.5" id="nav-frame">
             <button onclick="switchTab('spawning')" id="tab-btn-spawning" class="flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm border border-slate-200/50">
                 <i data-lucide="sparkles" class="w-4 h-4 text-teal-600"></i>
                 <span>Spawning Trials</span>
@@ -94,7 +99,7 @@
             <form id="spawning-form" onsubmit="handleSpawningSubmit(event)" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center header-adjust">
                     <div>
-                        <h3 class="text-base font-extrabold text-teal-950 flex items-center gap-2">Spawning Trial Entry <span id="draft-indicator" class="hidden text-[10px] bg-teal-200/50 text-teal-800 px-2 py-0.5 rounded-full">Draft Auto-Saved</span></h3>
+                        <h3 class="text-base font-extrabold text-teal-950 flex items-center gap-2" id="spawn-entry-title">Spawning Trial Entry <span id="draft-indicator" class="hidden text-[10px] bg-teal-200/50 text-teal-800 px-2 py-0.5 rounded-full">Draft Auto-Saved</span></h3>
                     </div>
                 </div>
 
@@ -172,7 +177,7 @@
                             <div class="border border-teal-200 rounded-xl overflow-hidden bg-white shadow-sm">
                                 <div class="bg-teal-50 px-4 py-2.5 flex justify-between items-center border-b border-teal-100 header-adjust">
                                     <span class="text-xs font-black text-teal-900 tracking-wider uppercase">WQ Check 1</span>
-                                    <input type="time" id="c1-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold">
+                                    <input type="time" id="c1-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold text-slate-800">
                                 </div>
                                 <div class="p-3 space-y-2">
                                     <div class="grid grid-cols-5 gap-1.5 text-[10px] font-black text-slate-500 uppercase text-center pb-1.5 border-b">
@@ -180,10 +185,10 @@
                                     </div>
                                     <div id="check1-tanks-grid" class="space-y-1.5"></div>
                                     <div class="bg-teal-100/60 p-2.5 rounded-lg grid grid-cols-4 gap-1.5 text-center text-[11px] font-black text-teal-950 mt-3 border border-teal-200">
-                                        <div>T: <span id="c1-avg-temp" class="text-teal-700 block text-xs mt-0.5">0.0°C</span></div>
-                                        <div>DO: <span id="c1-avg-do" class="text-teal-700 block text-xs mt-0.5">0.00</span></div>
-                                        <div>pH: <span id="c1-avg-ph" class="text-teal-700 block text-xs mt-0.5">0.00</span></div>
-                                        <div>Sal: <span id="c1-avg-sal" class="text-teal-700 block text-xs mt-0.5">0.0</span></div>
+                                        <div>T: <span id="c1-avg-temp" class="text-teal-800 block text-xs mt-0.5 font-bold">0.0°C</span></div>
+                                        <div>DO: <span id="c1-avg-do" class="text-teal-800 block text-xs mt-0.5 font-bold">0.00</span></div>
+                                        <div>pH: <span id="c1-avg-ph" class="text-teal-800 block text-xs mt-0.5 font-bold">0.00</span></div>
+                                        <div>Sal: <span id="c1-avg-sal" class="text-teal-800 block text-xs mt-0.5 font-bold">0.0</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -191,7 +196,7 @@
                             <div class="border border-cyan-200 rounded-xl overflow-hidden bg-white shadow-sm">
                                 <div class="bg-cyan-50 px-4 py-2.5 flex justify-between items-center border-b border-cyan-100 header-adjust">
                                     <span class="text-xs font-black text-cyan-900 tracking-wider uppercase">WQ Check 2</span>
-                                    <input type="time" id="c2-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold">
+                                    <input type="time" id="c2-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold text-slate-800">
                                 </div>
                                 <div class="p-3 space-y-2">
                                     <div class="grid grid-cols-5 gap-1.5 text-[10px] font-black text-slate-500 uppercase text-center pb-1.5 border-b">
@@ -199,10 +204,10 @@
                                     </div>
                                     <div id="check2-tanks-grid" class="space-y-1.5"></div>
                                     <div class="bg-cyan-100/60 p-2.5 rounded-lg grid grid-cols-4 gap-1.5 text-center text-[11px] font-black text-cyan-950 mt-3 border border-cyan-200">
-                                        <div>T: <span id="c2-avg-temp" class="text-cyan-700 block text-xs mt-0.5">0.0°C</span></div>
-                                        <div>DO: <span id="c2-avg-do" class="text-cyan-700 block text-xs mt-0.5">0.00</span></div>
-                                        <div>pH: <span id="c2-avg-ph" class="text-cyan-700 block text-xs mt-0.5">0.00</span></div>
-                                        <div>Sal: <span id="c2-avg-sal" class="text-cyan-700 block text-xs mt-0.5">0.0</span></div>
+                                        <div>T: <span id="c2-avg-temp" class="text-cyan-800 block text-xs mt-0.5 font-bold">0.0°C</span></div>
+                                        <div>DO: <span id="c2-avg-do" class="text-cyan-800 block text-xs mt-0.5 font-bold">0.00</span></div>
+                                        <div>pH: <span id="c2-avg-ph" class="text-cyan-800 block text-xs mt-0.5 font-bold">0.00</span></div>
+                                        <div>Sal: <span id="c2-avg-sal" class="text-cyan-800 block text-xs mt-0.5 font-bold">0.0</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -228,7 +233,7 @@
                                     <div class="grid grid-cols-2 gap-3"><select id="sf-mat-4" class="p-2 text-xs border bg-slate-50 rounded-lg font-bold"><option value="60%">60% Maturity</option><option value="50%">50%</option><option value="70%">70%</option><option value="80%">80%</option><option value="90%">90%</option></select><input type="number" id="sf-pcs-4" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-2 text-xs text-center border rounded-lg font-black bg-white"></div>
                                 </div>
                                 <div class="text-xs font-black text-teal-900 bg-teal-50 border border-teal-100 p-3 rounded-lg flex justify-between mt-2">
-                                    <span>Females Combined:</span><span id="display-female-total" class="text-sm">0 pcs</span>
+                                    <span class="text-slate-700">Females Combined:</span><span id="display-female-total" class="text-sm font-bold text-teal-800">0 pcs</span>
                                 </div>
                             </div>
 
@@ -249,7 +254,7 @@
                                     </div>
                                 </div>
                                 <div class="text-xs font-black text-cyan-900 bg-cyan-50 border border-cyan-100 p-3 rounded-lg flex justify-between mt-4">
-                                    <span>Males Combined:</span><span id="display-male-total" class="text-sm">0 pcs</span>
+                                    <span class="text-slate-700">Males Combined:</span><span id="display-male-total" class="text-sm font-bold text-cyan-800">0 pcs</span>
                                 </div>
                             </div>
                         </div>
@@ -280,7 +285,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <div>
                                 <label class="block text-[10px] font-black text-slate-700 mb-1.5 uppercase tracking-wider">Spawning Outcome</label>
-                                <select id="spawn-status-outcome" onchange="toggleOutcomeLockState(this.value)" required class="w-full p-2.5 text-xs border-2 rounded-lg font-black transition-colors shadow-sm bg-white border-slate-300 text-slate-800">
+                                <select id="spawn-status-outcome" onchange="toggleOutcomeLockState(this.value)" required class="w-full p-2.5 text-xs border-2 rounded-lg font-black transition-all shadow-sm bg-white border-slate-300 text-slate-800">
                                     <option value="">Choose Outcome</option>
                                     <option value="Successful">Successful</option>
                                     <option value="No Sperm & Eggs">No Sperm & Eggs</option>
@@ -356,7 +361,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Total Weight (kg)</label>
-                                <input type="number" step="0.01" id="pur-total-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-2.5 text-sm border-2 border-slate-300 rounded-lg font-black">
+                                <input type="number" step="0.01" id="pur-total-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-2.5 text-sm border-2 border-slate-300 rounded-lg font-black text-slate-800">
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Dead Weight (kg)</label>
@@ -368,7 +373,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Batch Quality</label>
-                                <select id="pur-quality" required class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-bold">
+                                <select id="pur-quality" required class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-bold text-slate-800">
                                     <option value="Excellent">Excellent</option>
                                     <option value="Good">Good</option>
                                     <option value="Normal">Normal</option>
@@ -389,16 +394,16 @@
                                     <div>Maturity</div><div>Pieces</div><div>Weight (kg)</div>
                                 </div>
                                 <div class="space-y-2" id="female-purchase-rows">
-                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">50%</span><input type="number" id="pf-50-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-50-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">60%</span><input type="number" id="pf-60-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-60-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">70%</span><input type="number" id="pf-70-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-70-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">80%</span><input type="number" id="pf-80-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-80-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">90%</span><input type="number" id="pf-90-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-90-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">50%</span><input type="number" id="pf-50-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"><input type="number" step="0.01" id="pf-50-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">60%</span><input type="number" id="pf-60-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"><input type="number" step="0.01" id="pf-60-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">70%</span><input type="number" id="pf-70-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"><input type="number" step="0.01" id="pf-70-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">80%</span><input type="number" id="pf-80-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"><input type="number" step="0.01" id="pf-80-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">90%</span><input type="number" id="pf-90-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"><input type="number" step="0.01" id="pf-90-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold text-slate-800"></div>
                                 </div>
                                 <div class="bg-teal-50 border border-teal-200 p-3 rounded-lg text-xs font-extrabold text-teal-950 grid grid-cols-3 gap-1.5 text-center mt-3">
-                                    <div>Pcs: <span id="f-sum-pcs" class="block text-sm font-black text-teal-700 mt-0.5">0</span></div>
-                                    <div>Total Kg: <span id="f-sum-kg" class="block text-sm font-black text-teal-700 mt-0.5">0.00</span></div>
-                                    <div>Ratio: <span id="f-sum-ratio" class="block text-sm font-black text-teal-700 mt-0.5">0.00%</span></div>
+                                    <div class="text-slate-700">Pcs: <span id="f-sum-pcs" class="block text-sm font-black text-teal-700 mt-0.5">0</span></div>
+                                    <div class="text-slate-700">Total Kg: <span id="f-sum-kg" class="block text-sm font-black text-teal-700 mt-0.5">0.00</span></div>
+                                    <div class="text-slate-700">Ratio: <span id="f-sum-ratio" class="block text-sm font-black text-teal-700 mt-0.5">0.00%</span></div>
                                 </div>
                             </div>
 
@@ -408,18 +413,18 @@
                                     <div class="grid grid-cols-2 gap-3 pt-1">
                                         <div>
                                             <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Total Pieces (pcs)</label>
-                                            <input type="number" id="pm-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg text-center font-black bg-slate-50">
+                                            <input type="number" id="pm-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg text-center font-black bg-slate-50 text-slate-800">
                                         </div>
                                         <div>
                                             <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Total Weight (kg)</label>
-                                            <input type="number" step="0.01" id="pm-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg text-center font-black bg-slate-50">
+                                            <input type="number" step="0.01" id="pm-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg text-center font-black bg-slate-50 text-slate-800">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="bg-cyan-50 border border-cyan-200 p-3 rounded-lg text-xs font-extrabold text-cyan-950 grid grid-cols-3 gap-1.5 text-center mt-4">
-                                    <div>Pcs: <span id="m-sum-pcs" class="block text-sm font-black text-cyan-700 mt-0.5">0</span></div>
-                                    <div>Total Kg: <span id="m-sum-kg" class="block text-sm font-black text-cyan-700 mt-0.5">0.00</span></div>
-                                    <div>Ratio: <span id="m-sum-ratio" class="block text-sm font-black text-cyan-700 mt-0.5">0.00%</span></div>
+                                    <div class="text-slate-700">Pcs: <span id="m-sum-pcs" class="block text-sm font-black text-cyan-700 mt-0.5">0</span></div>
+                                    <div class="text-slate-700">Total Kg: <span id="m-sum-kg" class="block text-sm font-black text-cyan-700 mt-0.5">0.00</span></div>
+                                    <div class="text-slate-700">Ratio: <span id="m-sum-ratio" class="block text-sm font-black text-cyan-700 mt-0.5">0.00%</span></div>
                                 </div>
                             </div>
                         </div>
@@ -442,7 +447,7 @@
                 <h3 class="text-lg sm:text-xl font-black text-slate-800 mb-2">Executive Access</h3>
                 <p class="text-xs text-slate-500 mb-6 px-2">Verify your 4-digit token identity passcode.</p>
                 <div class="flex flex-col w-full gap-3 max-w-[200px]">
-                    <input type="password" id="manager-pin" maxlength="4" placeholder="••••" class="w-full text-center text-2xl tracking-[0.3em] font-black py-2.5 bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-teal-500 transition-all">
+                    <input type="password" id="manager-pin" maxlength="4" placeholder="••••" class="w-full text-center text-2xl tracking-[0.3em] font-black py-2.5 bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-teal-500 transition-all text-slate-800">
                     <button onclick="unlockTerminalLogs()" class="py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-extrabold transition-all shadow-sm">
                         Authorize Details
                     </button>
@@ -455,7 +460,7 @@
                     <div class="flex items-center space-x-3">
                         <div class="bg-rose-100 p-2.5 rounded-xl text-rose-700 border border-rose-200"><i data-lucide="presentation" class="w-5 h-5"></i></div>
                         <div>
-                            <h3 class="text-base font-black text-slate-800 tracking-tight">Master Executive Dashboard</h3>
+                            <h3 class="text-base font-black tracking-tight">Master Executive Dashboard</h3>
                             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Live Analytics Grids</p>
                         </div>
                     </div>
@@ -485,12 +490,12 @@
 
                     <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl shadow-inner">
                         
-                        <table id="spawning-log-table" class="min-w-full text-xs text-left text-slate-700 whitespace-nowrap">
-                            <thead class="bg-slate-100 text-[11px] uppercase font-black text-slate-500 border-b-2 border-slate-200">
+                        <table id="spawning-log-table" class="min-w-full text-xs text-left whitespace-nowrap">
+                            <thead class="bg-slate-100 text-[11px] uppercase font-black border-b-2 border-slate-200">
                                 <tr>
                                     <th class="px-4 py-3 border-r border-slate-200">Date</th>
                                     <th class="px-4 py-3">Moon Phase</th>
-                                    <th class="px-4 py-3 bg-emerald-50 border-x border-emerald-200 text-slate-800">Status Outcome</th>
+                                    <th class="px-4 py-3 bg-emerald-50 text-slate-800 border-x border-slate-200">Status Outcome</th>
                                     <th class="px-4 py-3 bg-teal-50 text-right text-slate-800 border-r border-teal-200">Fertilised Eggs</th>
                                     <th class="px-4 py-3">Staff Registry</th>
                                     <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">WQ Avg (C1 &rarr; C2)</th>
@@ -500,14 +505,14 @@
                             <tbody id="spawning-log-body" class="divide-y divide-slate-100 font-bold bg-white"></tbody>
                         </table>
 
-                        <table id="purchasing-log-table" class="min-w-full text-xs text-left text-slate-700 whitespace-nowrap hidden">
-                            <thead class="bg-slate-100 text-[11px] uppercase font-black text-slate-500 border-b-2 border-slate-200">
+                        <table id="purchasing-log-table" class="min-w-full text-xs text-left whitespace-nowrap hidden">
+                            <thead class="bg-slate-100 text-[11px] uppercase font-black border-b-2 border-slate-200">
                                 <tr>
                                     <th class="px-4 py-3 border-r border-slate-200">Date</th>
                                     <th class="px-4 py-3">Supplier & Moon</th>
-                                    <th class="px-4 py-3 bg-teal-50 text-teal-950 border-l border-teal-200">Total Weight</th>
-                                    <th class="px-4 py-3 bg-rose-50 text-rose-950 border-l border-rose-200">Transit Loss</th>
-                                    <th class="px-4 py-3 bg-rose-100 text-rose-900 border-r border-rose-300">Mortality %</th>
+                                    <th class="px-4 py-3 bg-teal-50 text-slate-800 border-l border-slate-200">Total Weight</th>
+                                    <th class="px-4 py-3 bg-rose-50 text-slate-800 border-l border-slate-200">Transit Loss</th>
+                                    <th class="px-4 py-3 bg-rose-100 text-rose-900 border-r border-slate-200">Mortality %</th>
                                     <th class="px-4 py-3">Quality Grade</th>
                                     <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Female Breakdown</th>
                                     <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Male Distribution</th>
@@ -552,7 +557,6 @@
             if(localStorage.getItem('spawningDraft')) {
                 loadDraft('spawning-form', 'spawningDraft');
                 document.getElementById('draft-indicator').classList.remove('hidden');
-                // Ensure field lock state is updated correctly on load
                 toggleOutcomeLockState(document.getElementById('spawn-status-outcome').value);
             } else {
                 const today = new Date().toISOString().split('T')[0];
@@ -606,23 +610,29 @@
             }
         }
 
-        // --- SPOWNING LOGIC GUARDRAILS ---
+        // --- FIXED: SPOWNING OUTCOME STYLING CONTROLLER ---
         function toggleOutcomeLockState(val) {
             const el = document.getElementById('spawn-status-outcome');
             const eggsInput = document.getElementById('total-collected-eggs');
             const qualityInput = document.getElementById('egg-quality');
             
+            // Forces pure color badges regardless of dark code restrictions
             if (val === "Successful") {
-                el.className = "w-full p-2.5 text-xs border-4 rounded-lg font-black bg-emerald-50 border-emerald-500 text-emerald-900";
+                el.style.backgroundColor = "#d1fae5"; 
+                el.style.borderColor = "#10b981";
+                el.style.color = "#065f46";
                 eggsInput.disabled = false;
                 qualityInput.disabled = false;
             } else if (val === "") {
-                el.className = "w-full p-2.5 text-xs border-2 rounded-lg font-black bg-white border-slate-300 text-slate-800";
+                el.style.backgroundColor = ""; 
+                el.style.borderColor = "";
+                el.style.color = "";
                 eggsInput.disabled = false;
                 qualityInput.disabled = false;
             } else {
-                // High contrast alert red color for failures
-                el.className = "w-full p-2.5 text-xs border-4 rounded-lg font-black bg-rose-50 border-rose-500 text-rose-900";
+                el.style.backgroundColor = "#fee2e2"; 
+                el.style.borderColor = "#ef4444";
+                el.style.color = "#991b1b";
                 eggsInput.value = 0;
                 eggsInput.disabled = true;
                 qualityInput.value = "None";
@@ -639,19 +649,19 @@
             tanksList.forEach(t => {
                 grid1.innerHTML += `
                     <div class="grid grid-cols-5 gap-1.5 items-center">
-                        <span class="text-[11px] font-black text-teal-800 text-center bg-teal-100 py-1.5 rounded-md border border-teal-200">Tank ${t}</span>
-                        <input type="number" step="0.1" id="c1-t-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
-                        <input type="number" step="0.01" id="c1-d-${t}" oninput="calculateSpawningAverages(1); evaluateDoLimit(this);" placeholder="5.5" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
-                        <input type="number" step="0.1" id="c1-p-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
-                        <input type="number" step="0.1" id="c1-s-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <span class="text-[11px] font-black text-center bg-teal-100 text-teal-900 py-1.5 rounded-md border border-teal-200">Tank ${t}</span>
+                        <input type="number" step="0.1" id="c1-t-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
+                        <input type="number" step="0.01" id="c1-d-${t}" oninput="calculateSpawningAverages(1); evaluateDoLimit(this);" placeholder="5.5" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
+                        <input type="number" step="0.1" id="c1-p-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
+                        <input type="number" step="0.1" id="c1-s-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
                     </div>`;
                 grid2.innerHTML += `
                     <div class="grid grid-cols-5 gap-1.5 items-center">
-                        <span class="text-[11px] font-black text-cyan-800 text-center bg-cyan-100 py-1.5 rounded-md border border-cyan-200">Tank ${t}</span>
-                        <input type="number" step="0.1" id="c2-t-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
-                        <input type="number" step="0.01" id="c2-d-${t}" oninput="calculateSpawningAverages(2); evaluateDoLimit(this);" placeholder="5.5" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
-                        <input type="number" step="0.1" id="c2-p-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
-                        <input type="number" step="0.1" id="c2-s-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <span class="text-[11px] font-black text-center bg-cyan-100 text-cyan-900 py-1.5 rounded-md border border-cyan-200">Tank ${t}</span>
+                        <input type="number" step="0.1" id="c2-t-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
+                        <input type="number" step="0.01" id="c2-d-${t}" oninput="calculateSpawningAverages(2); evaluateDoLimit(this);" placeholder="5.5" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
+                        <input type="number" step="0.1" id="c2-p-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
+                        <input type="number" step="0.1" id="c2-s-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold text-slate-800">
                     </div>`;
             });
         }
@@ -712,14 +722,20 @@
 
         function evaluateDoLimit(el) {
             const v = parseFloat(el.value);
-            if(!isNaN(v) && v < 5.0) el.className = "p-1.5 text-xs text-center border-2 rounded-md bg-rose-50 text-rose-700 font-black border-rose-400 animate-pulse";
-            else el.className = "p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white";
+            if(!isNaN(v) && v < 5.0) {
+                el.style.backgroundColor = "#fee2e2"; el.style.color = "#991b1b"; el.style.borderColor = "#f87171";
+            } else {
+                el.style.backgroundColor = ""; el.style.color = ""; el.style.borderColor = "";
+            }
         }
 
         function evaluateLimits(el, min, max) {
             const v = parseFloat(el.value);
-            if(!isNaN(v) && (v < min || v > max)) el.className = "p-1.5 text-xs text-center border-2 rounded-md bg-amber-50 text-amber-700 font-black border-amber-400";
-            else el.className = "p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white";
+            if(!isNaN(v) && (v < min || v > max)) {
+                el.style.backgroundColor = "#fef3c7"; el.style.color = "#92400e"; el.style.borderColor = "#fbbf24";
+            } else {
+                el.style.backgroundColor = ""; el.style.color = ""; el.style.borderColor = "";
+            }
         }
 
         function switchTab(id) {
@@ -744,8 +760,8 @@
             activeLogTab = type;
             document.getElementById('lv-spawn').className = type === 'spawning' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
             document.getElementById('lv-purch').className = type === 'purchasing' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
-            document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-xs text-left text-slate-700 whitespace-nowrap" : "hidden";
-            document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-xs text-left text-slate-700 whitespace-nowrap" : "hidden";
+            document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
+            document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
             document.getElementById('current-log-label').textContent = type === 'spawning' ? "Spawning Trials Workbook" : "Abalone Purchases Workbook";
             if(isLogsUnlocked) renderTerminalLogsEngine();
         }
@@ -773,7 +789,7 @@
         function toggleConnectionBadgeState(state) {
             const b = document.getElementById('conn-badge');
             if(state) {
-                b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-800 border border-emerald-500/40 flex items-center space-x-1.5";
+                b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1.5";
                 b.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span><span class="hidden sm:inline">Connected to Sheets</span><span class="sm:hidden">Online</span>`;
             } else {
                 b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center space-x-1.5";
@@ -938,8 +954,8 @@
             const url = localStorage.getItem('abalone_gas_url');
             if(!url) return;
             
-            document.getElementById('spawning-log-body').innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-teal-600 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
-            document.getElementById('purchasing-log-body').innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-teal-600 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
+            document.getElementById('spawning-log-body').innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-teal-500 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
+            document.getElementById('purchasing-log-body').innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-teal-500 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
 
             fetch(`${url}?action=getLogs&pin=3653`, { method: 'GET', mode: 'cors' })
             .then(res => res.json()).then(d => {
@@ -954,10 +970,11 @@
         }
 
         function renderTerminalLogsEngine() {
+            const isDark = document.body.classList.contains('theme-dark');
             if(activeLogTab === 'spawning') {
                 const tbody = document.getElementById('spawning-log-body');
                 if(!cachedSpawning || cachedSpawning.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-slate-400 font-bold text-sm">No recorded Spawning logs located inside spreadsheet.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center font-bold text-sm">No recorded Spawning logs located inside spreadsheet.</td></tr>`;
                     return;
                 }
                 tbody.innerHTML = cachedSpawning.map(r => {
@@ -971,36 +988,36 @@
                     const mStr = r.malePcs && parseInt(r.malePcs) > 0 ? `${formatPercent(r.maleMat) || '80%'}: ${r.malePcs}pcs` : 'None';
                     
                     const safeDate = formatCleanDateOnly(r.date || r.trialDate);
-
-                    // Color code outcomes inside the dashboard dynamically
                     const isSuccess = (r.statusOutcome || '').trim() === "Successful";
-                    const outcomeBadgeClass = isSuccess 
-                        ? "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 border border-emerald-200"
-                        : "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-rose-100 text-rose-800 border border-rose-200";
+                    
+                    // High contrast outcomes regardless of light vs night backgrounds
+                    let outcomeBadgeClass = isSuccess 
+                        ? "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-500 text-white shadow-sm"
+                        : "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-rose-500 text-white shadow-sm";
 
                     return `
-                    <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-4 py-3 font-extrabold bg-slate-50/10 border-r border-slate-200 text-slate-800">${safeDate}</td>
-                        <td class="px-4 py-3 text-slate-600 font-bold">${r.moonCycle || ''}</td>
-                        <td class="px-4 py-3 bg-emerald-50/10 border-x border-slate-200">
+                    <tr class="border-b transition-colors border-slate-200">
+                        <td class="px-4 py-3 font-extrabold text-sm">${safeDate}</td>
+                        <td class="px-4 py-3 font-medium">${r.moonCycle || ''}</td>
+                        <td class="px-4 py-3">
                             <span class="${outcomeBadgeClass}">${r.statusOutcome || 'Successful'}</span>
                         </td>
-                        <td class="px-4 py-3 font-black text-teal-950 text-right bg-teal-50/10 text-sm border-r border-slate-200">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-bold text-slate-500 text-[10px] mt-0.5">Quality: ${r.eggQuality || ''}</span></td>
-                        <td class="px-4 py-3 text-slate-800 font-bold">${r.inCharge || ''} <span class="block text-[10px] text-slate-500 font-medium mt-0.5">Team: ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
-                        <td class="px-4 py-3 text-slate-700 bg-slate-50/10 border-l border-slate-200">
-                            <div class="text-teal-800 font-black text-[11px]">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'} | pH ${r.wq1AvgPh || '0.00'} | Sal ${r.wq1AvgSal || '0.0'}</div>
-                            <div class="text-cyan-800 font-black text-[11px] mt-1.5">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'} | pH ${r.wq2AvgPh || '0.00'} | Sal ${r.wq2AvgSal || '0.0'}</div>
+                        <td class="px-4 py-3 font-black text-right text-sm">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-bold text-[10px] opacity-75">Quality: ${r.eggQuality || ''}</span></td>
+                        <td class="px-4 py-3 font-medium">${r.inCharge || ''} <span class="block text-[10px] font-medium opacity-60">Team: ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
+                        <td class="px-4 py-3 text-xs">
+                            <div class="font-bold text-teal-500">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'} | pH ${r.wq1AvgPh || '0.00'} | Sal ${r.wq1AvgSal || '0.0'}</div>
+                            <div class="font-bold text-cyan-400 mt-1">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'} | pH ${r.wq2AvgPh || '0.00'} | Sal ${r.wq2AvgSal || '0.0'}</div>
                         </td>
-                        <td class="px-4 py-3 bg-slate-50/10 border-l border-slate-200">
-                            <div class="text-[11px] text-slate-700 font-medium"><span class="font-black text-teal-800">F:</span> ${fStr} <br/><span class="text-slate-500 mt-1 inline-block">(Total: ${r.totalSpawners ? parseInt(r.totalSpawners)-parseInt(r.malePcs||0) : '0'} pcs)</span></div>
-                            <div class="text-[11px] text-slate-700 font-medium mt-1 pt-1 border-t border-slate-200"><span class="font-black text-cyan-800">M:</span> ${mStr}</div>
+                        <td class="px-4 py-3 text-xs">
+                            <div><span class="font-black text-teal-500">F:</span> ${fStr}</div>
+                            <div class="mt-1"><span class="font-black text-cyan-400">M:</span> ${mStr}</div>
                         </td>
                     </tr>`;
                 }).join('');
             } else {
                 const tbody = document.getElementById('purchasing-log-body');
                 if(!cachedPurchasing || cachedPurchasing.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-slate-400 font-bold text-sm">No recorded Purchasing logs located inside spreadsheet.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center font-bold text-sm">No recorded Purchasing logs located inside spreadsheet.</td></tr>`;
                     return;
                 }
                 tbody.innerHTML = cachedPurchasing.map(r => {
@@ -1015,21 +1032,21 @@
                     const safeDate = formatCleanDateOnly(r.date || r.purchaseDate || r.intakeDate);
 
                     return `
-                    <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-4 py-3 font-extrabold bg-slate-50/10 border-r border-slate-200 text-slate-800">${safeDate}</td>
-                        <td class="px-4 py-3 font-extrabold text-slate-800">${r.supplierCategory || ''} <span class="block font-medium text-slate-500 text-[10px] mt-0.5">Moon: ${r.moonPhase || ''}</span></td>
-                        <td class="px-4 py-3 bg-teal-50/10 text-slate-800 font-black text-sm border-l border-slate-200">${r.totalBatchWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3 bg-rose-50/10 text-slate-800 font-bold border-l border-slate-200">${r.deadWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3 text-rose-600 font-black text-sm bg-rose-100/10 border-r border-slate-200">${formatPercent(r.mortality)}</td>
-                        <td class="px-4 py-3"><span class="px-2 py-1 border border-slate-300 rounded-md text-[10px] font-black uppercase bg-white text-slate-700 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
-                        <td class="px-4 py-3 bg-slate-50/10 border-l border-slate-200">
-                            <div class="text-[11px] font-black text-teal-900">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
-                            <div class="text-[10px] font-extrabold text-teal-600 mt-1">% of Mass: ${formatPercent(r.femaleWeightRatio)}</div>
-                            <div class="text-[10px] text-slate-500 font-bold mt-1.5 border-t border-slate-200 pt-1 max-w-[180px] whitespace-normal leading-relaxed">${fBreakdownStr}</div>
+                    <tr class="border-b transition-colors border-slate-200">
+                        <td class="px-4 py-3 font-extrabold text-sm">${safeDate}</td>
+                        <td class="px-4 py-3 font-extrabold">${r.supplierCategory || ''} <span class="block font-medium text-[10px] opacity-60">Moon: ${r.moonPhase || ''}</span></td>
+                        <td class="px-4 py-3 font-black text-sm">${r.totalBatchWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3 font-bold">${r.deadWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3 text-rose-500 font-black text-sm">${formatPercent(r.mortality)}</td>
+                        <td class="px-4 py-3"><span class="px-2 py-1 border border-slate-400 rounded-md text-[10px] font-black uppercase bg-white text-slate-800 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
+                        <td class="px-4 py-3 text-xs">
+                            <div class="font-black text-teal-500">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
+                            <div class="font-extrabold opacity-75 mt-0.5">% of Mass: ${formatPercent(r.femaleWeightRatio)}</div>
+                            <div class="opacity-60 font-medium mt-1 whitespace-normal max-w-[180px]">${fBreakdownStr}</div>
                         </td>
-                        <td class="px-4 py-3 bg-slate-50/10 border-l border-slate-200">
-                            <div class="text-[11px] font-black text-cyan-900">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
-                            <div class="text-[10px] font-extrabold text-cyan-600 mt-1">% of Mass: ${formatPercent(r.maleWeightRatio)}</div>
+                        <td class="px-4 py-3 text-xs">
+                            <div class="font-black text-cyan-400">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
+                            <div class="font-extrabold opacity-75 mt-0.5">% of Mass: ${formatPercent(r.maleWeightRatio)}</div>
                         </td>
                     </tr>`;
                 }).join('');
@@ -1041,7 +1058,9 @@
             if(isSpawning) { 
                 localStorage.removeItem('spawningDraft');
                 document.getElementById('draft-indicator').classList.add('hidden');
-                document.getElementById('spawn-status-outcome').className = "w-full p-2.5 text-xs border-2 rounded-lg font-black bg-white border-slate-300 text-slate-800";
+                document.getElementById('spawn-status-outcome').style.backgroundColor = "";
+                document.getElementById('spawn-status-outcome').style.color = "";
+                document.getElementById('spawn-status-outcome').style.borderColor = "";
                 document.getElementById('total-collected-eggs').disabled = false;
                 document.getElementById('egg-quality').disabled = false;
                 buildTankInterfaceRows(); 

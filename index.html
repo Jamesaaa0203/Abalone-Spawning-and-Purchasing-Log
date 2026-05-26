@@ -9,27 +9,27 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-teal-50 min-h-screen text-slate-800 pb-16">
 
-    <header class="bg-gradient-to-r from-teal-800 to-cyan-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+    <header class="bg-gradient-to-r from-teal-800 to-cyan-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <div class="bg-teal-600/30 p-2 rounded-xl border border-teal-400/30">
-                    <i data-lucide="shell" class="w-6 h-6 text-teal-300"></i>
+                    <i data-lucide="shell" class="w-5 h-5 text-teal-300"></i>
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-base tracking-tight sm:text-lg">Haliotis asinina Hatchery</h1>
-                    <p class="text-[10px] sm:text-xs text-teal-200 uppercase tracking-widest font-bold mt-0.5">Tropical Abalone Farm</p>
+                    <h1 class="font-extrabold text-sm sm:text-base tracking-tight">Haliotis asinina Hatchery</h1>
+                    <p class="text-[9px] sm:text-[10px] text-teal-200 uppercase tracking-widest font-bold mt-0.5">Tropical Abalone Farm</p>
                 </div>
             </div>
             <div>
-                <span id="conn-badge" class="px-3 py-1.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center space-x-1.5">
-                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span id="conn-badge" class="px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center space-x-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                     <span class="hidden sm:inline">Standalone Mode</span>
                     <span class="sm:hidden">Offline</span>
                 </span>
@@ -47,14 +47,14 @@
                 </div>
                 <div class="flex items-center space-x-2 text-slate-400">
                     <span class="text-xs font-medium" id="config-status-lbl">Click to link database</span>
-                    <i data-lucide="chevron-down" class="w-5 h-5 transition-transform duration-200" id="config-chevron"></i>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200" id="config-chevron"></i>
                 </div>
             </div>
             <div id="config-drawer" class="hidden mt-4 pt-4 border-t border-slate-100">
                 <div class="flex flex-col sm:flex-row gap-3">
                     <input type="password" id="gas-url" placeholder="Paste Stage 2 /exec Web App deployment link here..." 
                            class="flex-grow p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/20">
-                    <button onclick="saveGasUrl()" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition-all shadow-sm">
+                    <button onclick="saveGasUrl()" class="px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition-all shadow-sm">
                         Save Link URL
                     </button>
                 </div>
@@ -62,72 +62,79 @@
         </section>
 
         <div class="flex flex-col sm:flex-row bg-slate-100 p-1.5 rounded-2xl mb-6 shadow-inner border border-slate-200 max-w-6xl mx-auto gap-1.5">
-            <button onclick="switchTab('spawning')" id="tab-btn-spawning" class="flex-1 py-3 text-sm sm:text-base font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm border border-slate-200/50">
+            <button onclick="switchTab('spawning')" id="tab-btn-spawning" class="flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm border border-slate-200/50">
                 <i data-lucide="sparkles" class="w-4 h-4 text-teal-600"></i>
                 <span>Spawning Trials</span>
             </button>
-            <button onclick="switchTab('purchasing')" id="tab-btn-purchasing" class="flex-1 py-3 text-sm sm:text-base font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800 hover:bg-white/50">
+            <button onclick="switchTab('purchasing')" id="tab-btn-purchasing" class="flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800 hover:bg-white/50">
                 <i data-lucide="shopping-bag" class="w-4 h-4 text-slate-400"></i>
                 <span>Broodstock Purchases</span>
             </button>
-            <button onclick="switchTab('manager')" id="tab-btn-manager" class="flex-1 py-3 text-sm sm:text-base font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800 hover:bg-white/50">
+            <button onclick="switchTab('manager')" id="tab-btn-manager" class="flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800 hover:bg-white/50">
                 <i data-lucide="layout-dashboard" class="w-4 h-4 text-rose-500"></i>
                 <span class="text-rose-700">Manager Dashboard</span>
             </button>
         </div>
 
         <div id="tab-content-spawning" class="space-y-6 max-w-6xl mx-auto">
-            <form id="spawning-form" onsubmit="handleSpawningSubmit(event)" class="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden">
-                <div class="p-6 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center">
+            <form id="spawning-form" onsubmit="handleSpawningSubmit(event)" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center">
                     <div>
-                        <h3 class="text-lg font-extrabold text-teal-950">Spawning Trial Entry</h3>
+                        <h3 class="text-base font-extrabold text-teal-950 flex items-center gap-2">Spawning Trial Entry <span id="draft-indicator" class="hidden text-[10px] bg-teal-200/50 text-teal-800 px-2 py-0.5 rounded-full">Draft Auto-Saved</span></h3>
                     </div>
-                    <button type="button" onclick="fillMockSpawning()" class="text-xs font-bold text-teal-800 bg-teal-200/80 hover:bg-teal-300 px-4 py-2 rounded-xl transition-all shadow-sm">
-                        Load 16th April Mock Data
+                    <button type="button" onclick="fillMockSpawning()" class="text-[11px] font-bold text-teal-800 bg-teal-200/80 hover:bg-teal-300 px-3 py-1.5 rounded-lg transition-all shadow-sm">
+                        Load Mock Data
                     </button>
                 </div>
 
-                <div class="p-5 sm:p-6 space-y-8">
+                <div class="p-5 sm:p-6 space-y-6">
                     <div>
-                        <span class="text-xs font-extrabold text-teal-900 bg-teal-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-teal-200">1. Details & Staff</span>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
+                        <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">1. Details & Staff</span>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Trial Date</label>
-                                <input type="date" id="spawn-date" required class="w-full p-3 text-sm border border-slate-300 rounded-xl focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Trial Reference Date</label>
+                                <input type="date" id="spawn-date" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Shift Start (Time)</label>
-                                <select id="spawn-period-start-hour" required class="w-full p-3 text-sm border border-slate-300 bg-slate-50 rounded-xl focus:ring-2 focus:ring-teal-500"></select>
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Shift Start (Date & Time)</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="date" id="spawn-start-date" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                                    <input type="time" id="spawn-start-time" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                                </div>
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Shift End (Time)</label>
-                                <select id="spawn-period-end-hour" required class="w-full p-3 text-sm border border-slate-300 bg-slate-50 rounded-xl focus:ring-2 focus:ring-teal-500"></select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
-                            <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Operator in Charge</label>
-                                <input type="text" id="spawn-in-charge" placeholder="Popo" required class="w-full p-3 text-sm border border-slate-300 rounded-xl">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-extrabold text-slate-500 mb-2">Assistant 1</label>
-                                <input type="text" id="spawn-assistant-1" placeholder="Irwanshah" class="w-full p-3 text-sm border border-slate-300 rounded-xl">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-extrabold text-slate-500 mb-2">Assistant 2</label>
-                                <input type="text" id="spawn-assistant-2" placeholder="Dennivis" class="w-full p-3 text-sm border border-slate-300 rounded-xl">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-extrabold text-slate-500 mb-2">Assistant 3</label>
-                                <input type="text" id="spawn-assistant-3" placeholder="Optional" class="w-full p-3 text-sm border border-slate-300 rounded-xl">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Shift End (Date & Time)</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="date" id="spawn-end-date" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                                    <input type="time" id="spawn-end-time" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Moon Cycle</label>
-                                <select id="spawn-moon-cycle" required class="w-full p-3 text-sm border border-slate-300 rounded-xl bg-slate-50">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Operator in Charge</label>
+                                <input type="text" id="spawn-in-charge" placeholder="Popo" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-500 mb-1.5">Assistant 1</label>
+                                <input type="text" id="spawn-assistant-1" placeholder="Irwanshah" class="w-full p-2.5 text-xs border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-500 mb-1.5">Assistant 2</label>
+                                <input type="text" id="spawn-assistant-2" placeholder="Dennivis" class="w-full p-2.5 text-xs border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-500 mb-1.5">Assistant 3</label>
+                                <input type="text" id="spawn-assistant-3" placeholder="Optional" class="w-full p-2.5 text-xs border border-slate-300 rounded-lg">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Moon Cycle</label>
+                                <select id="spawn-moon-cycle" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg bg-slate-50">
                                     <option value="New Moon">New Moon</option>
                                     <option value="Full Moon">Full Moon</option>
                                     <option value="First Quarter">First Quarter</option>
@@ -135,8 +142,8 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Weather Condition</label>
-                                <select id="spawn-weather" required class="w-full p-3 text-sm border border-slate-300 rounded-xl bg-slate-50">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Weather Condition</label>
+                                <select id="spawn-weather" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg bg-slate-50">
                                     <option value="Dark sky">Dark Sky / Night</option>
                                     <option value="Clear sky">Clear Sky</option>
                                     <option value="Rainy">Rainy</option>
@@ -149,42 +156,42 @@
                     <hr class="border-slate-200">
 
                     <div>
-                        <span class="text-xs font-extrabold text-teal-900 bg-teal-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-teal-200">2. Water Quality Checks</span>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
-                            <div class="border border-teal-200 rounded-2xl overflow-hidden bg-white shadow-sm">
-                                <div class="bg-teal-50 px-4 py-3 flex justify-between items-center border-b border-teal-100">
-                                    <span class="text-sm font-black text-teal-900 tracking-wider uppercase">WQ Check 1</span>
-                                    <select id="c1-hour" class="p-2 text-sm border border-slate-300 rounded-lg bg-white font-bold"></select>
+                        <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">2. Water Quality Checks</span>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-4">
+                            <div class="border border-teal-200 rounded-xl overflow-hidden bg-white shadow-sm">
+                                <div class="bg-teal-50 px-4 py-2.5 flex justify-between items-center border-b border-teal-100">
+                                    <span class="text-xs font-black text-teal-900 tracking-wider uppercase">WQ Check 1</span>
+                                    <input type="time" id="c1-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold">
                                 </div>
-                                <div class="p-4 space-y-3">
-                                    <div class="grid grid-cols-5 gap-2 text-[11px] font-black text-slate-500 uppercase text-center pb-2 border-b">
+                                <div class="p-3 space-y-2">
+                                    <div class="grid grid-cols-5 gap-1.5 text-[10px] font-black text-slate-500 uppercase text-center pb-1.5 border-b">
                                         <div>Tank</div><div>Temp</div><div>DO</div><div>pH</div><div>Sal</div>
                                     </div>
-                                    <div id="check1-tanks-grid" class="space-y-2"></div>
-                                    <div class="bg-teal-100/60 p-3 rounded-xl grid grid-cols-4 gap-2 text-center text-xs font-black text-teal-950 mt-4 border border-teal-200">
-                                        <div>T: <span id="c1-avg-temp" class="text-teal-700 block text-sm mt-0.5">0.0°C</span></div>
-                                        <div>DO: <span id="c1-avg-do" class="text-teal-700 block text-sm mt-0.5">0.00</span></div>
-                                        <div>pH: <span id="c1-avg-ph" class="text-teal-700 block text-sm mt-0.5">0.00</span></div>
-                                        <div>Sal: <span id="c1-avg-sal" class="text-teal-700 block text-sm mt-0.5">0.0</span></div>
+                                    <div id="check1-tanks-grid" class="space-y-1.5"></div>
+                                    <div class="bg-teal-100/60 p-2.5 rounded-lg grid grid-cols-4 gap-1.5 text-center text-[11px] font-black text-teal-950 mt-3 border border-teal-200">
+                                        <div>T: <span id="c1-avg-temp" class="text-teal-700 block text-xs mt-0.5">0.0°C</span></div>
+                                        <div>DO: <span id="c1-avg-do" class="text-teal-700 block text-xs mt-0.5">0.00</span></div>
+                                        <div>pH: <span id="c1-avg-ph" class="text-teal-700 block text-xs mt-0.5">0.00</span></div>
+                                        <div>Sal: <span id="c1-avg-sal" class="text-teal-700 block text-xs mt-0.5">0.0</span></div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="border border-cyan-200 rounded-2xl overflow-hidden bg-white shadow-sm">
-                                <div class="bg-cyan-50 px-4 py-3 flex justify-between items-center border-b border-cyan-100">
-                                    <span class="text-sm font-black text-cyan-900 tracking-wider uppercase">WQ Check 2</span>
-                                    <select id="c2-hour" class="p-2 text-sm border border-slate-300 rounded-lg bg-white font-bold"></select>
+                            <div class="border border-cyan-200 rounded-xl overflow-hidden bg-white shadow-sm">
+                                <div class="bg-cyan-50 px-4 py-2.5 flex justify-between items-center border-b border-cyan-100">
+                                    <span class="text-xs font-black text-cyan-900 tracking-wider uppercase">WQ Check 2</span>
+                                    <input type="time" id="c2-hour" class="p-1.5 text-xs border border-slate-300 rounded-md bg-white font-bold">
                                 </div>
-                                <div class="p-4 space-y-3">
-                                    <div class="grid grid-cols-5 gap-2 text-[11px] font-black text-slate-500 uppercase text-center pb-2 border-b">
+                                <div class="p-3 space-y-2">
+                                    <div class="grid grid-cols-5 gap-1.5 text-[10px] font-black text-slate-500 uppercase text-center pb-1.5 border-b">
                                         <div>Tank</div><div>Temp</div><div>DO</div><div>pH</div><div>Sal</div>
                                     </div>
-                                    <div id="check2-tanks-grid" class="space-y-2"></div>
-                                    <div class="bg-cyan-100/60 p-3 rounded-xl grid grid-cols-4 gap-2 text-center text-xs font-black text-cyan-950 mt-4 border border-cyan-200">
-                                        <div>T: <span id="c2-avg-temp" class="text-cyan-700 block text-sm mt-0.5">0.0°C</span></div>
-                                        <div>DO: <span id="c2-avg-do" class="text-cyan-700 block text-sm mt-0.5">0.00</span></div>
-                                        <div>pH: <span id="c2-avg-ph" class="text-cyan-700 block text-sm mt-0.5">0.00</span></div>
-                                        <div>Sal: <span id="c2-avg-sal" class="text-cyan-700 block text-sm mt-0.5">0.0</span></div>
+                                    <div id="check2-tanks-grid" class="space-y-1.5"></div>
+                                    <div class="bg-cyan-100/60 p-2.5 rounded-lg grid grid-cols-4 gap-1.5 text-center text-[11px] font-black text-cyan-950 mt-3 border border-cyan-200">
+                                        <div>T: <span id="c2-avg-temp" class="text-cyan-700 block text-xs mt-0.5">0.0°C</span></div>
+                                        <div>DO: <span id="c2-avg-do" class="text-cyan-700 block text-xs mt-0.5">0.00</span></div>
+                                        <div>pH: <span id="c2-avg-ph" class="text-cyan-700 block text-xs mt-0.5">0.00</span></div>
+                                        <div>Sal: <span id="c2-avg-sal" class="text-cyan-700 block text-xs mt-0.5">0.0</span></div>
                                     </div>
                                 </div>
                             </div>
@@ -194,62 +201,62 @@
                     <hr class="border-slate-200">
 
                     <div>
-                        <span class="text-xs font-extrabold text-teal-900 bg-teal-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-teal-200">3. Maturation Profiles</span>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
-                            <div class="border border-slate-200 rounded-2xl p-5 bg-white space-y-4 shadow-sm">
-                                <h4 class="text-sm font-black text-teal-900 flex items-center gap-2">
-                                    <span class="w-3 h-3 rounded-full bg-teal-500"></span> Female Selection
+                        <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">3. Maturation Profiles</span>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-4">
+                            <div class="border border-slate-200 rounded-xl p-4 bg-white space-y-3 shadow-sm">
+                                <h4 class="text-xs font-black text-teal-900 flex items-center gap-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span> Female Selection
                                 </h4>
-                                <div class="grid grid-cols-2 gap-4 text-[11px] font-black text-slate-500 uppercase text-center border-b pb-2">
+                                <div class="grid grid-cols-2 gap-3 text-[10px] font-black text-slate-500 uppercase text-center border-b pb-1.5">
                                     <div>Maturity %</div><div>Pieces (pcs)</div>
                                 </div>
-                                <div class="space-y-3">
-                                    <div class="grid grid-cols-2 gap-4"><select id="sf-mat-1" class="p-3 text-sm border bg-slate-50 rounded-xl font-bold"><option value="80%">80% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="90%">90%</option></select><input type="number" id="sf-pcs-1" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-3 text-sm text-center border rounded-xl font-black bg-white"></div>
-                                    <div class="grid grid-cols-2 gap-4"><select id="sf-mat-2" class="p-3 text-sm border bg-slate-50 rounded-xl font-bold"><option value="70%">70% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="80%">80%</option><option value="90%">90%</option></select><input type="number" id="sf-pcs-2" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-3 text-sm text-center border rounded-xl font-black bg-white"></div>
-                                    <div class="grid grid-cols-2 gap-4"><select id="sf-mat-3" class="p-3 text-sm border bg-slate-50 rounded-xl font-bold"><option value="90%">90% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="80%">80%</option></select><input type="number" id="sf-pcs-3" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-3 text-sm text-center border rounded-xl font-black bg-white"></div>
-                                    <div class="grid grid-cols-2 gap-4"><select id="sf-mat-4" class="p-3 text-sm border bg-slate-50 rounded-xl font-bold"><option value="60%">60% Maturity</option><option value="50%">50%</option><option value="70%">70%</option><option value="80%">80%</option><option value="90%">90%</option></select><input type="number" id="sf-pcs-4" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-3 text-sm text-center border rounded-xl font-black bg-white"></div>
+                                <div class="space-y-2">
+                                    <div class="grid grid-cols-2 gap-3"><select id="sf-mat-1" class="p-2 text-xs border bg-slate-50 rounded-lg font-bold"><option value="80%">80% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="90%">90%</option></select><input type="number" id="sf-pcs-1" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-2 text-xs text-center border rounded-lg font-black bg-white"></div>
+                                    <div class="grid grid-cols-2 gap-3"><select id="sf-mat-2" class="p-2 text-xs border bg-slate-50 rounded-lg font-bold"><option value="70%">70% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="80%">80%</option><option value="90%">90%</option></select><input type="number" id="sf-pcs-2" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-2 text-xs text-center border rounded-lg font-black bg-white"></div>
+                                    <div class="grid grid-cols-2 gap-3"><select id="sf-mat-3" class="p-2 text-xs border bg-slate-50 rounded-lg font-bold"><option value="90%">90% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="80%">80%</option></select><input type="number" id="sf-pcs-3" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-2 text-xs text-center border rounded-lg font-black bg-white"></div>
+                                    <div class="grid grid-cols-2 gap-3"><select id="sf-mat-4" class="p-2 text-xs border bg-slate-50 rounded-lg font-bold"><option value="60%">60% Maturity</option><option value="50%">50%</option><option value="70%">70%</option><option value="80%">80%</option><option value="90%">90%</option></select><input type="number" id="sf-pcs-4" placeholder="0" oninput="calculateTotalSpawnersLive()" class="p-2 text-xs text-center border rounded-lg font-black bg-white"></div>
                                 </div>
-                                <div class="text-sm font-black text-teal-900 bg-teal-50 border border-teal-100 p-4 rounded-xl flex justify-between mt-3">
-                                    <span>Females Combined:</span><span id="display-female-total" class="text-base">0 pcs</span>
+                                <div class="text-xs font-black text-teal-900 bg-teal-50 border border-teal-100 p-3 rounded-lg flex justify-between mt-2">
+                                    <span>Females Combined:</span><span id="display-female-total" class="text-sm">0 pcs</span>
                                 </div>
                             </div>
 
-                            <div class="border border-slate-200 rounded-2xl p-5 bg-white flex flex-col justify-between shadow-sm">
-                                <div class="space-y-4">
-                                    <h4 class="text-sm font-black text-cyan-900 flex items-center gap-2">
-                                        <span class="w-3 h-3 rounded-full bg-cyan-500"></span> Male Selection
+                            <div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col justify-between shadow-sm">
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-black text-cyan-900 flex items-center gap-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> Male Selection
                                     </h4>
-                                    <div class="grid grid-cols-2 gap-4 pt-2">
+                                    <div class="grid grid-cols-2 gap-3 pt-1">
                                         <div>
-                                            <label class="block text-xs text-slate-500 font-extrabold mb-2 uppercase tracking-wider">Maturity %</label>
-                                            <select id="sm-mat" class="w-full p-3 text-sm border bg-slate-50 rounded-xl font-bold"><option value="80%">80% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="90%">90%</option></select>
+                                            <label class="block text-[10px] text-slate-500 font-extrabold mb-1.5 uppercase tracking-wider">Maturity %</label>
+                                            <select id="sm-mat" class="w-full p-2 text-xs border bg-slate-50 rounded-lg font-bold"><option value="80%">80% Maturity</option><option value="50%">50%</option><option value="60%">60%</option><option value="70%">70%</option><option value="90%">90%</option></select>
                                         </div>
                                         <div>
-                                            <label class="block text-xs text-slate-500 font-extrabold mb-2 uppercase tracking-wider">Pieces (pcs)</label>
-                                            <input type="number" id="sm-pcs" placeholder="0" oninput="calculateTotalSpawnersLive()" class="w-full p-3 text-sm text-center border rounded-xl font-black bg-white">
+                                            <label class="block text-[10px] text-slate-500 font-extrabold mb-1.5 uppercase tracking-wider">Pieces (pcs)</label>
+                                            <input type="number" id="sm-pcs" placeholder="0" oninput="calculateTotalSpawnersLive()" class="w-full p-2 text-xs text-center border rounded-lg font-black bg-white">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="text-sm font-black text-cyan-900 bg-cyan-50 border border-cyan-100 p-4 rounded-xl flex justify-between mt-6">
-                                    <span>Males Combined:</span><span id="display-male-total" class="text-base">0 pcs</span>
+                                <div class="text-xs font-black text-cyan-900 bg-cyan-50 border border-cyan-100 p-3 rounded-lg flex justify-between mt-4">
+                                    <span>Males Combined:</span><span id="display-male-total" class="text-sm">0 pcs</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6 bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-inner">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-5 bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-inner">
                             <div>
-                                <label class="block text-xs font-extrabold text-slate-700 mb-2 uppercase tracking-wider">Total Spawners</label>
-                                <input type="number" id="spawn-total-count" readonly placeholder="0" class="w-full p-3 text-lg bg-slate-200 text-slate-700 font-black border border-slate-300 rounded-xl text-center">
+                                <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Total Spawners</label>
+                                <input type="number" id="spawn-total-count" readonly placeholder="0" class="w-full p-2 text-sm bg-slate-200 text-slate-700 font-black border border-slate-300 rounded-lg text-center">
                             </div>
                             <div>
-                                <label class="block text-xs font-extrabold text-slate-700 mb-2 uppercase tracking-wider">Sperm Release Time</label>
-                                <input type="time" id="sperm-release-time" class="w-full p-3 text-sm font-bold border border-slate-300 rounded-xl bg-white text-center">
+                                <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Sperm Release Time</label>
+                                <input type="time" id="sperm-release-time" class="w-full p-2 text-xs font-bold border border-slate-300 rounded-lg bg-white text-center">
                             </div>
                             <div class="col-span-1 sm:col-span-2">
-                                <label class="block text-xs font-extrabold text-slate-700 mb-2 uppercase tracking-wider">Egg Laying Window (From - To)</label>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <input type="time" id="egg-laying-from" class="w-full p-3 text-sm font-bold border border-slate-300 rounded-xl bg-white text-center">
-                                    <input type="time" id="egg-laying-to" class="w-full p-3 text-sm font-bold border border-slate-300 rounded-xl bg-white text-center">
+                                <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">Egg Laying Window (From - To)</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <input type="time" id="egg-laying-from" class="w-full p-2 text-xs font-bold border border-slate-300 rounded-lg bg-white text-center">
+                                    <input type="time" id="egg-laying-to" class="w-full p-2 text-xs font-bold border border-slate-300 rounded-lg bg-white text-center">
                                 </div>
                             </div>
                         </div>
@@ -258,11 +265,11 @@
                     <hr class="border-slate-200">
 
                     <div>
-                        <span class="text-xs font-extrabold text-emerald-900 bg-emerald-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-emerald-300">4. Final Yield Result</span>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+                        <span class="text-[10px] font-extrabold text-emerald-900 bg-emerald-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-emerald-300">4. Final Yield Result</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <div>
-                                <label class="block text-xs font-black text-teal-950 mb-2 uppercase tracking-wider">Spawning Outcome</label>
-                                <select id="spawn-status-outcome" required class="w-full p-3 text-sm border-2 border-teal-500 bg-teal-50 rounded-xl font-black text-teal-900 shadow-sm">
+                                <label class="block text-[10px] font-black text-teal-950 mb-1.5 uppercase tracking-wider">Spawning Outcome</label>
+                                <select id="spawn-status-outcome" required class="w-full p-2.5 text-xs border-2 border-teal-500 bg-teal-50 rounded-lg font-black text-teal-900 shadow-sm">
                                     <option value="">Choose Outcome</option>
                                     <option value="Successful">Successful</option>
                                     <option value="No Sperm & Eggs">No Sperm & Eggs</option>
@@ -271,15 +278,15 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-black text-slate-700 mb-2 uppercase tracking-wider">Fertilised Eggs</label>
+                                <label class="block text-[10px] font-black text-slate-700 mb-1.5 uppercase tracking-wider">Fertilised Eggs</label>
                                 <div class="relative">
-                                    <input type="number" id="total-collected-eggs" placeholder="4835333" required class="w-full pl-4 pr-16 py-3 text-base border-2 border-slate-300 font-black rounded-xl text-teal-950 shadow-inner">
-                                    <span class="absolute right-4 top-3.5 text-xs font-black text-slate-400 uppercase">Eggs</span>
+                                    <input type="number" id="total-collected-eggs" placeholder="4835333" required class="w-full pl-3 pr-14 py-2.5 text-sm border-2 border-slate-300 font-black rounded-lg text-teal-950 shadow-inner">
+                                    <span class="absolute right-3 top-2.5 text-[10px] font-black text-slate-400 uppercase">Eggs</span>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-black text-slate-700 mb-2 uppercase tracking-wider">Quality Grade</label>
-                                <select id="egg-quality" required class="w-full p-3 text-sm border border-slate-300 bg-white rounded-xl font-black text-slate-800">
+                                <label class="block text-[10px] font-black text-slate-700 mb-1.5 uppercase tracking-wider">Quality Grade</label>
+                                <select id="egg-quality" required class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-black text-slate-800">
                                     <option value="Good">Good</option>
                                     <option value="Bad">Bad</option>
                                 </select>
@@ -288,42 +295,42 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-50 border-t border-slate-200 px-6 py-5 flex flex-col sm:flex-row gap-4 justify-end">
-                    <button type="button" onclick="resetForm('spawning-form')" class="px-6 py-3 border border-slate-300 bg-white rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
-                    <button type="submit" class="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-black text-sm rounded-xl shadow-md transition-all">Upload Spawning Log</button>
+                <div class="bg-slate-50 border-t border-slate-200 px-5 py-4 flex flex-col sm:flex-row gap-3 justify-end">
+                    <button type="button" onclick="resetForm('spawning-form', true)" class="px-5 py-2 border border-slate-300 bg-white rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
+                    <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-black text-xs rounded-lg shadow-md transition-all">Upload Spawning Log</button>
                 </div>
             </form>
         </div>
 
         <div id="tab-content-purchasing" class="hidden space-y-6 max-w-6xl mx-auto">
-            <form id="purchasing-form" onsubmit="handlePurchasingSubmit(event)" class="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden">
-                <div class="p-6 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center">
+            <form id="purchasing-form" onsubmit="handlePurchasingSubmit(event)" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center">
                     <div>
-                        <h3 class="text-lg font-extrabold text-teal-950">Abalone Purchase Intake</h3>
+                        <h3 class="text-base font-extrabold text-teal-950">Abalone Purchase Intake</h3>
                     </div>
-                    <button type="button" onclick="fillMockPurchasing()" class="text-xs font-bold text-teal-800 bg-teal-200/80 hover:bg-teal-300 px-4 py-2 rounded-xl transition-all shadow-sm">
+                    <button type="button" onclick="fillMockPurchasing()" class="text-[11px] font-bold text-teal-800 bg-teal-200/80 hover:bg-teal-300 px-3 py-1.5 rounded-lg transition-all shadow-sm">
                         Load Mock Purchase
                     </button>
                 </div>
 
-                <div class="p-5 sm:p-6 space-y-8">
+                <div class="p-5 sm:p-6 space-y-6">
                     <div>
-                        <span class="text-xs font-extrabold text-teal-900 bg-teal-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-teal-200">1. Logistics Setup</span>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
+                        <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">1. Logistics Setup</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Purchase Date</label>
-                                <input type="date" id="pur-date" required class="w-full p-3 text-sm border border-slate-300 bg-slate-50 rounded-xl focus:ring-2 focus:ring-teal-500">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Purchase Date</label>
+                                <input type="date" id="pur-date" required class="w-full p-2.5 text-xs border border-slate-300 bg-slate-50 rounded-lg focus:ring-2 focus:ring-teal-500">
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Supplier Category</label>
-                                <select id="pur-supplier-cat" required class="w-full p-3 text-sm border border-slate-300 bg-slate-50 rounded-xl">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Supplier Category</label>
+                                <select id="pur-supplier-cat" required class="w-full p-2.5 text-xs border border-slate-300 bg-slate-50 rounded-lg">
                                     <option value="Existing Supplier">Existing Supplier</option>
                                     <option value="New Supplier">New Supplier</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Moon Phase</label>
-                                <select id="pur-moon" required class="w-full p-3 text-sm border border-slate-300 bg-slate-50 rounded-xl">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Moon Phase</label>
+                                <select id="pur-moon" required class="w-full p-2.5 text-xs border border-slate-300 bg-slate-50 rounded-lg">
                                     <option value="New Moon">New Moon</option>
                                     <option value="Full Moon">Full Moon</option>
                                     <option value="First Quarter">First Quarter</option>
@@ -336,23 +343,23 @@
                     <hr class="border-slate-200">
 
                     <div>
-                        <span class="text-xs font-extrabold text-teal-900 bg-teal-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-teal-200">2. Mass & Assessment</span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5">
+                        <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">2. Mass & Assessment</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Total Weight (kg)</label>
-                                <input type="number" step="0.01" id="pur-total-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-3 text-base border-2 border-slate-300 rounded-xl font-black">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Total Weight (kg)</label>
+                                <input type="number" step="0.01" id="pur-total-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-2.5 text-sm border-2 border-slate-300 rounded-lg font-black">
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Dead Weight (kg)</label>
-                                <input type="number" step="0.01" id="pur-dead-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-3 text-sm border border-slate-300 rounded-xl bg-rose-50 text-rose-900 font-bold focus:ring-2 focus:ring-rose-500/30">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Dead Weight (kg)</label>
+                                <input type="number" step="0.01" id="pur-dead-kg" placeholder="0.00" required oninput="calculatePurchasingMetricsLive()" class="w-full p-2.5 text-xs border border-slate-300 rounded-lg bg-rose-50 text-rose-900 font-bold focus:ring-2 focus:ring-rose-500/30">
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Mortality Rate (%)</label>
-                                <input type="text" id="pur-dead-pct" readonly placeholder="0.00%" class="w-full p-3 text-base bg-slate-200 text-rose-600 border border-slate-300 rounded-xl font-black text-center shadow-inner">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Mortality Rate (%)</label>
+                                <input type="text" id="pur-dead-pct" readonly placeholder="0.00%" class="w-full p-2.5 text-sm bg-slate-200 text-rose-600 border border-slate-300 rounded-lg font-black text-center shadow-inner">
                             </div>
                             <div>
-                                <label class="block text-sm font-extrabold text-slate-700 mb-2">Batch Quality</label>
-                                <select id="pur-quality" required class="w-full p-3 text-sm border border-slate-300 bg-white rounded-xl font-bold">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Batch Quality</label>
+                                <select id="pur-quality" required class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-bold">
                                     <option value="Excellent">Excellent</option>
                                     <option value="Good">Good</option>
                                     <option value="Normal">Normal</option>
@@ -365,137 +372,136 @@
                     <hr class="border-slate-200">
 
                     <div>
-                        <span class="text-xs font-extrabold text-teal-900 bg-teal-100 px-3 py-1.5 rounded-lg uppercase tracking-wider border border-teal-200">3. Matrix Distribution</span>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
-                            <div class="border border-slate-200 rounded-2xl p-5 bg-white space-y-5">
-                                <h4 class="text-sm font-black text-teal-800 flex items-center gap-2"><i data-lucide="venus" class="w-5 h-5 text-teal-500"></i> Female Details</h4>
-                                <div class="grid grid-cols-3 gap-3 text-xs font-black text-slate-500 text-center uppercase border-b pb-2">
+                        <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">3. Matrix Distribution</span>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-4">
+                            <div class="border border-slate-200 rounded-xl p-4 bg-white space-y-4">
+                                <h4 class="text-xs font-black text-teal-800 flex items-center gap-1.5"><i data-lucide="venus" class="w-4 h-4 text-teal-500"></i> Female Details</h4>
+                                <div class="grid grid-cols-3 gap-2 text-[10px] font-black text-slate-500 text-center uppercase border-b pb-1.5">
                                     <div>Maturity</div><div>Pieces</div><div>Weight (kg)</div>
                                 </div>
-                                <div class="space-y-3" id="female-purchase-rows">
-                                    <div class="grid grid-cols-3 gap-3 items-center"><span class="text-sm font-bold text-slate-700 bg-slate-50 py-2 rounded-lg text-center border">50%</span><input type="number" id="pf-50-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"><input type="number" step="0.01" id="pf-50-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-3 items-center"><span class="text-sm font-bold text-slate-700 bg-slate-50 py-2 rounded-lg text-center border">60%</span><input type="number" id="pf-60-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"><input type="number" step="0.01" id="pf-60-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-3 items-center"><span class="text-sm font-bold text-slate-700 bg-slate-50 py-2 rounded-lg text-center border">70%</span><input type="number" id="pf-70-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"><input type="number" step="0.01" id="pf-70-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-3 items-center"><span class="text-sm font-bold text-slate-700 bg-slate-50 py-2 rounded-lg text-center border">80%</span><input type="number" id="pf-80-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"><input type="number" step="0.01" id="pf-80-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"></div>
-                                    <div class="grid grid-cols-3 gap-3 items-center"><span class="text-sm font-bold text-slate-700 bg-slate-50 py-2 rounded-lg text-center border">90%</span><input type="number" id="pf-90-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"><input type="number" step="0.01" id="pf-90-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-sm border border-slate-300 rounded-lg text-center font-bold"></div>
+                                <div class="space-y-2" id="female-purchase-rows">
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">50%</span><input type="number" id="pf-50-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-50-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">60%</span><input type="number" id="pf-60-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-60-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">70%</span><input type="number" id="pf-70-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-70-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">80%</span><input type="number" id="pf-80-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-80-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
+                                    <div class="grid grid-cols-3 gap-2 items-center"><span class="text-xs font-bold text-slate-700 bg-slate-50 py-1.5 rounded-md text-center border">90%</span><input type="number" id="pf-90-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"><input type="number" step="0.01" id="pf-90-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="p-2 text-xs border border-slate-300 rounded-md text-center font-bold"></div>
                                 </div>
-                                <div class="bg-teal-50 border border-teal-200 p-4 rounded-xl text-sm font-extrabold text-teal-950 grid grid-cols-3 gap-2 text-center mt-4">
-                                    <div>Pcs: <span id="f-sum-pcs" class="block text-base font-black text-teal-700 mt-1">0</span></div>
-                                    <div>Total Kg: <span id="f-sum-kg" class="block text-base font-black text-teal-700 mt-1">0.00</span></div>
-                                    <div>Ratio: <span id="f-sum-ratio" class="block text-base font-black text-teal-700 mt-1">0.00%</span></div>
+                                <div class="bg-teal-50 border border-teal-200 p-3 rounded-lg text-xs font-extrabold text-teal-950 grid grid-cols-3 gap-1.5 text-center mt-3">
+                                    <div>Pcs: <span id="f-sum-pcs" class="block text-sm font-black text-teal-700 mt-0.5">0</span></div>
+                                    <div>Total Kg: <span id="f-sum-kg" class="block text-sm font-black text-teal-700 mt-0.5">0.00</span></div>
+                                    <div>Ratio: <span id="f-sum-ratio" class="block text-sm font-black text-teal-700 mt-0.5">0.00%</span></div>
                                 </div>
                             </div>
 
-                            <div class="border border-slate-200 rounded-2xl p-5 bg-white flex flex-col justify-between">
-                                <div class="space-y-5">
-                                    <h4 class="text-sm font-black text-cyan-800 flex items-center gap-2"><i data-lucide="mars" class="w-5 h-5 text-cyan-500"></i> Male Details</h4>
-                                    <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col justify-between">
+                                <div class="space-y-4">
+                                    <h4 class="text-xs font-black text-cyan-800 flex items-center gap-1.5"><i data-lucide="mars" class="w-4 h-4 text-cyan-500"></i> Male Details</h4>
+                                    <div class="grid grid-cols-2 gap-3 pt-1">
                                         <div>
-                                            <label class="block text-xs font-extrabold text-slate-700 mb-2 uppercase">Total Pieces (pcs)</label>
-                                            <input type="number" id="pm-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="w-full p-3 text-base border border-slate-300 rounded-xl text-center font-black bg-slate-50">
+                                            <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Total Pieces (pcs)</label>
+                                            <input type="number" id="pm-pcs" oninput="calculatePurchasingMetricsLive()" placeholder="0" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg text-center font-black bg-slate-50">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-extrabold text-slate-700 mb-2 uppercase">Total Weight (kg)</label>
-                                            <input type="number" step="0.01" id="pm-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="w-full p-3 text-base border border-slate-300 rounded-xl text-center font-black bg-slate-50">
+                                            <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Total Weight (kg)</label>
+                                            <input type="number" step="0.01" id="pm-kg" oninput="calculatePurchasingMetricsLive()" placeholder="0.00" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg text-center font-black bg-slate-50">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="bg-cyan-50 border border-cyan-200 p-4 rounded-xl text-sm font-extrabold text-cyan-950 grid grid-cols-3 gap-2 text-center mt-6">
-                                    <div>Pcs: <span id="m-sum-pcs" class="block text-base font-black text-cyan-700 mt-1">0</span></div>
-                                    <div>Total Kg: <span id="m-sum-kg" class="block text-base font-black text-cyan-700 mt-1">0.00</span></div>
-                                    <div>Ratio: <span id="m-sum-ratio" class="block text-base font-black text-cyan-700 mt-1">0.00%</span></div>
+                                <div class="bg-cyan-50 border border-cyan-200 p-3 rounded-lg text-xs font-extrabold text-cyan-950 grid grid-cols-3 gap-1.5 text-center mt-4">
+                                    <div>Pcs: <span id="m-sum-pcs" class="block text-sm font-black text-cyan-700 mt-0.5">0</span></div>
+                                    <div>Total Kg: <span id="m-sum-kg" class="block text-sm font-black text-cyan-700 mt-0.5">0.00</span></div>
+                                    <div>Ratio: <span id="m-sum-ratio" class="block text-sm font-black text-cyan-700 mt-0.5">0.00%</span></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-50 border-t border-slate-200 px-6 py-5 flex flex-col sm:flex-row gap-4 justify-end">
-                    <button type="button" onclick="resetForm('purchasing-form')" class="px-6 py-3 border border-slate-300 bg-white rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
-                    <button type="submit" class="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-black text-sm rounded-xl shadow-md transition-all transform hover:scale-[1.01]">Upload Purchase Log</button>
+                <div class="bg-slate-50 border-t border-slate-200 px-5 py-4 flex flex-col sm:flex-row gap-3 justify-end">
+                    <button type="button" onclick="resetForm('purchasing-form')" class="px-5 py-2 border border-slate-300 bg-white rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
+                    <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-black text-xs rounded-lg shadow-md transition-all">Upload Purchase Log</button>
                 </div>
             </form>
         </div>
 
-        <div id="tab-content-manager" class="hidden space-y-6 w-full max-w-6xl mx-auto">
+        <div id="tab-content-manager" class="hidden space-y-5 w-full max-w-6xl mx-auto">
             
-            <div id="pin-barrier" class="bg-white rounded-3xl border border-slate-200 shadow-xl p-10 sm:p-14 text-center flex flex-col items-center justify-center max-w-md mx-auto mt-10">
-                <div class="w-16 h-16 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-6 border-2 border-rose-100">
-                    <i data-lucide="lock-keyhole" class="w-8 h-8"></i>
+            <div id="pin-barrier" class="bg-white rounded-2xl border border-slate-200 shadow-lg p-8 sm:p-12 text-center flex flex-col items-center justify-center max-w-sm mx-auto mt-8">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-4 border border-rose-100">
+                    <i data-lucide="lock-keyhole" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-xl sm:text-2xl font-black text-slate-800 mb-3">Executive Access</h3>
-                <p class="text-sm text-slate-500 mb-8 px-2">Verify your 4-digit token identity passcode.</p>
-                <div class="flex flex-col w-full gap-4 max-w-[250px]">
-                    <input type="password" id="manager-pin" maxlength="4" placeholder="••••" class="w-full text-center text-3xl tracking-[0.4em] font-black py-3 bg-slate-50 border-2 border-slate-300 rounded-2xl focus:outline-none focus:border-teal-500 transition-all">
-                    <button onclick="unlockTerminalLogs()" class="py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-extrabold transition-all shadow-md transform hover:-translate-y-0.5">
+                <h3 class="text-lg sm:text-xl font-black text-slate-800 mb-2">Executive Access</h3>
+                <p class="text-xs text-slate-500 mb-6 px-2">Verify your 4-digit token identity passcode.</p>
+                <div class="flex flex-col w-full gap-3 max-w-[200px]">
+                    <input type="password" id="manager-pin" maxlength="4" placeholder="••••" class="w-full text-center text-2xl tracking-[0.3em] font-black py-2.5 bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-teal-500 transition-all">
+                    <button onclick="unlockTerminalLogs()" class="py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-extrabold transition-all shadow-sm">
                         Authorize Details
                     </button>
                 </div>
             </div>
 
-            <div id="logs-unlocked-panel" class="hidden space-y-6 w-full">
+            <div id="logs-unlocked-panel" class="hidden space-y-5 w-full">
                 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-5 sm:p-6 flex flex-col md:flex-row justify-between items-center gap-5">
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-rose-100 p-3 rounded-xl text-rose-700 border border-rose-200"><i data-lucide="presentation" class="w-6 h-6"></i></div>
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-rose-100 p-2.5 rounded-xl text-rose-700 border border-rose-200"><i data-lucide="presentation" class="w-5 h-5"></i></div>
                         <div>
-                            <h3 class="text-lg font-black text-slate-800 tracking-tight">Master Executive Dashboard</h3>
-                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Live Analytics Grids</p>
+                            <h3 class="text-base font-black text-slate-800 tracking-tight">Master Executive Dashboard</h3>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Live Analytics Grids</p>
                         </div>
                     </div>
                     
-                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
-                        <div id="sub-tabs-logs" class="flex bg-slate-100 p-1.5 rounded-xl text-sm font-bold border border-slate-200 w-full sm:w-auto">
-                            <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Spawning Runs</button>
-                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50">Purchase Batches</button>
+                    <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                        <div id="sub-tabs-logs" class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200 w-full sm:w-auto">
+                            <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Spawning Runs</button>
+                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50">Purchase Batches</button>
                         </div>
                         
-                        <div class="flex gap-3 w-full sm:w-auto">
-                            <button onclick="fetchLatestLogs()" class="flex-1 sm:flex-none p-3 bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-700 rounded-xl transition-all flex items-center justify-center shadow-sm" title="Force Sync Refresh">
-                                <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button onclick="fetchLatestLogs()" class="flex-1 sm:flex-none p-2.5 bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-700 rounded-lg transition-all flex items-center justify-center shadow-sm" title="Force Sync Refresh">
+                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                             </button>
                             
-                            <button onclick="lockTerminalLogs()" class="flex-1 sm:flex-none px-5 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold transition-all uppercase tracking-wider shadow-sm">
+                            <button onclick="lockTerminalLogs()" class="flex-1 sm:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-all uppercase tracking-wider shadow-sm">
                                 Lock
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-4 sm:p-6 overflow-hidden">
-                    <div class="mb-4 px-2 sm:px-0">
-                        <span id="current-log-label" class="text-sm font-black text-slate-600 uppercase tracking-widest bg-slate-100 px-4 py-1.5 rounded-full border border-slate-200">Spawning Trials Workbook</span>
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3 sm:p-5 overflow-hidden">
+                    <div class="mb-3 px-2 sm:px-0">
+                        <span id="current-log-label" class="text-xs font-black text-slate-600 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full border border-slate-200">Spawning Trials Workbook</span>
                     </div>
 
-                    <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-2xl shadow-inner">
+                    <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl shadow-inner">
                         
-                        <table id="spawning-log-table" class="min-w-full text-sm text-left text-slate-700 whitespace-nowrap">
-                            <thead class="bg-slate-100 text-xs uppercase font-black text-slate-500 border-b-2 border-slate-200">
+                        <table id="spawning-log-table" class="min-w-full text-xs text-left text-slate-700 whitespace-nowrap">
+                            <thead class="bg-slate-100 text-[11px] uppercase font-black text-slate-500 border-b-2 border-slate-200">
                                 <tr>
-                                    <th class="px-5 py-4 border-r border-slate-200 tracking-wider">Date</th>
-                                    <th class="px-5 py-4 tracking-wider">Moon Phase</th>
-                                    <th class="px-5 py-4 bg-emerald-50 text-emerald-900 border-x border-emerald-200 tracking-wider">Status Outcome</th>
-                                    <th class="px-5 py-4 bg-teal-50 text-teal-950 border-r border-teal-200 text-right tracking-wider">Fertilised Eggs</th>
-                                    <th class="px-5 py-4 tracking-wider">Staff Registry</th>
-                                    <th class="px-5 py-4 bg-slate-50 border-l border-slate-200 tracking-wider">WQ Avg (C1 &rarr; C2)</th>
-                                    <th class="px-5 py-4 bg-slate-50 border-l border-slate-200 tracking-wider">Broodstock Sorting</th>
-                                    <th class="px-5 py-4 border-l border-slate-200 tracking-wider">Shift Window</th>
+                                    <th class="px-4 py-3 border-r border-slate-200">Date</th>
+                                    <th class="px-4 py-3">Moon Phase</th>
+                                    <th class="px-4 py-3 bg-emerald-50 text-emerald-900 border-x border-emerald-200">Status Outcome</th>
+                                    <th class="px-4 py-3 bg-teal-50 text-teal-950 border-r border-teal-200 text-right">Fertilised Eggs</th>
+                                    <th class="px-4 py-3">Staff Registry</th>
+                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">WQ Avg (C1 &rarr; C2)</th>
+                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Broodstock Sorting</th>
                                 </tr>
                             </thead>
                             <tbody id="spawning-log-body" class="divide-y divide-slate-100 font-bold bg-white"></tbody>
                         </table>
 
-                        <table id="purchasing-log-table" class="min-w-full text-sm text-left text-slate-700 whitespace-nowrap hidden">
-                            <thead class="bg-slate-100 text-xs uppercase font-black text-slate-500 border-b-2 border-slate-200">
+                        <table id="purchasing-log-table" class="min-w-full text-xs text-left text-slate-700 whitespace-nowrap hidden">
+                            <thead class="bg-slate-100 text-[11px] uppercase font-black text-slate-500 border-b-2 border-slate-200">
                                 <tr>
-                                    <th class="px-5 py-4 border-r border-slate-200 tracking-wider">Date</th>
-                                    <th class="px-5 py-4 tracking-wider">Supplier & Moon</th>
-                                    <th class="px-5 py-4 bg-teal-50 text-teal-950 border-l border-teal-200 tracking-wider">Total Weight</th>
-                                    <th class="px-5 py-4 bg-rose-50 text-rose-950 border-l border-rose-200 tracking-wider">Transit Loss</th>
-                                    <th class="px-5 py-4 bg-rose-100 text-rose-900 border-r border-rose-300 tracking-wider">Mortality %</th>
-                                    <th class="px-5 py-4 tracking-wider">Quality Grade</th>
-                                    <th class="px-5 py-4 bg-slate-50 border-l border-slate-200 tracking-wider">Female Breakdown</th>
-                                    <th class="px-5 py-4 bg-slate-50 border-l border-slate-200 tracking-wider">Male Distribution</th>
+                                    <th class="px-4 py-3 border-r border-slate-200">Date</th>
+                                    <th class="px-4 py-3">Supplier & Moon</th>
+                                    <th class="px-4 py-3 bg-teal-50 text-teal-950 border-l border-teal-200">Total Weight</th>
+                                    <th class="px-4 py-3 bg-rose-50 text-rose-950 border-l border-rose-200">Transit Loss</th>
+                                    <th class="px-4 py-3 bg-rose-100 text-rose-900 border-r border-rose-300">Mortality %</th>
+                                    <th class="px-4 py-3">Quality Grade</th>
+                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Female Breakdown</th>
+                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Male Distribution</th>
                                 </tr>
                             </thead>
                             <tbody id="purchasing-log-body" class="divide-y divide-slate-100 font-bold bg-white"></tbody>
@@ -506,11 +512,11 @@
         </section>
     </main>
 
-    <div id="alert-banner" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 max-w-sm w-full bg-slate-900 text-white px-5 py-4 rounded-2xl shadow-2xl flex items-start space-x-4 text-sm border border-slate-700">
-        <div id="alert-icon-container" class="p-2 rounded-lg text-teal-400 bg-teal-500/20"></div>
+    <div id="alert-banner" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 max-w-sm w-full bg-slate-900 text-white px-4 py-3.5 rounded-xl shadow-2xl flex items-start space-x-3 text-sm border border-slate-700">
+        <div id="alert-icon-container" class="p-1.5 rounded-lg text-teal-400 bg-teal-500/20"></div>
         <div class="flex-grow">
-            <h5 id="alert-title" class="font-black tracking-wide text-base">System Alert</h5>
-            <p id="alert-msg" class="text-slate-300 mt-1 leading-relaxed font-medium"></p>
+            <h5 id="alert-title" class="font-black tracking-wide text-sm">System Alert</h5>
+            <p id="alert-msg" class="text-slate-300 mt-1 leading-relaxed text-xs"></p>
         </div>
     </div>
 
@@ -523,7 +529,6 @@
         let isLogsUnlocked = false;
         
         window.addEventListener('load', () => {
-            initializeLayoutHours();
             buildTankInterfaceRows();
             lucide.createIcons();
             
@@ -533,32 +538,48 @@
                 toggleConnectionBadgeState(true);
             }
             
-            const today = new Date().toISOString().split('T')[0];
-            ['spawn-date','c1-date','c2-date','pur-date'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.value = today;
-            });
+            // Auto-Save Draft recovery
+            if(localStorage.getItem('spawningDraft')) {
+                loadDraft('spawning-form', 'spawningDraft');
+                document.getElementById('draft-indicator').classList.remove('hidden');
+            } else {
+                const today = new Date().toISOString().split('T')[0];
+                ['spawn-date','spawn-start-date','spawn-end-date','pur-date'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) el.value = today;
+                });
+                document.getElementById('spawn-start-time').value = "22:00";
+                document.getElementById('spawn-end-time').value = "04:00";
+                document.getElementById('c1-hour').value = "22:00";
+                document.getElementById('c2-hour').value = "03:00";
+            }
 
-            document.getElementById('spawn-period-start-hour').value = "22:00";
-            document.getElementById('spawn-period-end-hour').value = "04:00";
-            document.getElementById('c1-hour').value = "22:00";
-            document.getElementById('c2-hour').value = "03:00";
+            // Bind the auto-save event to the spawning form
+            document.getElementById('spawning-form').addEventListener('input', () => saveDraft('spawning-form', 'spawningDraft'));
 
             calculateSpawningAverages(1);
             calculateSpawningAverages(2);
         });
 
-        function initializeLayoutHours() {
-            ['spawn-period-start-hour', 'spawn-period-end-hour', 'c1-hour', 'c2-hour'].forEach(id => {
-                const select = document.getElementById(id);
-                if(!select) return;
-                select.innerHTML = '';
-                for(let h=0; h<24; h++) {
-                    let formatted = (h < 10 ? '0' : '') + h + ':00';
-                    select.innerHTML += `<option value="${formatted}">${formatted}</option>`;
-                }
-            });
+        // --- DRAFT AUTO SAVE SYSTEM ---
+        function saveDraft(formId, storageKey) {
+            const inputs = document.querySelectorAll(`#${formId} input, #${formId} select`);
+            let draft = {};
+            inputs.forEach(el => { if(el.id) draft[el.id] = el.value; });
+            localStorage.setItem(storageKey, JSON.stringify(draft));
+            document.getElementById('draft-indicator').classList.remove('hidden');
         }
+
+        function loadDraft(formId, storageKey) {
+            let draft = JSON.parse(localStorage.getItem(storageKey));
+            if(draft) {
+                for(let id in draft) {
+                    let el = document.getElementById(id);
+                    if(el) el.value = draft[id];
+                }
+            }
+        }
+        // ------------------------------
 
         function buildTankInterfaceRows() {
             const grid1 = document.getElementById('check1-tanks-grid');
@@ -567,20 +588,20 @@
 
             tanksList.forEach(t => {
                 grid1.innerHTML += `
-                    <div class="grid grid-cols-5 gap-2 items-center">
-                        <span class="text-xs font-black text-teal-800 text-center bg-teal-100 py-2.5 rounded-lg border border-teal-200">Tank ${t}</span>
-                        <input type="number" step="0.1" id="c1-t-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
-                        <input type="number" step="0.01" id="c1-d-${t}" oninput="calculateSpawningAverages(1); evaluateDoLimit(this);" placeholder="5.5" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
-                        <input type="number" step="0.1" id="c1-p-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
-                        <input type="number" step="0.1" id="c1-s-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
+                    <div class="grid grid-cols-5 gap-1.5 items-center">
+                        <span class="text-[11px] font-black text-teal-800 text-center bg-teal-100 py-1.5 rounded-md border border-teal-200">Tank ${t}</span>
+                        <input type="number" step="0.1" id="c1-t-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <input type="number" step="0.01" id="c1-d-${t}" oninput="calculateSpawningAverages(1); evaluateDoLimit(this);" placeholder="5.5" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <input type="number" step="0.1" id="c1-p-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <input type="number" step="0.1" id="c1-s-${t}" oninput="calculateSpawningAverages(1); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
                     </div>`;
                 grid2.innerHTML += `
-                    <div class="grid grid-cols-5 gap-2 items-center">
-                        <span class="text-xs font-black text-cyan-800 text-center bg-cyan-100 py-2.5 rounded-lg border border-cyan-200">Tank ${t}</span>
-                        <input type="number" step="0.1" id="c2-t-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
-                        <input type="number" step="0.01" id="c2-d-${t}" oninput="calculateSpawningAverages(2); evaluateDoLimit(this);" placeholder="5.5" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
-                        <input type="number" step="0.1" id="c2-p-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
-                        <input type="number" step="0.1" id="c2-s-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white">
+                    <div class="grid grid-cols-5 gap-1.5 items-center">
+                        <span class="text-[11px] font-black text-cyan-800 text-center bg-cyan-100 py-1.5 rounded-md border border-cyan-200">Tank ${t}</span>
+                        <input type="number" step="0.1" id="c2-t-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,28.0,32.0);" placeholder="30.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <input type="number" step="0.01" id="c2-d-${t}" oninput="calculateSpawningAverages(2); evaluateDoLimit(this);" placeholder="5.5" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <input type="number" step="0.1" id="c2-p-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,8.1,8.5);" placeholder="8.2" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
+                        <input type="number" step="0.1" id="c2-s-${t}" oninput="calculateSpawningAverages(2); evaluateLimits(this,32.0,36.0);" placeholder="34.0" class="p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white">
                     </div>`;
             });
         }
@@ -641,14 +662,14 @@
 
         function evaluateDoLimit(el) {
             const v = parseFloat(el.value);
-            if(!isNaN(v) && v < 5.0) el.className = "p-2.5 text-sm text-center border-2 rounded-lg bg-rose-50 text-rose-700 font-black border-rose-400 animate-pulse";
-            else el.className = "p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white";
+            if(!isNaN(v) && v < 5.0) el.className = "p-1.5 text-xs text-center border-2 rounded-md bg-rose-50 text-rose-700 font-black border-rose-400 animate-pulse";
+            else el.className = "p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white";
         }
 
         function evaluateLimits(el, min, max) {
             const v = parseFloat(el.value);
-            if(!isNaN(v) && (v < min || v > max)) el.className = "p-2.5 text-sm text-center border-2 rounded-lg bg-amber-50 text-amber-700 font-black border-amber-400";
-            else el.className = "p-2.5 text-sm text-center border border-slate-300 rounded-lg font-bold bg-white";
+            if(!isNaN(v) && (v < min || v > max)) el.className = "p-1.5 text-xs text-center border-2 rounded-md bg-amber-50 text-amber-700 font-black border-amber-400";
+            else el.className = "p-1.5 text-xs text-center border border-slate-300 rounded-md font-bold bg-white";
         }
 
         function switchTab(id) {
@@ -657,10 +678,10 @@
                 const btn = document.getElementById(`tab-btn-${t}`);
                 const block = document.getElementById(`tab-content-${t}`);
                 if (t === id) {
-                    btn.className = "flex-1 py-3 text-sm sm:text-base font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm border border-slate-200/50";
+                    btn.className = "flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm border border-slate-200/50";
                     block.classList.remove('hidden');
                 } else {
-                    btn.className = "flex-1 py-3 text-sm sm:text-base font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800 hover:bg-white/50 border border-transparent";
+                    btn.className = "flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800 hover:bg-white/50 border border-transparent";
                     block.classList.add('hidden');
                 }
             });
@@ -671,10 +692,10 @@
 
         function switchLogView(type) {
             activeLogTab = type;
-            document.getElementById('lv-spawn').className = type === 'spawning' ? "flex-1 sm:flex-none px-5 py-2.5 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-5 py-2.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
-            document.getElementById('lv-purch').className = type === 'purchasing' ? "flex-1 sm:flex-none px-5 py-2.5 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-5 py-2.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
-            document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-sm text-left text-slate-700 whitespace-nowrap" : "hidden";
-            document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-sm text-left text-slate-700 whitespace-nowrap" : "hidden";
+            document.getElementById('lv-spawn').className = type === 'spawning' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
+            document.getElementById('lv-purch').className = type === 'purchasing' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
+            document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-xs text-left text-slate-700 whitespace-nowrap" : "hidden";
+            document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-xs text-left text-slate-700 whitespace-nowrap" : "hidden";
             document.getElementById('current-log-label').textContent = type === 'spawning' ? "Spawning Trials Workbook" : "Abalone Purchases Workbook";
             if(isLogsUnlocked) renderTerminalLogsEngine();
         }
@@ -702,11 +723,11 @@
         function toggleConnectionBadgeState(state) {
             const b = document.getElementById('conn-badge');
             if(state) {
-                b.className = "px-4 py-2 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-800 border border-emerald-500/40 flex items-center space-x-2";
-                b.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span><span class="hidden sm:inline">Connected to Sheets</span><span class="sm:hidden">Online</span>`;
+                b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-800 border border-emerald-500/40 flex items-center space-x-1.5";
+                b.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span><span class="hidden sm:inline">Connected to Sheets</span><span class="sm:hidden">Online</span>`;
             } else {
-                b.className = "px-4 py-2 rounded-full text-xs font-bold bg-amber-500/20 text-amber-800 border border-amber-500/40 flex items-center space-x-2";
-                b.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span><span class="hidden sm:inline">Standalone Mode</span><span class="sm:hidden">Offline</span>`;
+                b.className = "px-3 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-800 border border-amber-500/40 flex items-center space-x-1.5";
+                b.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span><span class="hidden sm:inline">Standalone Mode</span><span class="sm:hidden">Offline</span>`;
             }
         }
 
@@ -715,8 +736,8 @@
             const icon = document.getElementById('alert-icon-container');
             document.getElementById('alert-title').textContent = title;
             document.getElementById('alert-msg').textContent = msg;
-            icon.className = type === 'success' ? "p-2.5 rounded-xl text-emerald-400 bg-emerald-500/20" : "p-2.5 rounded-xl text-rose-400 bg-rose-500/20";
-            icon.innerHTML = type === 'success' ? `<i data-lucide="check-circle-2" class="w-6 h-6"></i>` : `<i data-lucide="alert-octagon" class="w-6 h-6"></i>`;
+            icon.className = type === 'success' ? "p-1.5 rounded-lg text-emerald-400 bg-emerald-500/20" : "p-1.5 rounded-lg text-rose-400 bg-rose-500/20";
+            icon.innerHTML = type === 'success' ? `<i data-lucide="check-circle-2" class="w-5 h-5"></i>` : `<i data-lucide="alert-octagon" class="w-5 h-5"></i>`;
             lucide.createIcons();
             b.classList.remove('translate-y-16','opacity-0');
             setTimeout(() => b.classList.add('translate-y-16','opacity-0'), 4000);
@@ -756,9 +777,6 @@
             return s;
         }
 
-        /**
-         * Converts 0.8 to "80%" securely
-         */
         function formatPercent(val) {
             if (!val && val !== 0) return '';
             let str = String(val).trim();
@@ -780,8 +798,8 @@
                 c2Raw[t] = { temp: document.getElementById(`c2-t-${t}`).value, do: document.getElementById(`c2-d-${t}`).value, ph: document.getElementById(`c2-p-${t}`).value, sal: document.getElementById(`c2-s-${t}`).value };
             });
 
-            const shiftStart = document.getElementById('spawn-period-start-hour').value;
-            const shiftEnd = document.getElementById('spawn-period-end-hour').value;
+            const shiftStart = document.getElementById('spawn-start-date').value + ' ' + document.getElementById('spawn-start-time').value;
+            const shiftEnd = document.getElementById('spawn-end-date').value + ' ' + document.getElementById('spawn-end-time').value;
 
             const payload = {
                 action: 'addSpawning',
@@ -818,7 +836,7 @@
                 eggQuality: document.getElementById('egg-quality').value,
                 c1Raw: JSON.stringify(c1Raw), c2Raw: JSON.stringify(c2Raw)
             };
-            transmitToCloud(url, payload, () => resetForm('spawning-form'));
+            transmitToCloud(url, payload, () => resetForm('spawning-form', true));
         }
 
         function handlePurchasingSubmit(e) {
@@ -846,7 +864,7 @@
                 maleKg: document.getElementById('pm-kg').value || 0,
                 maleSumRatio: document.getElementById('m-sum-ratio').textContent
             };
-            transmitToCloud(url, payload, () => resetForm('purchasing-form'));
+            transmitToCloud(url, payload, () => resetForm('purchasing-form', false));
         }
 
         function transmitToCloud(url, p, cb) {
@@ -870,8 +888,8 @@
             const url = localStorage.getItem('abalone_gas_url');
             if(!url) return;
             
-            document.getElementById('spawning-log-body').innerHTML = `<tr><td colspan="8" class="px-5 py-8 text-center text-teal-600 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
-            document.getElementById('purchasing-log-body').innerHTML = `<tr><td colspan="8" class="px-5 py-8 text-center text-teal-600 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
+            document.getElementById('spawning-log-body').innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-teal-600 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
+            document.getElementById('purchasing-log-body').innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-teal-600 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
 
             fetch(`${url}?action=getLogs&pin=3653`, { method: 'GET', mode: 'cors' })
             .then(res => res.json()).then(d => {
@@ -889,7 +907,7 @@
             if(activeLogTab === 'spawning') {
                 const tbody = document.getElementById('spawning-log-body');
                 if(!cachedSpawning || cachedSpawning.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="px-5 py-8 text-center text-slate-400 font-bold text-sm">No recorded Spawning logs located inside spreadsheet.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-slate-400 font-bold text-sm">No recorded Spawning logs located inside spreadsheet.</td></tr>`;
                     return;
                 }
                 tbody.innerHTML = cachedSpawning.map(r => {
@@ -903,35 +921,30 @@
                     const mStr = r.malePcs && parseInt(r.malePcs) > 0 ? `${formatPercent(r.maleMat) || '80%'}: ${r.malePcs}pcs` : 'None';
                     
                     const safeDate = formatCleanDateOnly(r.date || r.trialDate);
-                    
-                    let tStart = r.periodStart || "22:00", tEnd = r.periodEnd || "04:00";
-                    if(tStart.includes(" ")) tStart = tStart.split(" ")[1];
-                    if(tEnd.includes(" ")) tEnd = tEnd.split(" ")[1];
 
                     return `
                     <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-5 py-4 font-extrabold bg-slate-50/50 border-r border-slate-200 text-slate-800">${safeDate}</td>
-                        <td class="px-5 py-4 text-slate-600 font-bold">${r.moonCycle || ''}</td>
-                        <td class="px-5 py-4 bg-emerald-50/70 border-x border-emerald-100/50">
-                            <span class="px-3 py-1.5 rounded-md text-[11px] font-black uppercase bg-emerald-100 text-emerald-800 shadow-sm border border-emerald-200">${r.statusOutcome || 'Successful'}</span>
+                        <td class="px-4 py-3 font-extrabold bg-slate-50/50 border-r border-slate-200 text-slate-800">${safeDate}</td>
+                        <td class="px-4 py-3 text-slate-600 font-bold">${r.moonCycle || ''}</td>
+                        <td class="px-4 py-3 bg-emerald-50/70 border-x border-emerald-100/50">
+                            <span class="px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-100 text-emerald-800 shadow-sm border border-emerald-200">${r.statusOutcome || 'Successful'}</span>
                         </td>
-                        <td class="px-5 py-4 font-black text-teal-950 text-right bg-teal-50/50 text-base border-r border-teal-100/50">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-bold text-slate-500 text-xs mt-0.5">Quality: ${r.eggQuality || ''}</span></td>
-                        <td class="px-5 py-4 text-slate-800 font-bold">${r.inCharge || ''} <span class="block text-xs text-slate-500 font-medium mt-0.5">Team: ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
-                        <td class="px-5 py-4 text-slate-700 bg-slate-50 border-l border-slate-200">
-                            <div class="text-teal-800 font-black text-xs">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'}</div>
-                            <div class="text-cyan-800 font-black text-xs mt-1.5">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'}</div>
+                        <td class="px-4 py-3 font-black text-teal-950 text-right bg-teal-50/50 text-sm border-r border-teal-100/50">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-bold text-slate-500 text-[10px] mt-0.5">Quality: ${r.eggQuality || ''}</span></td>
+                        <td class="px-4 py-3 text-slate-800 font-bold">${r.inCharge || ''} <span class="block text-[10px] text-slate-500 font-medium mt-0.5">Team: ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
+                        <td class="px-4 py-3 text-slate-700 bg-slate-50 border-l border-slate-200">
+                            <div class="text-teal-800 font-black text-[11px]">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'} | pH ${r.wq1AvgPh || '0.00'} | Sal ${r.wq1AvgSal || '0.0'}</div>
+                            <div class="text-cyan-800 font-black text-[11px] mt-1.5">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'} | pH ${r.wq2AvgPh || '0.00'} | Sal ${r.wq2AvgSal || '0.0'}</div>
                         </td>
-                        <td class="px-5 py-4 bg-slate-50 border-l border-slate-200">
-                            <div class="text-xs text-slate-700 font-medium"><span class="font-black text-teal-800">F:</span> ${fStr} <br/><span class="text-slate-500 mt-1 inline-block">(Total: ${r.totalSpawners ? parseInt(r.totalSpawners)-parseInt(r.malePcs||0) : '0'} pcs)</span></div>
-                            <div class="text-xs text-slate-700 font-medium mt-2 pt-2 border-t border-slate-200"><span class="font-black text-cyan-800">M:</span> ${mStr}</div>
+                        <td class="px-4 py-3 bg-slate-50 border-l border-slate-200">
+                            <div class="text-[11px] text-slate-700 font-medium"><span class="font-black text-teal-800">F:</span> ${fStr} <br/><span class="text-slate-500 mt-1 inline-block">(Total: ${r.totalSpawners ? parseInt(r.totalSpawners)-parseInt(r.malePcs||0) : '0'} pcs)</span></div>
+                            <div class="text-[11px] text-slate-700 font-medium mt-1 pt-1 border-t border-slate-200"><span class="font-black text-cyan-800">M:</span> ${mStr}</div>
                         </td>
-                        <td class="px-5 py-4 text-slate-600 font-extrabold border-l border-slate-200">${tStart} to ${tEnd}</td>
                     </tr>`;
                 }).join('');
             } else {
                 const tbody = document.getElementById('purchasing-log-body');
                 if(!cachedPurchasing || cachedPurchasing.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="px-5 py-8 text-center text-slate-400 font-bold text-sm">No recorded Purchasing logs located inside spreadsheet.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-slate-400 font-bold text-sm">No recorded Purchasing logs located inside spreadsheet.</td></tr>`;
                     return;
                 }
                 tbody.innerHTML = cachedPurchasing.map(r => {
@@ -947,20 +960,20 @@
 
                     return `
                     <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-5 py-4 font-extrabold bg-slate-50/50 border-r border-slate-200 text-slate-800">${safeDate}</td>
-                        <td class="px-5 py-4 font-extrabold text-slate-800">${r.supplierCategory || ''} <span class="block font-medium text-slate-500 text-xs mt-0.5">Moon: ${r.moonPhase || ''}</span></td>
-                        <td class="px-5 py-4 bg-teal-50/50 text-teal-950 font-black text-base border-l border-teal-100/50">${r.totalBatchWeightKg || '0.00'} kg</td>
-                        <td class="px-5 py-4 bg-rose-50/50 text-rose-950 font-bold border-l border-rose-100/50">${r.deadWeightKg || '0.00'} kg</td>
-                        <td class="px-5 py-4 text-rose-600 font-black text-base bg-rose-100/40 border-r border-rose-200">${r.mortality || '0.00%'}</td>
-                        <td class="px-5 py-4"><span class="px-3 py-1.5 border border-slate-300 rounded-lg text-[11px] font-black uppercase bg-white text-slate-700 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
-                        <td class="px-5 py-4 bg-slate-50 border-l border-slate-200">
-                            <div class="text-sm font-black text-teal-900">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
-                            <div class="text-[11px] font-extrabold text-teal-600 mt-1">% of Mass: ${r.femaleWeightRatio || '0.00%'}</div>
-                            <div class="text-[11px] text-slate-500 font-bold mt-2 border-t border-slate-200 pt-1.5 max-w-[200px] whitespace-normal leading-relaxed">${fBreakdownStr}</div>
+                        <td class="px-4 py-3 font-extrabold bg-slate-50/50 border-r border-slate-200 text-slate-800">${safeDate}</td>
+                        <td class="px-4 py-3 font-extrabold text-slate-800">${r.supplierCategory || ''} <span class="block font-medium text-slate-500 text-[10px] mt-0.5">Moon: ${r.moonPhase || ''}</span></td>
+                        <td class="px-4 py-3 bg-teal-50/50 text-teal-950 font-black text-sm border-l border-teal-100/50">${r.totalBatchWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3 bg-rose-50/50 text-rose-950 font-bold border-l border-rose-100/50">${r.deadWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3 text-rose-600 font-black text-sm bg-rose-100/40 border-r border-rose-200">${r.mortality || '0.00%'}</td>
+                        <td class="px-4 py-3"><span class="px-2 py-1 border border-slate-300 rounded-md text-[10px] font-black uppercase bg-white text-slate-700 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
+                        <td class="px-4 py-3 bg-slate-50 border-l border-slate-200">
+                            <div class="text-[11px] font-black text-teal-900">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
+                            <div class="text-[10px] font-extrabold text-teal-600 mt-1">% of Mass: ${r.femaleWeightRatio || '0.00%'}</div>
+                            <div class="text-[10px] text-slate-500 font-bold mt-1.5 border-t border-slate-200 pt-1 max-w-[180px] whitespace-normal leading-relaxed">${fBreakdownStr}</div>
                         </td>
-                        <td class="px-5 py-4 bg-slate-50 border-l border-slate-200">
-                            <div class="text-sm font-black text-cyan-900">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
-                            <div class="text-[11px] font-extrabold text-cyan-600 mt-1">% of Mass: ${r.maleWeightRatio || '0.00%'}</div>
+                        <td class="px-4 py-3 bg-slate-50 border-l border-slate-200">
+                            <div class="text-[11px] font-black text-cyan-900">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
+                            <div class="text-[10px] font-extrabold text-cyan-600 mt-1">% of Mass: ${r.maleWeightRatio || '0.00%'}</div>
                         </td>
                     </tr>`;
                 }).join('');
@@ -1033,9 +1046,11 @@
             showSystemToast('success', 'Intake Loaded', 'Loaded mock purchasing metrics and batch distribution.');
         }
 
-        function resetForm(id) {
+        function resetForm(id, isSpawning) {
             document.getElementById(id).reset();
-            if(id === 'spawning-form') { 
+            if(isSpawning) { 
+                localStorage.removeItem('spawningDraft');
+                document.getElementById('draft-indicator').classList.add('hidden');
                 buildTankInterfaceRows(); 
                 calculateSpawningAverages(1); 
                 calculateSpawningAverages(2); 

@@ -6,8 +6,12 @@
     <title>Haliotis asinina Hatchery Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
@@ -418,7 +422,7 @@
                 </div>
 
                 <div class="bg-slate-50 border-t border-slate-200 px-5 py-4 flex flex-col sm:flex-row gap-3 justify-end">
-                    <button type="button" onclick="resetForm('purchasing-form')" class="px-5 py-2 border border-slate-300 bg-white rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
+                    <button type="button" onclick="resetForm('purchasing-form', false)" class="px-5 py-2 border border-slate-300 bg-white rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">Clear Form</button>
                     <button type="submit" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white font-black text-xs rounded-lg shadow-md transition-all">Upload Purchase Log</button>
                 </div>
             </form>
@@ -1030,20 +1034,6 @@
             calculateSpawningAverages(2); 
             calculateTotalSpawnersLive();
             showSystemToast('success', 'Report Loaded', 'Loaded the official Spawning parameters from April 16th.');
-        }
-
-        function fillMockPurchasing() {
-            document.getElementById('pur-supplier-cat').value = "Existing Supplier";
-            document.getElementById('pur-moon').value = "Full Moon";
-            document.getElementById('pur-total-kg').value = 25.0;
-            document.getElementById('pur-dead-kg').value = 0.85;
-            document.getElementById('pur-quality').value = "Excellent";
-            document.getElementById('pf-80-pcs').value = 84; 
-            document.getElementById('pf-80-kg').value = 12.4;
-            document.getElementById('pm-pcs').value = 40; 
-            document.getElementById('pm-kg').value = 3.8;
-            calculatePurchasingMetricsLive();
-            showSystemToast('success', 'Intake Loaded', 'Loaded mock purchasing metrics and batch distribution.');
         }
 
         function resetForm(id, isSpawning) {

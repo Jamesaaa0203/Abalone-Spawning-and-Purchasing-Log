@@ -22,7 +22,7 @@
         
         .theme-dark { background-color: #0f172a; color: #f8fafc; }
         .theme-dark .bg-white { background-color: #1e293b !important; border-color: #334155 !important; color: #f8fafc !important; }
-        .theme-dark input, .theme-dark select { background-color: #1e293b !important; border-color: #475569 !important; color: #ffffff !important; }
+        .theme-dark input, .theme-dark select { background-color: #1e293b !important; border-color: #475569 !important; color: #ffffff !important; color-scheme: dark; }
         .theme-dark label { color: #cbd5e1 !important; }
         .theme-dark span.text-slate-700, .theme-dark span.text-slate-500 { color: #94a3b8 !important; }
         .theme-dark .bg-slate-50, .theme-dark .bg-slate-100 { background-color: #1e293b !important; border-color: #334155 !important; }
@@ -470,9 +470,15 @@
                     </div>
                     
                     <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+                        
+                        <div class="flex items-center space-x-2 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg w-full sm:w-auto shadow-sm" title="Filter logs by Month and Year">
+                            <i data-lucide="calendar" class="w-4 h-4 text-teal-600"></i>
+                            <input type="month" id="manager-month-filter" onchange="renderTerminalLogsEngine()" class="bg-transparent text-xs font-bold text-slate-700 outline-none w-full cursor-pointer">
+                        </div>
+
                         <div id="sub-tabs-logs" class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200 w-full sm:w-auto">
-                            <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Spawning Runs</button>
-                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Purchase Batches</button>
+                            <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Spawning</button>
+                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50">Purchases</button>
                         </div>
                         
                         <div class="flex gap-2 w-full sm:w-auto">
@@ -488,7 +494,7 @@
                 </div>
 
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3 sm:p-5 overflow-hidden">
-                    <div class="mb-3 px-2 sm:px-0">
+                    <div class="mb-3 px-2 sm:px-0 flex justify-between items-center">
                         <span id="current-log-label" class="text-xs font-black text-slate-600 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full border border-slate-200">Spawning Trials Workbook</span>
                     </div>
 
@@ -551,6 +557,13 @@
             buildTankInterfaceRows();
             lucide.createIcons();
             
+            // Set Dashboard Month Picker to Current Month Automatically
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const filterEl = document.getElementById('manager-month-filter');
+            if(filterEl) filterEl.value = `${yyyy}-${mm}`;
+
             const storedUrl = localStorage.getItem('abalone_gas_url');
             if (storedUrl) {
                 document.getElementById('gas-url').value = storedUrl;
@@ -623,13 +636,16 @@
             const eggsInput = document.getElementById('total-collected-eggs');
             const qualityInput = document.getElementById('egg-quality');
             
-            if (val === "Successful") {
+            // Note: In Javascript checking we strip spaces and match lowercase to be perfectly robust
+            const cleanVal = (val || '').trim().toLowerCase();
+            
+            if (cleanVal === "successful") {
                 el.style.backgroundColor = "#10b981"; // Vibrant Solid Emerald
                 el.style.borderColor = "#047857";
                 el.style.color = "#ffffff";
                 eggsInput.disabled = false;
                 qualityInput.disabled = false;
-            } else if (val === "") {
+            } else if (cleanVal === "") {
                 el.style.backgroundColor = ""; 
                 el.style.borderColor = "";
                 el.style.color = "";
@@ -874,7 +890,6 @@
             const shiftStart = document.getElementById('spawn-start-date').value + ' ' + document.getElementById('spawn-start-time').value;
             const shiftEnd = document.getElementById('spawn-end-date').value + ' ' + document.getElementById('spawn-end-time').value;
             
-            // Full precision timestamp compilation for biological timers
             const compiledSpermRelease = document.getElementById('sperm-release-date').value + ' ' + document.getElementById('sperm-release-time').value;
             const compiledEggFrom = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-from').value;
             const compiledEggTo = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-to').value;
@@ -982,13 +997,26 @@
         }
 
         function renderTerminalLogsEngine() {
+            const filterVal = document.getElementById('manager-month-filter').value; // e.g. "2026-05"
+            
             if(activeLogTab === 'spawning') {
                 const tbody = document.getElementById('spawning-log-body');
-                if(!cachedSpawning || cachedSpawning.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center font-bold text-sm">No recorded Spawning logs located inside spreadsheet.</td></tr>`;
+                
+                // Smart Calendar Filter logic for Spawning
+                let filteredSpawning = cachedSpawning;
+                if(filterVal) {
+                    filteredSpawning = cachedSpawning.filter(r => {
+                        const d = formatCleanDateOnly(r.date || r.trialDate);
+                        return d.startsWith(filterVal); 
+                    });
+                }
+                
+                if(!filteredSpawning || filteredSpawning.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center font-bold text-sm text-slate-400">No Spawning logs recorded for this timeframe.</td></tr>`;
                     return;
                 }
-                tbody.innerHTML = cachedSpawning.map(r => {
+                
+                tbody.innerHTML = filteredSpawning.map(r => {
                     const fNotes = [];
                     if (r.f1Pcs && parseInt(r.f1Pcs) > 0) fNotes.push(`${formatPercent(r.f1Mat)}: ${r.f1Pcs}pcs`);
                     if (r.f2Pcs && parseInt(r.f2Pcs) > 0) fNotes.push(`${formatPercent(r.f2Mat)}: ${r.f2Pcs}pcs`);
@@ -999,7 +1027,10 @@
                     const mStr = r.malePcs && parseInt(r.malePcs) > 0 ? `${formatPercent(r.maleMat) || '80%'}: ${r.malePcs}pcs` : 'None';
                     
                     const safeDate = formatCleanDateOnly(r.date || r.trialDate);
-                    const isSuccess = (r.statusOutcome || '').trim() === "Successful";
+                    
+                    // BULLETPROOF: Trim extra invisible spaces and match perfectly even if sheets has uppercase/lowercase
+                    const cleanOutcome = (r.statusOutcome || '').trim().toLowerCase();
+                    const isSuccess = cleanOutcome === "successful";
                     
                     let outcomeBadgeClass = isSuccess 
                         ? "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-500 text-white shadow-sm"
@@ -1026,11 +1057,22 @@
                 }).join('');
             } else {
                 const tbody = document.getElementById('purchasing-log-body');
-                if(!cachedPurchasing || cachedPurchasing.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center font-bold text-sm">No recorded Purchasing logs located inside spreadsheet.</td></tr>`;
+                
+                // Smart Calendar Filter logic for Purchasing
+                let filteredPurchasing = cachedPurchasing;
+                if(filterVal) {
+                    filteredPurchasing = cachedPurchasing.filter(r => {
+                        const d = formatCleanDateOnly(r.date || r.purchaseDate || r.intakeDate);
+                        return d.startsWith(filterVal);
+                    });
+                }
+
+                if(!filteredPurchasing || filteredPurchasing.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center font-bold text-sm text-slate-400">No Purchasing logs recorded for this timeframe.</td></tr>`;
                     return;
                 }
-                tbody.innerHTML = cachedPurchasing.map(r => {
+                
+                tbody.innerHTML = filteredPurchasing.map(r => {
                     const fTiers = [];
                     if(r.female50Pcs && parseInt(r.female50Pcs) > 0) fTiers.push(`50%: ${r.female50Pcs}pcs (${r.female50Kg}kg)`);
                     if(r.female60Pcs && parseInt(r.female60Pcs) > 0) fTiers.push(`60%: ${r.female60Pcs}pcs (${r.female60Kg}kg)`);

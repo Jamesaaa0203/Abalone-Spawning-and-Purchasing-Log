@@ -1073,20 +1073,26 @@
 
                     return `
                     <tr class="border-b transition-colors border-slate-200">
-                        <td class="px-4 py-3 font-extrabold text-sm">${safeDate}</td>
-                        <td class="px-4 py-3 font-medium">${r.moonCycle || ''}</td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3.5 font-extrabold text-sm sm:text-base text-slate-900">${safeDate}</td>
+                        <td class="px-4 py-3.5 font-bold text-xs sm:text-sm text-slate-700">${r.moonCycle || ''}</td>
+                        <td class="px-4 py-3.5">
                             <span class="${outcomeBadgeClass}">${r.statusOutcome || 'Successful'}</span>
                         </td>
-                        <td class="px-4 py-3 font-black text-right text-sm">${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} <span class="block font-bold text-[10px] opacity-75">Quality: ${r.eggQuality || ''}</span></td>
-                        <td class="px-4 py-3 font-medium">${r.inCharge || ''} <span class="block text-[10px] font-medium opacity-60">Team: ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span></td>
-                        <td class="px-4 py-3 text-xs">
-                            <div class="font-bold text-teal-500">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'} | pH ${r.wq1AvgPh || '0.00'} | Sal ${r.wq1AvgSal || '0.0'}</div>
-                            <div class="font-bold text-cyan-400 mt-1">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'} | pH ${r.wq2AvgPh || '0.00'} | Sal ${r.wq2AvgSal || '0.0'}</div>
+                        <td class="px-4 py-3.5 font-black text-right text-sm sm:text-base text-teal-950">
+                            ${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} 
+                            <span class="block font-bold text-xs text-slate-500 mt-1">품질 (Quality): ${r.eggQuality || ''}</span>
                         </td>
-                        <td class="px-4 py-3 text-xs">
-                            <div><span class="font-black text-teal-500">F:</span> ${fStr}</div>
-                            <div class="mt-1"><span class="font-black text-cyan-400">M:</span> ${mStr}</div>
+                        <td class="px-4 py-3.5 font-bold text-xs sm:text-sm text-slate-800">
+                            ${r.inCharge || ''} 
+                            <span class="block text-[11px] font-semibold text-slate-500 mt-1">조원 (Team): ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span>
+                        </td>
+                        <td class="px-4 py-3.5 text-xs sm:text-sm">
+                            <div class="font-bold text-teal-600">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'} | pH ${r.wq1AvgPh || '0.00'} | Sal ${r.wq1AvgSal || '0.0'}</div>
+                            <div class="font-bold text-cyan-600 mt-1.5">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'} | pH ${r.wq2AvgPh || '0.00'} | Sal ${r.wq2AvgSal || '0.0'}</div>
+                        </td>
+                        <td class="px-4 py-3.5 text-xs sm:text-sm text-slate-800">
+                            <div><span class="font-black text-teal-600 text-xs sm:text-sm">암컷 (F):</span> ${fStr}</div>
+                            <div class="mt-1.5"><span class="font-black text-cyan-600 text-xs sm:text-sm">수컷 (M):</span> ${mStr}</div>
                         </td>
                     </tr>`;
                 }).join('');
@@ -1118,22 +1124,25 @@
                     const fBreakdownStr = fTiers.join(' | ') || 'None logged';
                     const safeDate = formatCleanDateOnly(r.date || r.purchaseDate || r.intakeDate);
 
-                    return `
+                   return `
                     <tr class="border-b transition-colors border-slate-200">
-                        <td class="px-4 py-3 font-extrabold text-sm">${safeDate}</td>
-                        <td class="px-4 py-3 font-extrabold">${r.supplierCategory || ''} <span class="block font-medium text-[10px] opacity-60">Moon: ${r.moonPhase || ''}</span></td>
-                        <td class="px-4 py-3 font-black text-sm">${r.totalBatchWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3 font-bold">${r.deadWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3 text-rose-500 font-black text-sm">${formatPercent(r.mortality)}</td>
-                        <td class="px-4 py-3"><span class="px-2 py-1 border border-slate-400 rounded-md text-[10px] font-black uppercase bg-white text-slate-800 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
-                        <td class="px-4 py-3 text-xs">
-                            <div class="font-black text-teal-950">Total: ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
-                            <div class="font-extrabold opacity-75 mt-0.5">% of Mass: ${formatPercent(r.femaleWeightRatio)}</div>
-                            <div class="opacity-60 font-medium mt-1 whitespace-normal max-w-[180px]">${fBreakdownStr}</div>
+                        <td class="px-4 py-3.5 font-extrabold text-sm sm:text-base text-slate-900">${safeDate}</td>
+                        <td class="px-4 py-3.5 font-extrabold text-xs sm:text-sm text-slate-800">
+                            ${r.supplierCategory || ''} 
+                            <span class="block font-bold text-[11px] text-slate-500 mt-1">월령 (Moon): ${r.moonPhase || ''}</span>
                         </td>
-                        <td class="px-4 py-3 text-xs">
-                            <div class="font-black text-cyan-950">Total: ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
-                            <div class="font-extrabold opacity-75 mt-0.5">% of Mass: ${formatPercent(r.maleWeightRatio)}</div>
+                        <td class="px-4 py-3.5 font-black text-sm sm:text-base text-slate-950">${r.totalBatchWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3.5 font-bold text-xs sm:text-sm text-slate-700">${r.deadWeightKg || '0.00'} kg</td>
+                        <td class="px-4 py-3.5 text-rose-600 font-black text-sm sm:text-base">${formatPercent(r.mortality)}</td>
+                        <td class="px-4 py-3.5"><span class="px-2 py-1 border border-slate-300 rounded-md text-[11px] font-black uppercase bg-slate-50 text-slate-800 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
+                        <td class="px-4 py-3.5 text-xs sm:text-sm text-slate-800">
+                            <div class="font-black text-slate-900">합계 (Total): ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
+                            <div class="font-extrabold text-slate-500 mt-1">중량 비율 (% of Mass): ${formatPercent(r.femaleWeightRatio)}</div>
+                            <div class="text-slate-500 font-medium mt-1 whitespace-normal max-w-[220px] text-[11px] leading-relaxed">${fBreakdownStr}</div>
+                        </td>
+                        <td class="px-4 py-3.5 text-xs sm:text-sm text-slate-800">
+                            <div class="font-black text-slate-900">합계 (Total): ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
+                            <div class="font-extrabold text-slate-500 mt-1">중량 비율 (% of Mass): ${formatPercent(r.maleWeightRatio)}</div>
                         </td>
                     </tr>`;
                 }).join('');

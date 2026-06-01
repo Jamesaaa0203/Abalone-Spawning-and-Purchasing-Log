@@ -809,13 +809,18 @@
             }
         }
 
-        function switchLogView(type) {
+       function switchLogView(type) {
             activeLogTab = type;
-            document.getElementById('lv-spawn').className = type === 'spawning' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
-            document.getElementById('lv-purch').className = type === 'purchasing' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50";
+            document.getElementById('lv-spawn').className = type === 'spawning' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold";
+            document.getElementById('lv-purch').className = type === 'purchasing' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold";
             document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
             document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
-            document.getElementById('current-log-label').textContent = type === 'spawning' ? "Spawning Trials Workbook" : "Abalone Purchases Workbook";
+            
+            // Replaced textContent with innerHTML to render larger Korean headers and crisp English subtitles
+            document.getElementById('current-log-label').innerHTML = type === 'spawning' 
+                ? `인공산란 시험 기록부 <span class="text-xs font-medium text-slate-400 block mt-1 normal-case tracking-normal">Spawning Trials Workbook</span>` 
+                : `전복 구매 기록부 <span class="text-xs font-medium text-slate-400 block mt-1 normal-case tracking-normal">Abalone Purchases Workbook</span>`;
+                
             if(isLogsUnlocked) renderTerminalLogsEngine();
         }
 

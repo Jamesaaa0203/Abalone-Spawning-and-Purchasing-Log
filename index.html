@@ -458,77 +458,74 @@
                 </div>
             </div>
 
-            <div id="logs-unlocked-panel" class="hidden space-y-5 w-full">
+          <div id="logs-unlocked-panel" class="hidden space-y-5 w-full">
                 
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="flex items-center space-x-3">
                         <div class="bg-rose-100 p-2.5 rounded-xl text-rose-700 border border-rose-200"><i data-lucide="presentation" class="w-5 h-5"></i></div>
                         <div>
-                            <h3 class="text-base font-black tracking-tight">Master Executive Dashboard</h3>
-                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Live Analytics Grids</p>
+                            <h3 class="text-lg font-black tracking-tight text-slate-900">마스터 경영 대시보드</h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Master Executive Dashboard</p>
                         </div>
                     </div>
                     
                     <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
-                        
-                        <div class="flex items-center space-x-2 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg w-full sm:w-auto shadow-sm" title="Filter logs by Month and Year">
+                        <div class="flex items-center space-x-2 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg w-full sm:w-auto shadow-sm">
                             <i data-lucide="calendar" class="w-4 h-4 text-teal-600"></i>
                             <input type="month" id="manager-month-filter" onchange="renderTerminalLogsEngine()" class="bg-transparent text-xs font-bold text-slate-700 outline-none w-full cursor-pointer">
                         </div>
 
                         <div id="sub-tabs-logs" class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200 w-full sm:w-auto">
-                            <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200">Spawning</button>
-                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50">Purchases</button>
+                            <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold">산란 시험 기록 (Spawning)</button>
+                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold">모패 구매 기록 (Purchases)</button>
                         </div>
                         
                         <div class="flex gap-2 w-full sm:w-auto">
-                            <button onclick="fetchLatestLogs()" class="flex-1 sm:flex-none p-2.5 bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-700 rounded-lg transition-all flex items-center justify-center shadow-sm" title="Force Sync Refresh">
+                            <button onclick="fetchLatestLogs()" class="flex-1 sm:flex-none p-2.5 bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-700 rounded-lg transition-all flex items-center justify-center shadow-sm">
                                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                             </button>
-                            
-                            <button onclick="lockTerminalLogs()" class="flex-1 sm:flex-none px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-all uppercase tracking-wider shadow-sm">
-                                Lock
+                            <button onclick="lockTerminalLogs()" class="flex-1 sm:flex-none px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-all uppercase tracking-wider shadow-sm text-center">
+                                잠금 <span class="text-[10px] font-normal block tracking-normal">LOCK</span>
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3 sm:p-5 overflow-hidden">
-                    <div class="mb-3 px-2 sm:px-0 flex justify-between items-center">
-                        <span id="current-log-label" class="text-xs font-black text-slate-600 uppercase tracking-widest bg-slate-100 px-3 py-1 rounded-full border border-slate-200">Spawning Trials Workbook</span>
+                    <div class="mb-4 px-2 sm:px-0 flex justify-between items-center">
+                        <span id="current-log-label" class="text-sm sm:text-base font-black text-slate-900 bg-slate-100 px-4 py-2 rounded-full border border-slate-200"></span>
                     </div>
 
                     <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl shadow-inner">
-                        
                         <table id="spawning-log-table" class="min-w-full text-xs text-left whitespace-nowrap">
-                            <thead class="bg-slate-100 text-[11px] uppercase font-black border-b-2 border-slate-200">
+                            <thead class="bg-slate-100 text-[13px] uppercase font-black border-b-2 border-slate-200 text-slate-800">
                                 <tr>
-                                    <th class="px-4 py-3 border-r border-slate-200">Date</th>
-                                    <th class="px-4 py-3">Moon Phase</th>
-                                    <th class="px-4 py-3 bg-emerald-50 text-slate-800 border-x border-slate-200">Status Outcome</th>
-                                    <th class="px-4 py-3 bg-teal-50 text-right text-slate-800 border-r border-teal-200">Fertilised Eggs</th>
-                                    <th class="px-4 py-3">Staff Registry</th>
-                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">WQ Avg (C1 &rarr; C2)</th>
-                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Broodstock Sorting</th>
+                                    <th class="px-4 py-3.5 border-r border-slate-200">날짜 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">DATE</span></th>
+                                    <th class="px-4 py-3.5">월령 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">MOON PHASE</span></th>
+                                    <th class="px-4 py-3.5 bg-emerald-50 text-slate-900 border-x border-slate-200">진행 결과 <span class="text-[11px] font-bold text-emerald-700 block normal-case tracking-normal">STATUS OUTCOME</span></th>
+                                    <th class="px-4 py-3.5 bg-teal-50 text-right text-slate-900 border-r border-teal-200">수정란 수 <span class="text-[11px] font-bold text-teal-700 block normal-case tracking-normal">FERTILISED EGGS</span></th>
+                                    <th class="px-4 py-3.5">担当 직원 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">STAFF REGISTRY</span></th>
+                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">수질 평균 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">WQ AVG</span></th>
+                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">모패 선별 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">BROODSTOCK SORTING</span></th>
                                 </tr>
                             </thead>
-                            <tbody id="spawning-log-body" class="divide-y divide-slate-100 font-bold bg-white"></tbody>
+                            <tbody id="spawning-log-body" class="divide-y divide-slate-100 font-bold bg-white text-slate-800"></tbody>
                         </table>
 
                         <table id="purchasing-log-table" class="min-w-full text-xs text-left whitespace-nowrap hidden">
-                            <thead class="bg-slate-100 text-[11px] uppercase font-black border-b-2 border-slate-200">
+                            <thead class="bg-slate-100 text-[13px] uppercase font-black border-b-2 border-slate-200 text-slate-700">
                                 <tr>
-                                    <th class="px-4 py-3 border-r border-slate-200">Date</th>
-                                    <th class="px-4 py-3">Supplier & Moon</th>
-                                    <th class="px-4 py-3 bg-teal-50 text-slate-800 border-l border-slate-200">Total Weight</th>
-                                    <th class="px-4 py-3 bg-rose-50 text-slate-800 border-l border-slate-200">Transit Loss</th>
-                                    <th class="px-4 py-3 bg-rose-100 text-rose-900 border-r border-slate-200">Mortality %</th>
-                                    <th class="px-4 py-3">Quality Grade</th>
-                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Female Breakdown</th>
-                                    <th class="px-4 py-3 bg-slate-50 border-l border-slate-200">Male Distribution</th>
+                                    <th class="px-4 py-3.5 border-r border-slate-200">날짜 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">DATE</span></th>
+                                    <th class="px-4 py-3.5">공급처 및 월령 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">SUPPLIER & MOON</span></th>
+                                    <th class="px-4 py-3.5 bg-teal-50 text-slate-900 border-l border-slate-200">총 중량 <span class="text-[11px] font-bold text-teal-700 block normal-case tracking-normal">TOTAL WEIGHT</span></th>
+                                    <th class="px-4 py-3.5 bg-rose-50 text-slate-900 border-l border-slate-200">운송 손실 <span class="text-[11px] font-bold text-rose-700 block normal-case tracking-normal">TRANSIT LOSS</span></th>
+                                    <th class="px-4 py-3.5 bg-rose-100 text-rose-900 border-r border-slate-200">폐사율 % <span class="text-[11px] font-bold text-rose-800 block normal-case tracking-normal">MORTALITY %</span></th>
+                                    <th class="px-4 py-3.5">품질 등급 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">QUALITY GRADE</span></th>
+                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">암컷 상세 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">FEMALE BREAKDOWN</span></th>
+                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">수컷 분포 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">MALE DISTRIBUTION</span></th>
                                 </tr>
                             </thead>
-                            <tbody id="purchasing-log-body" class="divide-y divide-slate-100 font-bold bg-white"></tbody>
+                            <tbody id="purchasing-log-body" class="divide-y divide-slate-100 font-bold bg-white text-slate-800"></tbody>
                         </table>
                     </div>
                 </div>

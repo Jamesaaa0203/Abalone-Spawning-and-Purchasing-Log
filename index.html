@@ -595,8 +595,41 @@
 
             calculateSpawningAverages(1);
             calculateSpawningAverages(2);
-        });
 
+            // ==========================================
+            // 📡 MICRO-FRONTEND MASTER HUB TUNNEL AGENT
+            // ==========================================
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetTabCommand = urlParams.get('targetTab');
+            const masterHubMonth = urlParams.get('month');
+
+            // Detects if the Master Hub is requesting an automated manager view override
+            if (targetTabCommand === 'spawning' || targetTabCommand === 'purchasing') {
+                
+                // 1. Cleanly strip headers, setup fields, and worker layouts for full embed styling
+                document.getElementById('app-header').classList.add('hidden');
+                document.querySelector('section').classList.add('hidden'); // Hides App Script Connection Card
+                document.getElementById('nav-frame').classList.add('hidden'); // Hides Worker Tab Selector row
+                document.getElementById('tab-content-spawning').classList.add('hidden'); // Hides entry sheets
+                document.getElementById('tab-content-purchasing').classList.add('hidden'); // Hides entry sheets
+                document.body.style.paddingBottom = "0px"; // Removes mobile safe margins inside the frame
+
+                // 2. Bypass terminal security layers and elevate to active manager logs display state
+                isLogsUnlocked = true;
+                document.getElementById('pin-barrier').classList.add('hidden');
+                document.getElementById('logs-unlocked-panel').classList.remove('hidden');
+                document.getElementById('tab-content-manager').classList.remove('hidden');
+
+                // 3. Sync the historic target month filter passed directly upstream from Master Hub
+                if (masterHubMonth && filterEl) {
+                    filterEl.value = masterHubMonth;
+                }
+
+                // 4. Fire localized view adjustments and request rows from spreadsheet endpoint
+                switchLogView(targetTabCommand);
+                fetchLatestLogs();
+            }
+        });
         // --- AUTOMATED MALAYSIAN TIME THEME SWITCHER ---
         function applyTimeBasedTheme() {
             const hr = new Date().getHours();

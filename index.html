@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haliotis asinina Hatchery Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -34,6 +37,13 @@
     </style>
 </head>
 <body class="theme-light min-h-screen pb-16">
+    <div id="manager-back-bar" class="hidden sticky top-0 z-[60] bg-teal-700 text-white px-4 py-3 flex items-center justify-between shadow-md">
+    <button onclick="window.location.href='https://aquaculture-master-hub.vercel.app'" class="flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg>
+        <span class="text-sm font-black uppercase tracking-wide">Back to Abalone Ops</span>
+    </button>
+    <span id="back-bar-label" class="text-xs font-bold opacity-70 uppercase tracking-wider">Manager View</span>
+</div>
 
     <header id="app-header" class="bg-gradient-to-r from-teal-800 to-cyan-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -623,6 +633,8 @@
                 }
 
                 // 4. Fire localized view adjustments and request rows from spreadsheet endpoint
+                document.getElementById('manager-back-bar').classList.remove('hidden');
+document.getElementById('back-bar-label').textContent = targetTabCommand === 'spawning' ? 'Spawning Trials' : 'Abalone Purchasing';
                 switchLogView(targetTabCommand);
                 fetchLatestLogs();
             }

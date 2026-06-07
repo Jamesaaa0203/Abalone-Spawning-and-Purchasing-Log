@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -540,7 +541,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <div id="alert-banner" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 max-w-sm w-full bg-slate-900 text-white px-4 py-3.5 rounded-xl shadow-2xl flex items-start space-x-3 text-sm border border-slate-700">
@@ -564,7 +565,6 @@
             buildTankInterfaceRows();
             lucide.createIcons();
             
-            // Set Dashboard Month Picker to Current Month Automatically
             const now = new Date();
             const yyyy = now.getFullYear();
             const mm = String(now.getMonth() + 1).padStart(2, '0');
@@ -577,7 +577,6 @@
                 toggleConnectionBadgeState(true);
             }
             
-            // Auto-Save Draft recovery
             if(localStorage.getItem('spawningDraft')) {
                 loadDraft('spawning-form', 'spawningDraft');
                 document.getElementById('draft-indicator').classList.remove('hidden');
@@ -597,49 +596,42 @@
                 document.getElementById('egg-laying-to').value = "03:30";
             }
 
-            // Bind auto-save tracking
             document.getElementById('spawning-form').addEventListener('input', () => saveDraft('spawning-form', 'spawningDraft'));
 
             calculateSpawningAverages(1);
             calculateSpawningAverages(2);
 
             // ==========================================
-            // 📡 MICRO-FRONTEND MASTER HUB TUNNEL AGENT
+            // MICRO-FRONTEND MASTER HUB TUNNEL AGENT
             // ==========================================
             const urlParams = new URLSearchParams(window.location.search);
             const targetTabCommand = urlParams.get('targetTab');
             const masterHubMonth = urlParams.get('month');
 
-            // Detects if the Master Hub is requesting an automated manager view override
             if (targetTabCommand === 'spawning' || targetTabCommand === 'purchasing') {
-                
-                // 1. Cleanly strip headers, setup fields, and worker layouts for full embed styling
                 document.getElementById('app-header').classList.add('hidden');
-                document.querySelector('section').classList.add('hidden'); // Hides App Script Connection Card
-                document.getElementById('nav-frame').classList.add('hidden'); // Hides Worker Tab Selector row
-                document.getElementById('tab-content-spawning').classList.add('hidden'); // Hides entry sheets
-                document.getElementById('tab-content-purchasing').classList.add('hidden'); // Hides entry sheets
-                document.body.style.paddingBottom = "0px"; // Removes mobile safe margins inside the frame
+                document.querySelector('section').classList.add('hidden');
+                document.getElementById('nav-frame').classList.add('hidden');
+                document.getElementById('tab-content-spawning').classList.add('hidden');
+                document.getElementById('tab-content-purchasing').classList.add('hidden');
+                document.body.style.paddingBottom = "0px";
 
-                // 2. Bypass terminal security layers and elevate to active manager logs display state
                 isLogsUnlocked = true;
                 document.getElementById('pin-barrier').classList.add('hidden');
                 document.getElementById('logs-unlocked-panel').classList.remove('hidden');
                 document.getElementById('tab-content-manager').classList.remove('hidden');
 
-                // 3. Sync the historic target month filter passed directly upstream from Master Hub
                 if (masterHubMonth && filterEl) {
                     filterEl.value = masterHubMonth;
                 }
 
-                // 4. Fire localized view adjustments and request rows from spreadsheet endpoint
                 document.getElementById('manager-back-bar').classList.remove('hidden');
-document.getElementById('back-bar-label').textContent = targetTabCommand === 'spawning' ? 'Spawning Trials' : 'Abalone Purchasing';
+                document.getElementById('back-bar-label').textContent = targetTabCommand === 'spawning' ? 'Spawning Trials' : 'Abalone Purchasing';
                 switchLogView(targetTabCommand);
                 fetchLatestLogs();
             }
         });
-        // --- AUTOMATED MALAYSIAN TIME THEME SWITCHER ---
+
         function applyTimeBasedTheme() {
             const hr = new Date().getHours();
             const b = document.body;
@@ -653,7 +645,6 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             }
         }
 
-        // --- DRAFT AUTO SAVE SYSTEM ---
         function saveDraft(formId, storageKey) {
             const inputs = document.querySelectorAll(`#${formId} input, #${formId} select`);
             let draft = {};
@@ -672,17 +663,13 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             }
         }
 
-        // --- SPOWNING OUTCOME STYLING CONTROLLER ---
         function toggleOutcomeLockState(val) {
             const el = document.getElementById('spawn-status-outcome');
             const eggsInput = document.getElementById('total-collected-eggs');
             const qualityInput = document.getElementById('egg-quality');
-            
-            // Note: In Javascript checking we strip spaces and match lowercase to be perfectly robust
             const cleanVal = (val || '').trim().toLowerCase();
-            
             if (cleanVal === "successful") {
-                el.style.backgroundColor = "#10b981"; // Vibrant Solid Emerald
+                el.style.backgroundColor = "#10b981";
                 el.style.borderColor = "#047857";
                 el.style.color = "#ffffff";
                 eggsInput.disabled = false;
@@ -694,7 +681,7 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
                 eggsInput.disabled = false;
                 qualityInput.disabled = false;
             } else {
-                el.style.backgroundColor = "#ef4444"; // High-Contrast Crimson Alert
+                el.style.backgroundColor = "#ef4444";
                 el.style.borderColor = "#b91c1c";
                 el.style.color = "#ffffff";
                 eggsInput.value = 0;
@@ -709,7 +696,6 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             const grid1 = document.getElementById('check1-tanks-grid');
             const grid2 = document.getElementById('check2-tanks-grid');
             grid1.innerHTML = ''; grid2.innerHTML = '';
-
             tanksList.forEach(t => {
                 grid1.innerHTML += `
                     <div class="grid grid-cols-5 gap-1.5 items-center">
@@ -767,7 +753,6 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             } else {
                 document.getElementById('pur-dead-pct').value = "0.00%";
             }
-            
             let fPcs=0, fKg=0;
             ['50','60','70','80','90'].forEach(pct => {
                 fPcs += parseInt(document.getElementById(`pf-${pct}-pcs`).value) || 0;
@@ -776,7 +761,6 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             document.getElementById('f-sum-pcs').textContent = fPcs;
             document.getElementById('f-sum-kg').textContent = fKg.toFixed(2);
             document.getElementById('f-sum-ratio').textContent = total > 0 ? ((fKg/total)*100).toFixed(2) + "%" : "0.00%";
-
             const mPcs = parseInt(document.getElementById('pm-pcs').value) || 0;
             const mKg = parseFloat(document.getElementById('pm-kg').value) || 0;
             document.getElementById('m-sum-pcs').textContent = mPcs;
@@ -802,7 +786,6 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             }
         }
 
-        // Standard App Architecture Navigation Routines
         function switchTab(id) {
             activeTab = id;
             ['spawning', 'purchasing', 'manager'].forEach(t => {
@@ -821,18 +804,15 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             }
         }
 
-       function switchLogView(type) {
+        function switchLogView(type) {
             activeLogTab = type;
             document.getElementById('lv-spawn').className = type === 'spawning' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold";
             document.getElementById('lv-purch').className = type === 'purchasing' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold";
             document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
             document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
-            
-            // Replaced textContent with innerHTML to render larger Korean headers and crisp English subtitles
             document.getElementById('current-log-label').innerHTML = type === 'spawning' 
                 ? `인공산란 시험 기록부 <span class="text-xs font-medium text-slate-400 block mt-1 normal-case tracking-normal">Spawning Trials Workbook</span>` 
                 : `전복 구매 기록부 <span class="text-xs font-medium text-slate-400 block mt-1 normal-case tracking-normal">Abalone Purchases Workbook</span>`;
-                
             if(isLogsUnlocked) renderTerminalLogsEngine();
         }
 
@@ -927,25 +907,20 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             e.preventDefault();
             const url = localStorage.getItem('abalone_gas_url');
             if(!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
-            
             const c1Raw = {}, c2Raw = {};
             tanksList.forEach(t => {
                 c1Raw[t] = { temp: document.getElementById(`c1-t-${t}`).value, do: document.getElementById(`c1-d-${t}`).value, ph: document.getElementById(`c1-p-${t}`).value, sal: document.getElementById(`c1-s-${t}`).value };
                 c2Raw[t] = { temp: document.getElementById(`c2-t-${t}`).value, do: document.getElementById(`c2-d-${t}`).value, ph: document.getElementById(`c2-p-${t}`).value, sal: document.getElementById(`c2-s-${t}`).value };
             });
-
             const shiftStart = document.getElementById('spawn-start-date').value + ' ' + document.getElementById('spawn-start-time').value;
             const shiftEnd = document.getElementById('spawn-end-date').value + ' ' + document.getElementById('spawn-end-time').value;
-            
             const compiledSpermRelease = document.getElementById('sperm-release-date').value + ' ' + document.getElementById('sperm-release-time').value;
             const compiledEggFrom = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-from').value;
             const compiledEggTo = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-to').value;
-
             const payload = {
                 action: 'addSpawning',
                 date: document.getElementById('spawn-date').value, 
-                periodStart: shiftStart,
-                periodEnd: shiftEnd,
+                periodStart: shiftStart, periodEnd: shiftEnd,
                 moonCycle: document.getElementById('spawn-moon-cycle').value,
                 weather: document.getElementById('spawn-weather').value,
                 inCharge: document.getElementById('spawn-in-charge').value,
@@ -968,9 +943,7 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
                 f4Mat: formatPercent(document.getElementById('sf-mat-4').value), f4Pcs: document.getElementById('sf-pcs-4').value || 0,
                 maleMat: formatPercent(document.getElementById('sm-mat').value), malePcs: document.getElementById('sm-pcs').value || 0,
                 totalSpawners: document.getElementById('spawn-total-count').value,
-                spermTime: compiledSpermRelease,
-                eggTimeFrom: compiledEggFrom,
-                eggTimeTo: compiledEggTo,
+                spermTime: compiledSpermRelease, eggTimeFrom: compiledEggFrom, eggTimeTo: compiledEggTo,
                 statusOutcome: document.getElementById('spawn-status-outcome').value,
                 totalEggs: document.getElementById('total-collected-eggs').value,
                 eggQuality: document.getElementById('egg-quality').value,
@@ -1016,14 +989,13 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
                 if(d.status === 'success') { 
                     showSystemToast('success', 'Approved', 'Row written to Google Sheet successfully.'); 
                     cb(); 
-                    if(isLogsUnlocked) {
-                        fetchLatestLogs(); 
-                    }
+                    if(isLogsUnlocked) fetchLatestLogs(); 
                 }
                 else showSystemToast('error', 'Execution Fail', d.message);
             }).catch(err => showSystemToast('error', 'Interface Lost', 'Network link exception. Check script permissions.'));
         }
 
+        // ── PATCHED: postMessage signals added so Master Hub banner triggers correctly ──
         function fetchLatestLogs() {
             const url = localStorage.getItem('abalone_gas_url');
             if(!url) return;
@@ -1032,24 +1004,25 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
             document.getElementById('purchasing-log-body').innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-teal-500 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
 
             fetch(`${url}?action=getLogs&pin=3653`, { method: 'GET', mode: 'cors' })
-            .then(res => res.json()).then(d => {
+            .then(res => res.json())
+            .then(d => {
                 if(d.status === 'success') { 
                     cachedSpawning = d.spawning || []; 
                     cachedPurchasing = d.purchasing || []; 
-                    renderTerminalLogsEngine(); 
+                    renderTerminalLogsEngine();
+                    window.parent.postMessage({ type: 'fetch_ok' }, '*');  // ← PATCH
                 }
             }).catch(err => {
                 showSystemToast('error', 'Terminal Read Exception', 'Error reading dataset rows from spreadsheet.');
+                window.parent.postMessage({ type: 'fetch_failed' }, '*');  // ← PATCH
             });
         }
 
         function renderTerminalLogsEngine() {
-            const filterVal = document.getElementById('manager-month-filter').value; // e.g. "2026-05"
+            const filterVal = document.getElementById('manager-month-filter').value;
             
             if(activeLogTab === 'spawning') {
                 const tbody = document.getElementById('spawning-log-body');
-                
-                // Smart Calendar Filter logic for Spawning
                 let filteredSpawning = cachedSpawning;
                 if(filterVal) {
                     filteredSpawning = cachedSpawning.filter(r => {
@@ -1057,39 +1030,29 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
                         return d.startsWith(filterVal); 
                     });
                 }
-                
                 if(!filteredSpawning || filteredSpawning.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center font-bold text-sm text-slate-400">No Spawning logs recorded for this timeframe.</td></tr>`;
                     return;
                 }
-                
                 tbody.innerHTML = filteredSpawning.map(r => {
                     const fNotes = [];
                     if (r.f1Pcs && parseInt(r.f1Pcs) > 0) fNotes.push(`${formatPercent(r.f1Mat)}: ${r.f1Pcs}pcs`);
                     if (r.f2Pcs && parseInt(r.f2Pcs) > 0) fNotes.push(`${formatPercent(r.f2Mat)}: ${r.f2Pcs}pcs`);
                     if (r.f3Pcs && parseInt(r.f3Pcs) > 0) fNotes.push(`${formatPercent(r.f3Mat)}: ${r.f3Pcs}pcs`);
                     if (r.f4Pcs && parseInt(r.f4Pcs) > 0) fNotes.push(`${formatPercent(r.f4Mat)}: ${r.f4Pcs}pcs`);
-                    
                     const fStr = fNotes.join(' | ') || 'None';
                     const mStr = r.malePcs && parseInt(r.malePcs) > 0 ? `${formatPercent(r.maleMat) || '80%'}: ${r.malePcs}pcs` : 'None';
-                    
                     const safeDate = formatCleanDateOnly(r.date || r.trialDate);
-                    
-                    // BULLETPROOF: Trim extra invisible spaces and match perfectly even if sheets has uppercase/lowercase
                     const cleanOutcome = (r.statusOutcome || '').trim().toLowerCase();
                     const isSuccess = cleanOutcome === "successful";
-                    
                     let outcomeBadgeClass = isSuccess 
                         ? "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-500 text-white shadow-sm"
                         : "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-rose-500 text-white shadow-sm";
-
                     return `
                     <tr class="border-b transition-colors border-slate-200">
                         <td class="px-4 py-3.5 font-extrabold text-sm sm:text-base text-slate-900">${safeDate}</td>
                         <td class="px-4 py-3.5 font-bold text-xs sm:text-sm text-slate-700">${r.moonCycle || ''}</td>
-                        <td class="px-4 py-3.5">
-                            <span class="${outcomeBadgeClass}">${r.statusOutcome || 'Successful'}</span>
-                        </td>
+                        <td class="px-4 py-3.5"><span class="${outcomeBadgeClass}">${r.statusOutcome || 'Successful'}</span></td>
                         <td class="px-4 py-3.5 font-black text-right text-sm sm:text-base text-teal-950">
                             ${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} 
                             <span class="block font-bold text-xs text-slate-500 mt-1">품질 (Quality): ${r.eggQuality || ''}</span>
@@ -1110,8 +1073,6 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
                 }).join('');
             } else {
                 const tbody = document.getElementById('purchasing-log-body');
-                
-                // Smart Calendar Filter logic for Purchasing
                 let filteredPurchasing = cachedPurchasing;
                 if(filterVal) {
                     filteredPurchasing = cachedPurchasing.filter(r => {
@@ -1119,12 +1080,10 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
                         return d.startsWith(filterVal);
                     });
                 }
-
                 if(!filteredPurchasing || filteredPurchasing.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center font-bold text-sm text-slate-400">No Purchasing logs recorded for this timeframe.</td></tr>`;
                     return;
                 }
-                
                 tbody.innerHTML = filteredPurchasing.map(r => {
                     const fTiers = [];
                     if(r.female50Pcs && parseInt(r.female50Pcs) > 0) fTiers.push(`50%: ${r.female50Pcs}pcs (${r.female50Kg}kg)`);
@@ -1132,11 +1091,9 @@ document.getElementById('back-bar-label').textContent = targetTabCommand === 'sp
                     if(r.female70Pcs && parseInt(r.female70Pcs) > 0) fTiers.push(`70%: ${r.female70Pcs}pcs (${r.female70Kg}kg)`);
                     if(r.female80Pcs && parseInt(r.female80Pcs) > 0) fTiers.push(`80%: ${r.female80Pcs}pcs (${r.female80Kg}kg)`);
                     if(r.female90Pcs && parseInt(r.female90Pcs) > 0) fTiers.push(`90%: ${r.female90Pcs}pcs (${r.female90Kg}kg)`);
-                    
                     const fBreakdownStr = fTiers.join(' | ') || 'None logged';
                     const safeDate = formatCleanDateOnly(r.date || r.purchaseDate || r.intakeDate);
-
-                   return `
+                    return `
                     <tr class="border-b transition-colors border-slate-200">
                         <td class="px-4 py-3.5 font-extrabold text-sm sm:text-base text-slate-900">${safeDate}</td>
                         <td class="px-4 py-3.5 font-extrabold text-xs sm:text-sm text-slate-800">

@@ -560,6 +560,13 @@
         let activeLogTab = 'spawning';
         let isLogsUnlocked = false;
         
+        // FIX: Chrome Storage Partitioning isolates localStorage for cross-origin iframes.
+        // runtimeGasUrl is populated from ?gasUrl= URL param passed by the master hub.
+        let runtimeGasUrl = null;
+        function getGasUrl() {
+            return runtimeGasUrl || localStorage.getItem('abalone_gas_url') || null;
+        }
+        
         window.addEventListener('load', () => {
             applyTimeBasedTheme();
             buildTankInterfaceRows();
@@ -627,6 +634,10 @@
 
                 document.getElementById('manager-back-bar').classList.remove('hidden');
                 document.getElementById('back-bar-label').textContent = targetTabCommand === 'spawning' ? 'Spawning Trials' : 'Abalone Purchasing';
+                // Read GAS URL passed from master hub (bypasses Chrome Storage Partitioning)
+                const gasUrlParam = urlParams.get('gasUrl');
+                if (gasUrlParam) runtimeGasUrl = decodeURIComponent(gasUrlParam);
+
                 switchLogView(targetTabCommand);
                 fetchLatestLogs();
             }
@@ -905,7 +916,7 @@
 
         function handleSpawningSubmit(e) {
             e.preventDefault();
-            const url = localStorage.getItem('abalone_gas_url');
+            const url = getGasUrl();
             if(!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
             const c1Raw = {}, c2Raw = {};
             tanksList.forEach(t => {
@@ -954,7 +965,7 @@
 
         function handlePurchasingSubmit(e) {
             e.preventDefault();
-            const url = localStorage.getItem('abalone_gas_url');
+            const url = getGasUrl();
             if(!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
             const payload = {
                 action: 'addPurchasing',
@@ -997,7 +1008,7 @@
 
         // ── PATCHED: postMessage signals added so Master Hub banner triggers correctly ──
         function fetchLatestLogs() {
-            const url = localStorage.getItem('abalone_gas_url');
+            const url = getGasUrl();
             if(!url) return;
             
             document.getElementById('spawning-log-body').innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-teal-500 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;

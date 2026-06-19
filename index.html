@@ -278,6 +278,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mt-4 bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                            <label class="block text-[10px] font-extrabold text-emerald-800 mb-1.5 uppercase tracking-wider">⏱ Fertilisation Time (sperm + eggs mixed)</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="date" id="fert-date" required class="p-2.5 text-sm border border-emerald-300 rounded-lg font-bold bg-white text-slate-800">
+                                <input type="time" id="fert-time" required class="p-2.5 text-sm border border-emerald-300 rounded-lg font-bold bg-white text-center text-slate-800">
+                            </div>
+                            <p class="text-[10px] text-emerald-700 mt-1.5 leading-relaxed">Every follow-up task — diatom plates, water on, spat count — is calculated from this exact moment. Set it precisely.</p>
+                        </div>
                     </div>
 
                     <hr class="border-slate-200">
@@ -577,7 +586,7 @@
                 toggleOutcomeLockState(document.getElementById('spawn-status-outcome').value);
             } else {
                 const today = new Date().toISOString().split('T')[0];
-                ['spawn-date','pur-date','sperm-release-date','egg-laying-date'].forEach(id => {
+                ['spawn-date','pur-date','sperm-release-date','egg-laying-date','fert-date'].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.value = today;
                 });
@@ -588,6 +597,7 @@
                 document.getElementById('sperm-release-time').value = "01:30";
                 document.getElementById('egg-laying-from').value = "02:30";
                 document.getElementById('egg-laying-to').value = "03:30";
+                document.getElementById('fert-time').value = "03:35";
             }
 
             document.getElementById('spawning-form').addEventListener('input', () => saveDraft('spawning-form', 'spawningDraft'));
@@ -886,11 +896,13 @@
             const compiledSpermRelease = document.getElementById('sperm-release-date').value + ' ' + document.getElementById('sperm-release-time').value;
             const compiledEggFrom = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-from').value;
             const compiledEggTo = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-to').value;
+            const compiledFertTime = document.getElementById('fert-date').value + ' ' + document.getElementById('fert-time').value;
             const payload = {
                 action: 'addSpawning',
                 trialId: `${trialDate.replace(/-/g,'')}-${startTime.replace(':','')}`,
                 date: trialDate, 
                 periodStart: shiftStart, periodEnd: shiftEnd,
+                fertilisationTime: compiledFertTime,
                 moonCycle: document.getElementById('spawn-moon-cycle').value,
                 weather: document.getElementById('spawn-weather').value,
                 inCharge: document.getElementById('spawn-in-charge').value,

@@ -501,6 +501,17 @@
                         <p class="text-[10px] text-slate-400 mt-2">This link never expires — only generate a new one when the database URL actually changes.</p>
                     </div>
                 </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="text-sm font-extrabold text-slate-800 flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-teal-600"></i> Trial Lifecycle Monitor</h4>
+                        <button onclick="loadLifecycleMonitor()" class="text-slate-400 hover:text-slate-600"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Internal check only — raw status of every Successful trial's post-spawning lifecycle. Not shown anywhere else in the app, including the master hub.</p>
+                    <div id="lifecycle-monitor-list" class="space-y-2">
+                        <p class="text-xs text-slate-400 text-center py-4">Tap refresh to load.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -525,6 +536,7 @@
 
     <script>
         const tanksList = ['A', 'B', 'C', 'D', 'E', 'F'];
+        const ADMIN_PIN = "3653";
         let activeTab = 'spawning';
         let isLogsUnlocked = false;
         
@@ -778,11 +790,12 @@
         }
 
         function unlockTerminalLogs() {
-            if(document.getElementById('manager-pin').value === '3653') {
+            if(document.getElementById('manager-pin').value === ADMIN_PIN) {
                 isLogsUnlocked = true;
                 document.getElementById('pin-barrier').classList.add('hidden');
                 document.getElementById('logs-unlocked-panel').classList.remove('hidden');
                 document.getElementById('manager-pin').value = '';
+                loadLifecycleMonitor();
             } else {
                 showSystemToast('error', 'Security Rejection', 'Invalid admin authorization passcode.');
             }
@@ -1010,7 +1023,9 @@
                 let dot = 'bg-slate-300';
                 if (diffHrs <= 12) { cls = 'bg-rose-50 border-rose-200 text-rose-700'; dot = 'bg-rose-500'; }
                 else if (diffHrs <= 24) { cls = 'bg-amber-50 border-amber-200 text-amber-700'; dot = 'bg-amber-500'; }
-                const dueStr = diffHrs < 0 ? `Overdue by ${Math.abs(diffHrs).toFixed(0)}h` : diffHrs < 48 ? `Due in ${diffHrs.toFixed(0)}h` : `Due in ${(diffHrs/24).toFixed(1)}d`;
+                const relStr = diffHrs < 0 ? `overdue ${Math.abs(diffHrs).toFixed(0)}h` : diffHrs < 48 ? `in ${diffHrs.toFixed(0)}h` : `in ${(diffHrs/24).toFixed(1)}d`;
+                const dateStr = due.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+                const timeStr = due.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
                 const tankStr = t.tanks && t.tanks.length ? `Tanks ${t.tanks.join(', ')}` : '';
                 return `
                 <div class="border rounded-xl p-3.5 ${cls} cursor-pointer transition-all hover:shadow-sm" onclick="openTaskAction(${i})">
@@ -1020,7 +1035,11 @@
                             <div class="text-sm font-bold mt-1">${t.label}</div>
                             ${tankStr ? `<div class="text-[11px] font-semibold mt-0.5 opacity-80">${tankStr}</div>` : ''}
                         </div>
-                        <span class="text-[11px] font-black whitespace-nowrap">${dueStr}</span>
+                        <div class="text-right whitespace-nowrap">
+                            <div class="text-[11px] font-black">${dateStr}</div>
+                            <div class="text-[11px] font-bold opacity-80">${timeStr}</div>
+                            <div class="text-[10px] font-bold mt-0.5">(${relStr})</div>
+                        </div>
                     </div>
                 </div>`;
             }).join('');
@@ -1035,23 +1054,31 @@
             if (t.step === 'Awaiting Tank Assignment') {
                 body.innerHTML = `
                     <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
-                    <p class="text-xs text-slate-500 mb-4">Choose which tanks received this batch, and how the veligers were split.</p>
+                    <p class="text-xs text-slate-500 mb-4">Add which tanks received this batch, and how the veligers were split.</p>
                     <div class="flex bg-slate-100 p-1 rounded-xl mb-4">
                         <button type="button" onclick="setDensityMode('same')" id="density-same-btn" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white shadow-sm">Same density</button>
                         <button type="button" onclick="setDensityMode('different')" id="density-diff-btn" class="flex-1 py-2 rounded-lg text-xs font-bold text-slate-500">Different density</button>
                     </div>
-                    <p class="text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Select Tanks</p>
-                    <div class="grid grid-cols-3 gap-2 mb-4" id="tank-picker">
-                        ${tanksList.map(tk => `<button type="button" onclick="toggleTankPick('${tk}')" id="tank-pick-${tk}" class="py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white text-slate-700">Tank ${tk}</button>`).join('')}
+                    <p class="text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Add Tanks (1–80)</p>
+                    <div class="flex gap-2 mb-2">
+                        <input type="number" id="tank-number-input" min="1" max="80" placeholder="Tank #" onkeydown="if(event.key==='Enter'){event.preventDefault();addTankNumber();}" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
+                        <button type="button" onclick="addTankNumber()" class="px-4 py-2.5 bg-slate-800 text-white rounded-lg text-xs font-bold whitespace-nowrap">+ Add</button>
                     </div>
+                    <div id="tank-chips" class="flex flex-wrap gap-1.5 mb-4"></div>
                     <div id="density-same-input" class="mb-3">
                         <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Veligers per tank</label>
                         <input type="number" id="density-same-value" placeholder="e.g. 300000" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
                     </div>
                     <div id="density-diff-inputs" class="hidden space-y-2 mb-3"></div>
+                    <div class="mb-3">
+                        <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Diatom plates timing (hours after spawning)</label>
+                        <input type="number" id="diatom-offset-input" value="42" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
+                        <p class="text-[10px] text-slate-400 mt-1">Default is 42h — only change this if the protocol calls for different timing this trial.</p>
+                    </div>
                     <button onclick="submitTankAssignment()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black mt-2">Save Tank Assignment</button>`;
                 selectedTanks = [];
                 densityMode = 'same';
+                renderTankChips();
             } else if (t.step === 'Awaiting Diatom Plates') {
                 body.innerHTML = `
                     <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
@@ -1066,9 +1093,9 @@
                 const isConfirm = t.step === 'Estimated — Awaiting Confirmation';
                 body.innerHTML = `
                     <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
-                    <p class="text-xs text-slate-500 mb-4">${isConfirm ? 'Enter the confirmed count (week 4 — exact count).' : 'Enter the estimated count (week 3 — estimation is fine).'}</p>
+                    <p class="text-xs text-slate-500 mb-4">${isConfirm ? 'Enter the confirmed count (week 4 — exact count).' : 'Enter the estimated count (week 3 — estimation is fine).'} Use 0 if no spat were found in that tank.</p>
                     <div class="space-y-2 mb-3">
-                        ${t.tanks.map(tk => `<div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span><input type="number" id="spat-count-${tk}" placeholder="0" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('')}
+                        ${t.tanks.map(tk => `<div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span><input type="number" id="spat-count-${tk}" placeholder="0 if none found" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('')}
                     </div>
                     <button onclick="submitSpatCount('${isConfirm ? 'Confirmed' : 'Estimated'}')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Save ${isConfirm ? 'Confirmed' : 'Estimated'} Count</button>`;
             }
@@ -1089,22 +1116,43 @@
             renderDensityDiffInputs();
         }
 
-        function toggleTankPick(tk) {
-            const btn = document.getElementById(`tank-pick-${tk}`);
-            const idx = selectedTanks.indexOf(tk);
-            if (idx === -1) { selectedTanks.push(tk); btn.className = "py-2 rounded-lg text-xs font-bold border border-teal-500 bg-teal-50 text-teal-700"; }
-            else { selectedTanks.splice(idx, 1); btn.className = "py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white text-slate-700"; }
+        function addTankNumber() {
+            const input = document.getElementById('tank-number-input');
+            const v = parseInt(input.value);
+            if (!v || v < 1 || v > 80) { showSystemToast('error', 'Invalid Tank', 'Enter a tank number between 1 and 80.'); return; }
+            const tk = String(v);
+            if (selectedTanks.includes(tk)) { showSystemToast('error', 'Already Added', `Tank ${tk} is already in the list.`); input.value = ''; return; }
+            selectedTanks.push(tk);
+            input.value = '';
+            input.focus();
+            renderTankChips();
             renderDensityDiffInputs();
+        }
+
+        function removeTankNumber(tk) {
+            selectedTanks = selectedTanks.filter(x => x !== tk);
+            renderTankChips();
+            renderDensityDiffInputs();
+        }
+
+        function renderTankChips() {
+            const c = document.getElementById('tank-chips');
+            if (!c) return;
+            c.innerHTML = selectedTanks.length ? selectedTanks.map(tk => `
+                <span class="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 bg-teal-50 border border-teal-200 text-teal-800 rounded-full text-xs font-bold">
+                    Tank ${tk} <button type="button" onclick="removeTankNumber('${tk}')" class="w-4 h-4 flex items-center justify-center text-teal-500 hover:text-teal-800">✕</button>
+                </span>`).join('') : `<span class="text-xs text-slate-400">No tanks added yet</span>`;
         }
 
         function renderDensityDiffInputs() {
             if (densityMode !== 'different') return;
             const c = document.getElementById('density-diff-inputs');
+            if (!c) return;
             c.innerHTML = selectedTanks.map(tk => `<div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span><input type="number" id="diff-density-${tk}" placeholder="veligers" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('');
         }
 
         function submitTankAssignment() {
-            if (!selectedTanks.length) { showSystemToast('error', 'No Tanks Selected', 'Pick at least one tank.'); return; }
+            if (!selectedTanks.length) { showSystemToast('error', 'No Tanks Added', 'Add at least one tank.'); return; }
             let assignments = [];
             if (densityMode === 'same') {
                 const v = parseInt(document.getElementById('density-same-value').value) || 0;
@@ -1112,9 +1160,10 @@
                 assignments = selectedTanks.map(tk => ({ tank: tk, veligers: v }));
             } else {
                 assignments = selectedTanks.map(tk => ({ tank: tk, veligers: parseInt(document.getElementById(`diff-density-${tk}`).value) || 0 }));
-                if (assignments.some(a => !a.veligers)) { showSystemToast('error', 'Missing Count', 'Enter veligers for every selected tank.'); return; }
+                if (assignments.some(a => !a.veligers)) { showSystemToast('error', 'Missing Count', 'Enter veligers for every added tank.'); return; }
             }
-            sendTaskAction({ action: 'logTankAssignment', trialId: upcomingTasks[currentTaskIndex].trialId, densityMode, assignments }, 'Tank assignment logged.');
+            const diatomOffsetHours = parseFloat(document.getElementById('diatom-offset-input').value) || 42;
+            sendTaskAction({ action: 'logTankAssignment', trialId: upcomingTasks[currentTaskIndex].trialId, densityMode, assignments, diatomOffsetHours }, 'Tank assignment logged.');
         }
 
         function submitSimpleStep(action) {
@@ -1123,8 +1172,11 @@
 
         function submitSpatCount(countType) {
             const t = upcomingTasks[currentTaskIndex];
-            const counts = t.tanks.map(tk => ({ tank: tk, count: parseInt(document.getElementById(`spat-count-${tk}`).value) || 0 }));
-            if (counts.some(c => !c.count)) { showSystemToast('error', 'Missing Count', 'Enter a count for every tank.'); return; }
+            const counts = t.tanks.map(tk => {
+                const raw = document.getElementById(`spat-count-${tk}`).value;
+                return { tank: tk, count: raw === '' ? null : parseInt(raw) };
+            });
+            if (counts.some(c => c.count === null || isNaN(c.count))) { showSystemToast('error', 'Missing Count', 'Enter a count for every tank — use 0 if no spat were found.'); return; }
             sendTaskAction({ action: 'logSpatCount', trialId: t.trialId, counts, countType }, `${countType} count logged.`);
         }
 
@@ -1139,6 +1191,51 @@
                 else showSystemToast('error', 'Execution Fail', d.message);
             })
             .catch(() => showSystemToast('error', 'Interface Lost', 'Network link exception. Check script permissions.'));
+        }
+
+        /* ── Trial Lifecycle Monitor (Admin Settings only — internal debug view) ── */
+        const LIFECYCLE_STATUS_COLOR = {
+            'Awaiting Tank Assignment': 'bg-slate-100 text-slate-700',
+            'Awaiting Diatom Plates': 'bg-amber-100 text-amber-700',
+            'Awaiting Water On': 'bg-cyan-100 text-cyan-700',
+            'Awaiting Spat Count': 'bg-indigo-100 text-indigo-700',
+            'Estimated — Awaiting Confirmation': 'bg-orange-100 text-orange-700',
+            'Confirmed': 'bg-emerald-100 text-emerald-700'
+        };
+
+        function loadLifecycleMonitor() {
+            const url = getGasUrl();
+            const container = document.getElementById('lifecycle-monitor-list');
+            if (!url) { container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Connect the database first.</p>`; return; }
+            container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 animate-pulse">Loading...</p>`;
+            fetch(`${url}?action=getLogs&pin=${ADMIN_PIN}`, { method: 'GET', mode: 'cors' })
+            .then(res => res.json())
+            .then(d => {
+                if (d.status !== 'success') { container.innerHTML = `<p class="text-xs text-rose-500 text-center py-4">${d.message || 'Could not load.'}</p>`; return; }
+                const trials = (d.spawning || []).filter(r => (r.statusOutcome || '').trim().toLowerCase() === 'successful' && r.spatStatus && r.spatStatus !== 'N/A');
+                if (!trials.length) { container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">No Successful trials with lifecycle data yet.</p>`; return; }
+                container.innerHTML = trials.map(r => {
+                    const colorCls = LIFECYCLE_STATUS_COLOR[r.spatStatus] || 'bg-slate-100 text-slate-700';
+                    let tanks = [];
+                    try { tanks = r.tankAssignments ? JSON.parse(r.tankAssignments).map(a => `${a.tank}:${a.veligers}`) : []; } catch(e) {}
+                    let counts = [];
+                    try { counts = r.spatCountJson ? JSON.parse(r.spatCountJson).map(c => `${c.tank}:${c.count}`) : []; } catch(e) {}
+                    return `
+                    <div class="border border-slate-200 rounded-xl p-3 text-xs">
+                        <div class="flex items-center justify-between mb-1.5 gap-2">
+                            <span class="font-black">${r.trialId || '—'}</span>
+                            <span class="px-2 py-0.5 rounded-md font-bold whitespace-nowrap ${colorCls}">${r.spatStatus}</span>
+                        </div>
+                        <div class="text-slate-500 space-y-0.5">
+                            ${tanks.length ? `<div>Tanks: ${tanks.join(', ')}</div>` : ''}
+                            ${r.diatomPlatesTime ? `<div>Diatom plates: ${r.diatomPlatesTime}</div>` : ''}
+                            ${r.waterOnTime ? `<div>Water on: ${r.waterOnTime}</div>` : ''}
+                            ${counts.length ? `<div>Spat count: ${counts.join(', ')}</div>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+            })
+            .catch(() => { container.innerHTML = `<p class="text-xs text-rose-500 text-center py-4">Couldn't reach the database.</p>`; });
         }
     </script>
 </body>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,28 +68,6 @@
 
     <main class="max-w-6xl mx-auto px-4 mt-6">
 
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-6 max-w-6xl mx-auto">
-            <div class="flex items-center justify-between cursor-pointer" onclick="toggleConfigDrawer()">
-                <div class="flex items-center space-x-3">
-                    <i data-lucide="settings-2" class="w-5 h-5 text-teal-600"></i>
-                    <h2 class="text-sm font-bold">Google Apps Script Connection</h2>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-400">
-                    <span class="text-xs font-medium" id="config-status-lbl">Click to link database</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200" id="config-chevron"></i>
-                </div>
-            </div>
-            <div id="config-drawer" class="hidden mt-4 pt-4 border-t border-slate-100">
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <input type="password" id="gas-url" placeholder="Paste Stage 2 /exec Web App deployment link here..." 
-                           class="flex-grow p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/20">
-                    <button onclick="saveGasUrl()" class="px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition-all shadow-sm">
-                        Save Link URL
-                    </button>
-                </div>
-            </div>
-        </section>
-
         <div class="flex flex-col sm:flex-row bg-slate-100 p-1.5 rounded-2xl mb-6 shadow-inner border border-slate-200 max-w-6xl mx-auto gap-1.5" id="nav-frame">
             <button onclick="switchTab('spawning')" id="tab-btn-spawning" class="flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 bg-white text-teal-800 shadow-sm border border-slate-200/50">
                 <i data-lucide="sparkles" class="w-4 h-4 text-teal-600"></i>
@@ -101,12 +78,26 @@
                 <span>Broodstock Purchases</span>
             </button>
             <button onclick="switchTab('manager')" id="tab-btn-manager" class="flex-1 py-2.5 text-xs sm:text-sm font-extrabold rounded-xl transition-all flex items-center justify-center space-x-2 text-slate-500 hover:text-slate-800 hover:bg-white/50">
-                <i data-lucide="layout-dashboard" class="w-4 h-4 text-rose-500"></i>
-                <span class="text-rose-700">Manager Dashboard</span>
+                <i data-lucide="shield-check" class="w-4 h-4 text-rose-500"></i>
+                <span class="text-rose-700">Admin Settings</span>
             </button>
         </div>
 
         <div id="tab-content-spawning" class="space-y-6 max-w-6xl mx-auto">
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="list-checks" class="w-4 h-4 text-amber-600"></i>
+                        <h3 class="text-sm font-extrabold text-amber-950">Upcoming Tasks</h3>
+                    </div>
+                    <button onclick="loadUpcomingTasks()" class="text-slate-400 hover:text-slate-600"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                </div>
+                <div id="tasks-list" class="p-4 space-y-2.5">
+                    <p class="text-xs text-slate-400 text-center py-4">Loading tasks...</p>
+                </div>
+            </div>
+
             <form id="spawning-form" onsubmit="handleSpawningSubmit(event)" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="p-5 bg-gradient-to-r from-teal-50 to-cyan-50 border-b border-teal-100 flex justify-between items-center header-adjust">
                     <div>
@@ -120,22 +111,18 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <div>
-                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Trial Reference Date</label>
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Trial Date</label>
                                 <input type="date" id="spawn-date" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                                <p class="text-[10px] text-slate-400 mt-1.5 font-semibold leading-snug">Doubles as this trial's reference ID &amp; shift start date</p>
                             </div>
                             <div>
-                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Shift Start (Date & Time)</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <input type="date" id="spawn-start-date" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
-                                    <input type="time" id="spawn-start-time" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
-                                </div>
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Shift Start Time</label>
+                                <input type="time" id="spawn-start-time" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
                             </div>
                             <div>
-                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Shift End (Date & Time)</label>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <input type="date" id="spawn-end-date" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
-                                    <input type="time" id="spawn-end-time" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
-                                </div>
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Shift End Time</label>
+                                <input type="time" id="spawn-end-time" required class="w-full p-2.5 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                                <p class="text-[10px] text-slate-400 mt-1.5 font-semibold leading-snug">Past midnight? Automatically rolls into the next day</p>
                             </div>
                         </div>
 
@@ -459,7 +446,7 @@
                 <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-4 border border-rose-100">
                     <i data-lucide="lock-keyhole" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg sm:text-xl font-black text-slate-800 mb-2">Executive Access</h3>
+                <h3 class="text-lg sm:text-xl font-black text-slate-800 mb-2">Admin Access</h3>
                 <p class="text-xs text-slate-500 mb-6 px-2">Verify your 4-digit token identity passcode.</p>
                 <div class="flex flex-col w-full gap-3 max-w-[200px]">
                     <input type="password" id="manager-pin" maxlength="4" placeholder="••••" class="w-full text-center text-2xl tracking-[0.3em] font-black py-2.5 bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-teal-500 transition-all text-slate-800">
@@ -469,80 +456,64 @@
                 </div>
             </div>
 
-          <div id="logs-unlocked-panel" class="hidden space-y-5 w-full">
+          <div id="logs-unlocked-panel" class="hidden space-y-5 w-full max-w-2xl mx-auto">
                 
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="bg-rose-100 p-2.5 rounded-xl text-rose-700 border border-rose-200"><i data-lucide="presentation" class="w-5 h-5"></i></div>
+                        <div class="bg-rose-100 p-2.5 rounded-xl text-rose-700 border border-rose-200"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
                         <div>
-                            <h3 class="text-lg font-black tracking-tight text-slate-900">마스터 경영 대시보드</h3>
-                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Master Executive Dashboard</p>
+                            <h3 class="text-lg font-black tracking-tight text-slate-900">관리자 설정</h3>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mt-0.5">Admin Settings</p>
                         </div>
                     </div>
-                    
-                    <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
-                        <div class="flex items-center space-x-2 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg w-full sm:w-auto shadow-sm">
-                            <i data-lucide="calendar" class="w-4 h-4 text-teal-600"></i>
-                            <input type="month" id="manager-month-filter" onchange="renderTerminalLogsEngine()" class="bg-transparent text-xs font-bold text-slate-700 outline-none w-full cursor-pointer">
-                        </div>
+                    <button onclick="lockTerminalLogs()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-all uppercase tracking-wider shadow-sm text-center">
+                        잠금 <span class="text-[10px] font-normal block tracking-normal">LOCK</span>
+                    </button>
+                </div>
 
-                        <div id="sub-tabs-logs" class="flex bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200 w-full sm:w-auto">
-                            <button onclick="switchLogView('spawning')" id="lv-spawn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold">산란 시험 기록 (Spawning)</button>
-                            <button onclick="switchLogView('purchasing')" id="lv-purch" class="flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold">모패 구매 기록 (Purchases)</button>
-                        </div>
-                        
-                        <div class="flex gap-2 w-full sm:w-auto">
-                            <button onclick="fetchLatestLogs()" class="flex-1 sm:flex-none p-2.5 bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-700 rounded-lg transition-all flex items-center justify-center shadow-sm">
-                                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="lockTerminalLogs()" class="flex-1 sm:flex-none px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-all uppercase tracking-wider shadow-sm text-center">
-                                잠금 <span class="text-[10px] font-normal block tracking-normal">LOCK</span>
-                            </button>
-                        </div>
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                    <h4 class="text-sm font-extrabold text-slate-800 mb-1 flex items-center gap-2"><i data-lucide="settings-2" class="w-4 h-4 text-teal-600"></i> Database Connection</h4>
+                    <p class="text-xs text-slate-500 mb-4">This device's link to the Google Sheet backend. Workers never see this screen.</p>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="password" id="gas-url" placeholder="Paste Stage 2 /exec Web App deployment link here..."
+                               class="flex-grow p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                        <button onclick="saveGasUrl()" class="px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-bold transition-all shadow-sm whitespace-nowrap">
+                            Save Link
+                        </button>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3 sm:p-5 overflow-hidden">
-                    <div class="mb-4 px-2 sm:px-0 flex justify-between items-center">
-                        <span id="current-log-label" class="text-sm sm:text-base font-black text-slate-900 bg-slate-100 px-4 py-2 rounded-full border border-slate-200"></span>
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                    <h4 class="text-sm font-extrabold text-slate-800 mb-1 flex items-center gap-2"><i data-lucide="link" class="w-4 h-4 text-teal-600"></i> Generate Setup Link</h4>
+                    <p class="text-xs text-slate-500 mb-4 leading-relaxed">If the database link ever changes, paste the new one below and share the generated link with any device that needs updating. One tap on that device — no settings screen, no PIN — and it's reconnected.</p>
+                    <div class="flex flex-col sm:flex-row gap-3 mb-3">
+                        <input type="text" id="setup-link-source" placeholder="New /exec URL to embed..."
+                               class="flex-grow p-3 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500/20">
+                        <button onclick="generateSetupLink()" class="px-5 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold transition-all shadow-sm whitespace-nowrap">
+                            Generate
+                        </button>
                     </div>
-
-                    <div class="overflow-x-auto custom-scrollbar border border-slate-200 rounded-xl shadow-inner">
-                        <table id="spawning-log-table" class="min-w-full text-xs text-left whitespace-nowrap">
-                            <thead class="bg-slate-100 text-[13px] uppercase font-black border-b-2 border-slate-200 text-slate-800">
-                                <tr>
-                                    <th class="px-4 py-3.5 border-r border-slate-200">날짜 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">DATE</span></th>
-                                    <th class="px-4 py-3.5">월령 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">MOON PHASE</span></th>
-                                    <th class="px-4 py-3.5 bg-emerald-50 text-slate-900 border-x border-slate-200">진행 결과 <span class="text-[11px] font-bold text-emerald-700 block normal-case tracking-normal">STATUS OUTCOME</span></th>
-                                    <th class="px-4 py-3.5 bg-teal-50 text-right text-slate-900 border-r border-teal-200">수정란 수 <span class="text-[11px] font-bold text-teal-700 block normal-case tracking-normal">FERTILISED EGGS</span></th>
-                                    <th class="px-4 py-3.5">担当 직원 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">STAFF REGISTRY</span></th>
-                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">수질 평균 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">WQ AVG</span></th>
-                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">모패 선별 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">BROODSTOCK SORTING</span></th>
-                                </tr>
-                            </thead>
-                            <tbody id="spawning-log-body" class="divide-y divide-slate-100 font-bold bg-white text-slate-800"></tbody>
-                        </table>
-
-                        <table id="purchasing-log-table" class="min-w-full text-xs text-left whitespace-nowrap hidden">
-                            <thead class="bg-slate-100 text-[13px] uppercase font-black border-b-2 border-slate-200 text-slate-700">
-                                <tr>
-                                    <th class="px-4 py-3.5 border-r border-slate-200">날짜 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">DATE</span></th>
-                                    <th class="px-4 py-3.5">공급처 및 월령 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">SUPPLIER & MOON</span></th>
-                                    <th class="px-4 py-3.5 bg-teal-50 text-slate-900 border-l border-slate-200">총 중량 <span class="text-[11px] font-bold text-teal-700 block normal-case tracking-normal">TOTAL WEIGHT</span></th>
-                                    <th class="px-4 py-3.5 bg-rose-50 text-slate-900 border-l border-slate-200">운송 손실 <span class="text-[11px] font-bold text-rose-700 block normal-case tracking-normal">TRANSIT LOSS</span></th>
-                                    <th class="px-4 py-3.5 bg-rose-100 text-rose-900 border-r border-slate-200">폐사율 % <span class="text-[11px] font-bold text-rose-800 block normal-case tracking-normal">MORTALITY %</span></th>
-                                    <th class="px-4 py-3.5">품질 등급 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">QUALITY GRADE</span></th>
-                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">암컷 상세 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">FEMALE BREAKDOWN</span></th>
-                                    <th class="px-4 py-3.5 bg-slate-50 border-l border-slate-200">수컷 분포 <span class="text-[11px] font-bold text-slate-500 block normal-case tracking-normal">MALE DISTRIBUTION</span></th>
-                                </tr>
-                            </thead>
-                            <tbody id="purchasing-log-body" class="divide-y divide-slate-100 font-bold bg-white text-slate-800"></tbody>
-                        </table>
+                    <div id="setup-link-output" class="hidden">
+                        <div class="flex items-center gap-2 bg-teal-50 border border-teal-200 rounded-xl p-3">
+                            <input type="text" id="setup-link-value" readonly class="flex-grow bg-transparent text-xs font-mono text-teal-900 outline-none">
+                            <button onclick="copySetupLink()" class="px-3 py-2 bg-white border border-teal-300 rounded-lg text-xs font-bold text-teal-700 whitespace-nowrap">Copy</button>
+                        </div>
+                        <p class="text-[10px] text-slate-400 mt-2">This link never expires — only generate a new one when the database URL actually changes.</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
+
+    <div id="task-modal-overlay" class="hidden fixed inset-0 z-[70] bg-slate-900/60 flex items-end sm:items-center justify-center p-0 sm:p-4">
+        <div class="bg-white w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl p-5 sm:p-6 max-h-[85vh] overflow-y-auto custom-scrollbar">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="task-modal-title" class="text-base font-black text-slate-900">Task</h3>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div id="task-modal-body"></div>
+        </div>
+    </div>
 
     <div id="alert-banner" class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 max-w-sm w-full bg-slate-900 text-white px-4 py-3.5 rounded-xl shadow-2xl flex items-start space-x-3 text-sm border border-slate-700">
         <div id="alert-icon-container" class="p-1.5 rounded-lg text-teal-400 bg-teal-500/20"></div>
@@ -554,14 +525,11 @@
 
     <script>
         const tanksList = ['A', 'B', 'C', 'D', 'E', 'F'];
-        let cachedSpawning = [];
-        let cachedPurchasing = [];
         let activeTab = 'spawning';
-        let activeLogTab = 'spawning';
         let isLogsUnlocked = false;
         
         // FIX: Chrome Storage Partitioning isolates localStorage for cross-origin iframes.
-        // runtimeGasUrl is populated from ?gasUrl= URL param passed by the master hub.
+        // runtimeGasUrl is populated from ?gasUrl= URL param if another tool ever tunnels in.
         let runtimeGasUrl = null;
         function getGasUrl() {
             return runtimeGasUrl || localStorage.getItem('abalone_gas_url') || null;
@@ -571,12 +539,19 @@
             applyTimeBasedTheme();
             buildTankInterfaceRows();
             lucide.createIcons();
-            
-            const now = new Date();
-            const yyyy = now.getFullYear();
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const filterEl = document.getElementById('manager-month-filter');
-            if(filterEl) filterEl.value = `${yyyy}-${mm}`;
+
+            // Harmless passive override — only relevant if something external ever links in with ?gasUrl=
+            const tunnelGasUrl = new URLSearchParams(window.location.search).get('gasUrl');
+            if (tunnelGasUrl) runtimeGasUrl = decodeURIComponent(tunnelGasUrl);
+
+            // One-tap setup link: silently saves a new GAS URL to this device and cleans the address bar
+            const setupParam = new URLSearchParams(window.location.search).get('setupGasUrl');
+            if (setupParam) {
+                localStorage.setItem('abalone_gas_url', decodeURIComponent(setupParam));
+                toggleConnectionBadgeState(true);
+                showSystemToast('success', 'Connected', 'This device is now linked to the database.');
+                window.history.replaceState({}, document.title, window.location.origin + window.location.pathname);
+            }
 
             const storedUrl = localStorage.getItem('abalone_gas_url');
             if (storedUrl) {
@@ -590,7 +565,7 @@
                 toggleOutcomeLockState(document.getElementById('spawn-status-outcome').value);
             } else {
                 const today = new Date().toISOString().split('T')[0];
-                ['spawn-date','spawn-start-date','spawn-end-date','pur-date','sperm-release-date','egg-laying-date'].forEach(id => {
+                ['spawn-date','pur-date','sperm-release-date','egg-laying-date'].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.value = today;
                 });
@@ -607,40 +582,7 @@
 
             calculateSpawningAverages(1);
             calculateSpawningAverages(2);
-
-            // ==========================================
-            // MICRO-FRONTEND MASTER HUB TUNNEL AGENT
-            // ==========================================
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetTabCommand = urlParams.get('targetTab');
-            const masterHubMonth = urlParams.get('month');
-
-            if (targetTabCommand === 'spawning' || targetTabCommand === 'purchasing') {
-                document.getElementById('app-header').classList.add('hidden');
-                document.querySelector('section').classList.add('hidden');
-                document.getElementById('nav-frame').classList.add('hidden');
-                document.getElementById('tab-content-spawning').classList.add('hidden');
-                document.getElementById('tab-content-purchasing').classList.add('hidden');
-                document.body.style.paddingBottom = "0px";
-
-                isLogsUnlocked = true;
-                document.getElementById('pin-barrier').classList.add('hidden');
-                document.getElementById('logs-unlocked-panel').classList.remove('hidden');
-                document.getElementById('tab-content-manager').classList.remove('hidden');
-
-                if (masterHubMonth && filterEl) {
-                    filterEl.value = masterHubMonth;
-                }
-
-                document.getElementById('manager-back-bar').classList.remove('hidden');
-                document.getElementById('back-bar-label').textContent = targetTabCommand === 'spawning' ? 'Spawning Trials' : 'Abalone Purchasing';
-                // Read GAS URL passed from master hub (bypasses Chrome Storage Partitioning)
-                const gasUrlParam = urlParams.get('gasUrl');
-                if (gasUrlParam) runtimeGasUrl = decodeURIComponent(gasUrlParam);
-
-                switchLogView(targetTabCommand);
-                fetchLatestLogs();
-            }
+            loadUpcomingTasks();
         });
 
         function applyTimeBasedTheme() {
@@ -810,41 +752,6 @@
                     block.classList.add('hidden');
                 }
             });
-            if (id === 'manager' && isLogsUnlocked) {
-                fetchLatestLogs();
-            }
-        }
-
-        function switchLogView(type) {
-            activeLogTab = type;
-            document.getElementById('lv-spawn').className = type === 'spawning' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold";
-            document.getElementById('lv-purch').className = type === 'purchasing' ? "flex-1 sm:flex-none px-4 py-2 rounded-lg bg-white text-teal-800 shadow-sm border border-slate-200 text-xs sm:text-sm font-bold" : "flex-1 sm:flex-none px-4 py-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 text-xs sm:text-sm font-bold";
-            document.getElementById('spawning-log-table').className = type === 'spawning' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
-            document.getElementById('purchasing-log-table').className = type === 'purchasing' ? "min-w-full text-xs text-left whitespace-nowrap" : "hidden";
-            document.getElementById('current-log-label').innerHTML = type === 'spawning' 
-                ? `인공산란 시험 기록부 <span class="text-xs font-medium text-slate-400 block mt-1 normal-case tracking-normal">Spawning Trials Workbook</span>` 
-                : `전복 구매 기록부 <span class="text-xs font-medium text-slate-400 block mt-1 normal-case tracking-normal">Abalone Purchases Workbook</span>`;
-            if(isLogsUnlocked) renderTerminalLogsEngine();
-        }
-
-        function toggleConfigDrawer() {
-            const drawer = document.getElementById('config-drawer');
-            const chevron = document.getElementById('config-chevron');
-            drawer.classList.toggle('hidden');
-            chevron.style.transform = drawer.classList.contains('hidden') ? "rotate(0deg)" : "rotate(180deg)";
-        }
-
-        function saveGasUrl() {
-            const url = document.getElementById('gas-url').value.trim();
-            if(url) {
-                localStorage.setItem('abalone_gas_url', url);
-                toggleConnectionBadgeState(true);
-                showSystemToast('success', 'Connection Established', 'Google Sheet secure connection saved.');
-                toggleConfigDrawer();
-            } else {
-                localStorage.removeItem('abalone_gas_url');
-                toggleConnectionBadgeState(false);
-            }
         }
 
         function toggleConnectionBadgeState(state) {
@@ -876,9 +783,8 @@
                 document.getElementById('pin-barrier').classList.add('hidden');
                 document.getElementById('logs-unlocked-panel').classList.remove('hidden');
                 document.getElementById('manager-pin').value = '';
-                fetchLatestLogs();
             } else {
-                showSystemToast('error', 'Security Rejection', 'Invalid executive authorization passcode.');
+                showSystemToast('error', 'Security Rejection', 'Invalid admin authorization passcode.');
             }
         }
 
@@ -888,20 +794,37 @@
             document.getElementById('pin-barrier').classList.remove('hidden');
         }
 
-        function formatCleanDateOnly(rawDate) {
-            if (!rawDate) return '';
-            try {
-                const d = new Date(rawDate);
-                if (!isNaN(d.getTime())) {
-                    const year = d.getFullYear();
-                    const month = String(d.getMonth() + 1).padStart(2, '0');
-                    const day = String(d.getDate()).padStart(2, '0');
-                    return `${year}-${month}-${day}`;
-                }
-            } catch(e) {}
-            let s = String(rawDate);
-            if (s.includes('T')) return s.split('T')[0];
-            return s;
+        function saveGasUrl() {
+            const url = document.getElementById('gas-url').value.trim();
+            if(url) {
+                localStorage.setItem('abalone_gas_url', url);
+                toggleConnectionBadgeState(true);
+                showSystemToast('success', 'Connection Established', 'Google Sheet secure connection saved.');
+            } else {
+                localStorage.removeItem('abalone_gas_url');
+                toggleConnectionBadgeState(false);
+            }
+        }
+
+        function generateSetupLink() {
+            const url = document.getElementById('setup-link-source').value.trim();
+            if(!url) { showSystemToast('error', 'Missing URL', 'Paste the new /exec URL first.'); return; }
+            const base = window.location.origin + window.location.pathname;
+            const link = `${base}?setupGasUrl=${encodeURIComponent(url)}`;
+            document.getElementById('setup-link-value').value = link;
+            document.getElementById('setup-link-output').classList.remove('hidden');
+        }
+
+        function copySetupLink() {
+            const el = document.getElementById('setup-link-value');
+            el.select();
+            el.setSelectionRange(0, 99999);
+            const finish = () => showSystemToast('success', 'Copied', 'Setup link copied — share it with the device that needs updating.');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(el.value).then(finish).catch(() => { document.execCommand('copy'); finish(); });
+            } else {
+                document.execCommand('copy'); finish();
+            }
         }
 
         function formatPercent(val) {
@@ -918,19 +841,42 @@
             e.preventDefault();
             const url = getGasUrl();
             if(!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
+
+            // Outcome integrity check: a "Successful" trial must have a real egg count
+            const outcomeVal = (document.getElementById('spawn-status-outcome').value || '').trim().toLowerCase();
+            const eggsVal = parseInt(document.getElementById('total-collected-eggs').value) || 0;
+            if (outcomeVal === 'successful' && eggsVal <= 0) {
+                showSystemToast('error', 'Missing Egg Count', 'Outcome is marked Successful — fertilised egg count must be greater than 0.');
+                return;
+            }
+
             const c1Raw = {}, c2Raw = {};
             tanksList.forEach(t => {
                 c1Raw[t] = { temp: document.getElementById(`c1-t-${t}`).value, do: document.getElementById(`c1-d-${t}`).value, ph: document.getElementById(`c1-p-${t}`).value, sal: document.getElementById(`c1-s-${t}`).value };
                 c2Raw[t] = { temp: document.getElementById(`c2-t-${t}`).value, do: document.getElementById(`c2-d-${t}`).value, ph: document.getElementById(`c2-p-${t}`).value, sal: document.getElementById(`c2-s-${t}`).value };
             });
-            const shiftStart = document.getElementById('spawn-start-date').value + ' ' + document.getElementById('spawn-start-time').value;
-            const shiftEnd = document.getElementById('spawn-end-date').value + ' ' + document.getElementById('spawn-end-time').value;
+
+            // Trial Date doubles as the shift start date. Shift end auto-rolls to the next
+            // calendar day if its time is earlier than (or equal to) the start time —
+            // this only applies here, since spawning shifts routinely cross midnight.
+            const trialDate = document.getElementById('spawn-date').value;
+            const startTime = document.getElementById('spawn-start-time').value;
+            const endTime = document.getElementById('spawn-end-time').value;
+            const shiftStart = `${trialDate} ${startTime}`;
+            const endDateObj = new Date(`${trialDate}T${endTime || '00:00'}`);
+            if (endTime && startTime && endTime <= startTime) {
+                endDateObj.setDate(endDateObj.getDate() + 1);
+            }
+            const shiftEndDateStr = endDateObj.toISOString().split('T')[0];
+            const shiftEnd = `${shiftEndDateStr} ${endTime}`;
+
             const compiledSpermRelease = document.getElementById('sperm-release-date').value + ' ' + document.getElementById('sperm-release-time').value;
             const compiledEggFrom = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-from').value;
             const compiledEggTo = document.getElementById('egg-laying-date').value + ' ' + document.getElementById('egg-laying-to').value;
             const payload = {
                 action: 'addSpawning',
-                date: document.getElementById('spawn-date').value, 
+                trialId: `${trialDate.replace(/-/g,'')}-${startTime.replace(':','')}`,
+                date: trialDate, 
                 periodStart: shiftStart, periodEnd: shiftEnd,
                 moonCycle: document.getElementById('spawn-moon-cycle').value,
                 weather: document.getElementById('spawn-weather').value,
@@ -1000,133 +946,9 @@
                 if(d.status === 'success') { 
                     showSystemToast('success', 'Approved', 'Row written to Google Sheet successfully.'); 
                     cb(); 
-                    if(isLogsUnlocked) fetchLatestLogs(); 
                 }
                 else showSystemToast('error', 'Execution Fail', d.message);
             }).catch(err => showSystemToast('error', 'Interface Lost', 'Network link exception. Check script permissions.'));
-        }
-
-        // ── PATCHED: postMessage signals added so Master Hub banner triggers correctly ──
-        function fetchLatestLogs() {
-            const url = getGasUrl();
-            if(!url) return;
-            
-            document.getElementById('spawning-log-body').innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center text-teal-500 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
-            document.getElementById('purchasing-log-body').innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center text-teal-500 font-extrabold text-sm animate-pulse">Syncing dynamic logs...</td></tr>`;
-
-            fetch(`${url}?action=getLogs&pin=3653`, { method: 'GET', mode: 'cors' })
-            .then(res => res.json())
-            .then(d => {
-                if(d.status === 'success') { 
-                    cachedSpawning = d.spawning || []; 
-                    cachedPurchasing = d.purchasing || []; 
-                    renderTerminalLogsEngine();
-                    window.parent.postMessage({ type: 'fetch_ok' }, '*');  // ← PATCH
-                }
-            }).catch(err => {
-                showSystemToast('error', 'Terminal Read Exception', 'Error reading dataset rows from spreadsheet.');
-                window.parent.postMessage({ type: 'fetch_failed' }, '*');  // ← PATCH
-            });
-        }
-
-        function renderTerminalLogsEngine() {
-            const filterVal = document.getElementById('manager-month-filter').value;
-            
-            if(activeLogTab === 'spawning') {
-                const tbody = document.getElementById('spawning-log-body');
-                let filteredSpawning = cachedSpawning;
-                if(filterVal) {
-                    filteredSpawning = cachedSpawning.filter(r => {
-                        const d = formatCleanDateOnly(r.date || r.trialDate);
-                        return d.startsWith(filterVal); 
-                    });
-                }
-                if(!filteredSpawning || filteredSpawning.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-8 text-center font-bold text-sm text-slate-400">No Spawning logs recorded for this timeframe.</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = filteredSpawning.map(r => {
-                    const fNotes = [];
-                    if (r.f1Pcs && parseInt(r.f1Pcs) > 0) fNotes.push(`${formatPercent(r.f1Mat)}: ${r.f1Pcs}pcs`);
-                    if (r.f2Pcs && parseInt(r.f2Pcs) > 0) fNotes.push(`${formatPercent(r.f2Mat)}: ${r.f2Pcs}pcs`);
-                    if (r.f3Pcs && parseInt(r.f3Pcs) > 0) fNotes.push(`${formatPercent(r.f3Mat)}: ${r.f3Pcs}pcs`);
-                    if (r.f4Pcs && parseInt(r.f4Pcs) > 0) fNotes.push(`${formatPercent(r.f4Mat)}: ${r.f4Pcs}pcs`);
-                    const fStr = fNotes.join(' | ') || 'None';
-                    const mStr = r.malePcs && parseInt(r.malePcs) > 0 ? `${formatPercent(r.maleMat) || '80%'}: ${r.malePcs}pcs` : 'None';
-                    const safeDate = formatCleanDateOnly(r.date || r.trialDate);
-                    const cleanOutcome = (r.statusOutcome || '').trim().toLowerCase();
-                    const isSuccess = cleanOutcome === "successful";
-                    let outcomeBadgeClass = isSuccess 
-                        ? "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-emerald-500 text-white shadow-sm"
-                        : "px-2 py-1 rounded-md text-[10px] font-black uppercase bg-rose-500 text-white shadow-sm";
-                    return `
-                    <tr class="border-b transition-colors border-slate-200">
-                        <td class="px-4 py-3.5 font-extrabold text-sm sm:text-base text-slate-900">${safeDate}</td>
-                        <td class="px-4 py-3.5 font-bold text-xs sm:text-sm text-slate-700">${r.moonCycle || ''}</td>
-                        <td class="px-4 py-3.5"><span class="${outcomeBadgeClass}">${r.statusOutcome || 'Successful'}</span></td>
-                        <td class="px-4 py-3.5 font-black text-right text-sm sm:text-base text-teal-950">
-                            ${r.totalEggs ? Number(r.totalEggs).toLocaleString() : '0'} 
-                            <span class="block font-bold text-xs text-slate-500 mt-1">품질 (Quality): ${r.eggQuality || ''}</span>
-                        </td>
-                        <td class="px-4 py-3.5 font-bold text-xs sm:text-sm text-slate-800">
-                            ${r.inCharge || ''} 
-                            <span class="block text-[11px] font-semibold text-slate-500 mt-1">조원 (Team): ${[r.assistant1,r.assistant2,r.assistant3].filter(Boolean).join(', ')}</span>
-                        </td>
-                        <td class="px-4 py-3.5 text-xs sm:text-sm">
-                            <div class="font-bold text-teal-600">C1: ${r.wq1AvgDo || '0.00'} DO | ${r.wq1AvgTemp || '0.0°C'} | pH ${r.wq1AvgPh || '0.00'} | Sal ${r.wq1AvgSal || '0.0'}</div>
-                            <div class="font-bold text-cyan-600 mt-1.5">C2: ${r.wq2AvgDo || '0.00'} DO | ${r.wq2AvgTemp || '0.0°C'} | pH ${r.wq2AvgPh || '0.00'} | Sal ${r.wq2AvgSal || '0.0'}</div>
-                        </td>
-                        <td class="px-4 py-3.5 text-xs sm:text-sm text-slate-800">
-                            <div><span class="font-black text-teal-600 text-xs sm:text-sm">암컷 (F):</span> ${fStr}</div>
-                            <div class="mt-1.5"><span class="font-black text-cyan-600 text-xs sm:text-sm">수컷 (M):</span> ${mStr}</div>
-                        </td>
-                    </tr>`;
-                }).join('');
-            } else {
-                const tbody = document.getElementById('purchasing-log-body');
-                let filteredPurchasing = cachedPurchasing;
-                if(filterVal) {
-                    filteredPurchasing = cachedPurchasing.filter(r => {
-                        const d = formatCleanDateOnly(r.date || r.purchaseDate || r.intakeDate);
-                        return d.startsWith(filterVal);
-                    });
-                }
-                if(!filteredPurchasing || filteredPurchasing.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-8 text-center font-bold text-sm text-slate-400">No Purchasing logs recorded for this timeframe.</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = filteredPurchasing.map(r => {
-                    const fTiers = [];
-                    if(r.female50Pcs && parseInt(r.female50Pcs) > 0) fTiers.push(`50%: ${r.female50Pcs}pcs (${r.female50Kg}kg)`);
-                    if(r.female60Pcs && parseInt(r.female60Pcs) > 0) fTiers.push(`60%: ${r.female60Pcs}pcs (${r.female60Kg}kg)`);
-                    if(r.female70Pcs && parseInt(r.female70Pcs) > 0) fTiers.push(`70%: ${r.female70Pcs}pcs (${r.female70Kg}kg)`);
-                    if(r.female80Pcs && parseInt(r.female80Pcs) > 0) fTiers.push(`80%: ${r.female80Pcs}pcs (${r.female80Kg}kg)`);
-                    if(r.female90Pcs && parseInt(r.female90Pcs) > 0) fTiers.push(`90%: ${r.female90Pcs}pcs (${r.female90Kg}kg)`);
-                    const fBreakdownStr = fTiers.join(' | ') || 'None logged';
-                    const safeDate = formatCleanDateOnly(r.date || r.purchaseDate || r.intakeDate);
-                    return `
-                    <tr class="border-b transition-colors border-slate-200">
-                        <td class="px-4 py-3.5 font-extrabold text-sm sm:text-base text-slate-900">${safeDate}</td>
-                        <td class="px-4 py-3.5 font-extrabold text-xs sm:text-sm text-slate-800">
-                            ${r.supplierCategory || ''} 
-                            <span class="block font-bold text-[11px] text-slate-500 mt-1">월령 (Moon): ${r.moonPhase || ''}</span>
-                        </td>
-                        <td class="px-4 py-3.5 font-black text-sm sm:text-base text-slate-950">${r.totalBatchWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3.5 font-bold text-xs sm:text-sm text-slate-700">${r.deadWeightKg || '0.00'} kg</td>
-                        <td class="px-4 py-3.5 text-rose-600 font-black text-sm sm:text-base">${formatPercent(r.mortality)}</td>
-                        <td class="px-4 py-3.5"><span class="px-2 py-1 border border-slate-300 rounded-md text-[11px] font-black uppercase bg-slate-50 text-slate-800 shadow-sm">${r.overallQuality || 'Normal'}</span></td>
-                        <td class="px-4 py-3.5 text-xs sm:text-sm text-slate-800">
-                            <div class="font-black text-slate-900">합계 (Total): ${r.totalFemalesPcs || '0'} pcs | ${r.totalFemalesKg || '0.00'} kg</div>
-                            <div class="font-extrabold text-slate-500 mt-1">중량 비율 (% of Mass): ${formatPercent(r.femaleWeightRatio)}</div>
-                            <div class="text-slate-500 font-medium mt-1 whitespace-normal max-w-[220px] text-[11px] leading-relaxed">${fBreakdownStr}</div>
-                        </td>
-                        <td class="px-4 py-3.5 text-xs sm:text-sm text-slate-800">
-                            <div class="font-black text-slate-900">합계 (Total): ${r.totalMalesPcs || '0'} pcs | ${r.totalMalesKg || '0.00'} kg</div>
-                            <div class="font-extrabold text-slate-500 mt-1">중량 비율 (% of Mass): ${formatPercent(r.maleWeightRatio)}</div>
-                        </td>
-                    </tr>`;
-                }).join('');
-            }
         }
 
         function resetForm(id, isSpawning) {
@@ -1143,9 +965,180 @@
                 calculateSpawningAverages(1); 
                 calculateSpawningAverages(2); 
                 calculateTotalSpawnersLive(); 
+                loadUpcomingTasks();
             } else {
                 calculatePurchasingMetricsLive();
             }
+        }
+
+        /* ── Upcoming Tasks (post-spawning lifecycle checklist) ──────────────── */
+        let upcomingTasks = [];
+        let currentTaskIndex = null;
+        let selectedTanks = [];
+        let densityMode = 'same';
+
+        function loadUpcomingTasks() {
+            const url = getGasUrl();
+            const container = document.getElementById('tasks-list');
+            if (!container) return;
+            if (!url) { container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Connect the database to see upcoming tasks.</p>`; return; }
+            container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4 animate-pulse">Loading tasks...</p>`;
+            fetch(`${url}?action=getUpcomingTasks`, { method: 'GET', mode: 'cors' })
+            .then(res => res.json())
+            .then(d => {
+                if (d.status === 'success') {
+                    upcomingTasks = d.tasks || [];
+                    renderUpcomingTasks();
+                } else {
+                    container.innerHTML = `<p class="text-xs text-rose-500 text-center py-4">${d.message || "Couldn't load tasks."}</p>`;
+                }
+            })
+            .catch(() => { container.innerHTML = `<p class="text-xs text-rose-500 text-center py-4">Couldn't reach the database.</p>`; });
+        }
+
+        function renderUpcomingTasks() {
+            const container = document.getElementById('tasks-list');
+            if (!upcomingTasks.length) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">No pending follow-ups right now.</p>`;
+                return;
+            }
+            const now = new Date();
+            container.innerHTML = upcomingTasks.map((t, i) => {
+                const due = new Date(t.dueAt);
+                const diffHrs = (due - now) / 3600000;
+                let cls = 'bg-slate-50 border-slate-200 text-slate-600';
+                let dot = 'bg-slate-300';
+                if (diffHrs <= 12) { cls = 'bg-rose-50 border-rose-200 text-rose-700'; dot = 'bg-rose-500'; }
+                else if (diffHrs <= 24) { cls = 'bg-amber-50 border-amber-200 text-amber-700'; dot = 'bg-amber-500'; }
+                const dueStr = diffHrs < 0 ? `Overdue by ${Math.abs(diffHrs).toFixed(0)}h` : diffHrs < 48 ? `Due in ${diffHrs.toFixed(0)}h` : `Due in ${(diffHrs/24).toFixed(1)}d`;
+                const tankStr = t.tanks && t.tanks.length ? `Tanks ${t.tanks.join(', ')}` : '';
+                return `
+                <div class="border rounded-xl p-3.5 ${cls} cursor-pointer transition-all hover:shadow-sm" onclick="openTaskAction(${i})">
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full ${dot}"></span><span class="text-[11px] font-black uppercase tracking-wider opacity-70">Trial ${t.trialId}</span></div>
+                            <div class="text-sm font-bold mt-1">${t.label}</div>
+                            ${tankStr ? `<div class="text-[11px] font-semibold mt-0.5 opacity-80">${tankStr}</div>` : ''}
+                        </div>
+                        <span class="text-[11px] font-black whitespace-nowrap">${dueStr}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function openTaskAction(i) {
+            currentTaskIndex = i;
+            const t = upcomingTasks[i];
+            document.getElementById('task-modal-title').textContent = `Trial ${t.trialId}`;
+            const body = document.getElementById('task-modal-body');
+
+            if (t.step === 'Awaiting Tank Assignment') {
+                body.innerHTML = `
+                    <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
+                    <p class="text-xs text-slate-500 mb-4">Choose which tanks received this batch, and how the veligers were split.</p>
+                    <div class="flex bg-slate-100 p-1 rounded-xl mb-4">
+                        <button type="button" onclick="setDensityMode('same')" id="density-same-btn" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white shadow-sm">Same density</button>
+                        <button type="button" onclick="setDensityMode('different')" id="density-diff-btn" class="flex-1 py-2 rounded-lg text-xs font-bold text-slate-500">Different density</button>
+                    </div>
+                    <p class="text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Select Tanks</p>
+                    <div class="grid grid-cols-3 gap-2 mb-4" id="tank-picker">
+                        ${tanksList.map(tk => `<button type="button" onclick="toggleTankPick('${tk}')" id="tank-pick-${tk}" class="py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white text-slate-700">Tank ${tk}</button>`).join('')}
+                    </div>
+                    <div id="density-same-input" class="mb-3">
+                        <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Veligers per tank</label>
+                        <input type="number" id="density-same-value" placeholder="e.g. 300000" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
+                    </div>
+                    <div id="density-diff-inputs" class="hidden space-y-2 mb-3"></div>
+                    <button onclick="submitTankAssignment()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black mt-2">Save Tank Assignment</button>`;
+                selectedTanks = [];
+                densityMode = 'same';
+            } else if (t.step === 'Awaiting Diatom Plates') {
+                body.innerHTML = `
+                    <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
+                    <p class="text-xs text-slate-500 mb-4">Confirm diatom plates have been placed in Tanks ${t.tanks.join(', ')} and the water has been turned off.</p>
+                    <button onclick="submitSimpleStep('logDiatomStep')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Confirm — Plates In, Water Off</button>`;
+            } else if (t.step === 'Awaiting Water On') {
+                body.innerHTML = `
+                    <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
+                    <p class="text-xs text-slate-500 mb-4">Confirm the water has been turned back on for Tanks ${t.tanks.join(', ')}.</p>
+                    <button onclick="submitSimpleStep('logWaterOnStep')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Confirm — Water Back On</button>`;
+            } else if (t.step === 'Awaiting Spat Count' || t.step === 'Estimated — Awaiting Confirmation') {
+                const isConfirm = t.step === 'Estimated — Awaiting Confirmation';
+                body.innerHTML = `
+                    <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
+                    <p class="text-xs text-slate-500 mb-4">${isConfirm ? 'Enter the confirmed count (week 4 — exact count).' : 'Enter the estimated count (week 3 — estimation is fine).'}</p>
+                    <div class="space-y-2 mb-3">
+                        ${t.tanks.map(tk => `<div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span><input type="number" id="spat-count-${tk}" placeholder="0" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('')}
+                    </div>
+                    <button onclick="submitSpatCount('${isConfirm ? 'Confirmed' : 'Estimated'}')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Save ${isConfirm ? 'Confirmed' : 'Estimated'} Count</button>`;
+            }
+            document.getElementById('task-modal-overlay').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeTaskModal() {
+            document.getElementById('task-modal-overlay').classList.add('hidden');
+        }
+
+        function setDensityMode(mode) {
+            densityMode = mode;
+            document.getElementById('density-same-btn').className = mode === 'same' ? "flex-1 py-2 rounded-lg text-xs font-bold bg-white shadow-sm" : "flex-1 py-2 rounded-lg text-xs font-bold text-slate-500";
+            document.getElementById('density-diff-btn').className = mode === 'different' ? "flex-1 py-2 rounded-lg text-xs font-bold bg-white shadow-sm" : "flex-1 py-2 rounded-lg text-xs font-bold text-slate-500";
+            document.getElementById('density-same-input').classList.toggle('hidden', mode !== 'same');
+            document.getElementById('density-diff-inputs').classList.toggle('hidden', mode !== 'different');
+            renderDensityDiffInputs();
+        }
+
+        function toggleTankPick(tk) {
+            const btn = document.getElementById(`tank-pick-${tk}`);
+            const idx = selectedTanks.indexOf(tk);
+            if (idx === -1) { selectedTanks.push(tk); btn.className = "py-2 rounded-lg text-xs font-bold border border-teal-500 bg-teal-50 text-teal-700"; }
+            else { selectedTanks.splice(idx, 1); btn.className = "py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white text-slate-700"; }
+            renderDensityDiffInputs();
+        }
+
+        function renderDensityDiffInputs() {
+            if (densityMode !== 'different') return;
+            const c = document.getElementById('density-diff-inputs');
+            c.innerHTML = selectedTanks.map(tk => `<div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span><input type="number" id="diff-density-${tk}" placeholder="veligers" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('');
+        }
+
+        function submitTankAssignment() {
+            if (!selectedTanks.length) { showSystemToast('error', 'No Tanks Selected', 'Pick at least one tank.'); return; }
+            let assignments = [];
+            if (densityMode === 'same') {
+                const v = parseInt(document.getElementById('density-same-value').value) || 0;
+                if (!v) { showSystemToast('error', 'Missing Count', 'Enter veligers per tank.'); return; }
+                assignments = selectedTanks.map(tk => ({ tank: tk, veligers: v }));
+            } else {
+                assignments = selectedTanks.map(tk => ({ tank: tk, veligers: parseInt(document.getElementById(`diff-density-${tk}`).value) || 0 }));
+                if (assignments.some(a => !a.veligers)) { showSystemToast('error', 'Missing Count', 'Enter veligers for every selected tank.'); return; }
+            }
+            sendTaskAction({ action: 'logTankAssignment', trialId: upcomingTasks[currentTaskIndex].trialId, densityMode, assignments }, 'Tank assignment logged.');
+        }
+
+        function submitSimpleStep(action) {
+            sendTaskAction({ action, trialId: upcomingTasks[currentTaskIndex].trialId }, 'Step confirmed.');
+        }
+
+        function submitSpatCount(countType) {
+            const t = upcomingTasks[currentTaskIndex];
+            const counts = t.tanks.map(tk => ({ tank: tk, count: parseInt(document.getElementById(`spat-count-${tk}`).value) || 0 }));
+            if (counts.some(c => !c.count)) { showSystemToast('error', 'Missing Count', 'Enter a count for every tank.'); return; }
+            sendTaskAction({ action: 'logSpatCount', trialId: t.trialId, counts, countType }, `${countType} count logged.`);
+        }
+
+        function sendTaskAction(payload, successMsg) {
+            const url = getGasUrl();
+            if (!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
+            const param = new URLSearchParams({ payload: JSON.stringify(payload) }).toString();
+            fetch(`${url}?${param}`, { method: 'GET', mode: 'cors' })
+            .then(res => res.json())
+            .then(d => {
+                if (d.status === 'success') { showSystemToast('success', 'Saved', successMsg); closeTaskModal(); loadUpcomingTasks(); }
+                else showSystemToast('error', 'Execution Fail', d.message);
+            })
+            .catch(() => showSystemToast('error', 'Interface Lost', 'Network link exception. Check script permissions.'));
         }
     </script>
 </body>

@@ -571,6 +571,17 @@
         const ADMIN_PIN = "3653";
         let activeTab = 'spawning';
         let isLogsUnlocked = false;
+
+        // Client-side dedup IDs — same pattern as land-farm / sea-cage modules.
+        // Held constant while a form is being filled/retried; regenerated only
+        // after a successful submit or a manual Clear Form, so an accidental
+        // double-tap or network retry reuses the same ID and the backend can
+        // skip the duplicate append.
+        function generateClientId() {
+            return 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+        }
+        let spawningClientId = generateClientId();
+        let purchasingClientId = generateClientId();
         
         // FIX: Chrome Storage Partitioning isolates localStorage for cross-origin iframes.
         // runtimeGasUrl is populated from ?gasUrl= URL param if another tool ever tunnels in.
@@ -967,7 +978,8 @@
                 statusOutcome: document.getElementById('spawn-status-outcome').value,
                 totalEggs: document.getElementById('total-collected-eggs').value,
                 eggQuality: document.getElementById('egg-quality').value,
-                c1Raw: JSON.stringify(c1Raw), c2Raw: JSON.stringify(c2Raw)
+                c1Raw: JSON.stringify(c1Raw), c2Raw: JSON.stringify(c2Raw),
+                clientId: spawningClientId
             };
             transmitToCloud(url, payload, () => resetForm('spawning-form', true));
         }
@@ -1001,7 +1013,8 @@
                 femaleSumRatio: document.getElementById('f-sum-ratio').textContent,
                 malePcs: document.getElementById('pm-pcs').value || 0,
                 maleKg: document.getElementById('pm-kg').value || 0,
-                maleSumRatio: document.getElementById('m-sum-ratio').textContent
+                maleSumRatio: document.getElementById('m-sum-ratio').textContent,
+                clientId: purchasingClientId
             };
             transmitToCloud(url, payload, () => resetForm('purchasing-form', false));
         }
@@ -1035,9 +1048,11 @@
                 calculateSpawningAverages(2); 
                 calculateTotalSpawnersLive(); 
                 loadUpcomingTasks();
+                spawningClientId = generateClientId();
             } else {
                 document.getElementById('pur-purpose').value = 'Broodstock';
                 togglePurchasePurpose('Broodstock');
+                purchasingClientId = generateClientId();
             }
         }
 

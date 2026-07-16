@@ -341,7 +341,14 @@
                 <div class="p-5 sm:p-6 space-y-6">
                     <div>
                         <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">1. Logistics Setup</span>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                            <div>
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Purchase Purpose</label>
+                                <select id="pur-purpose" required onchange="togglePurchasePurpose(this.value)" class="w-full p-2.5 text-xs border-2 border-teal-300 bg-white rounded-lg font-black text-teal-900">
+                                    <option value="Broodstock">Broodstock (Breeding)</option>
+                                    <option value="Cooking">Cooking / Consumption</option>
+                                </select>
+                            </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Purchase Date</label>
                                 <input type="date" id="pur-date" required class="w-full p-2.5 text-xs border border-slate-300 bg-slate-50 rounded-lg focus:ring-2 focus:ring-teal-500">
@@ -353,9 +360,9 @@
                                     <option value="New Supplier">New Supplier</option>
                                 </select>
                             </div>
-                            <div>
+                            <div class="purpose-broodstock-only">
                                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Moon Phase</label>
-                                <select id="pur-moon" required class="w-full p-2.5 text-xs border border-slate-300 bg-slate-50 rounded-lg">
+                                <select id="pur-moon" class="w-full p-2.5 text-xs border border-slate-300 bg-slate-50 rounded-lg">
                                     <option value="New Moon">New Moon</option>
                                     <option value="Full Moon">Full Moon</option>
                                     <option value="First Quarter">First Quarter</option>
@@ -382,21 +389,37 @@
                                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Mortality Rate (%)</label>
                                 <input type="text" id="pur-dead-pct" readonly placeholder="0.00%" class="w-full p-2.5 text-sm bg-slate-200 text-rose-600 border border-slate-300 rounded-lg font-black text-center shadow-inner">
                             </div>
-                            <div>
+                            <div class="purpose-broodstock-only">
                                 <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Batch Quality</label>
-                                <select id="pur-quality" required class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-bold text-slate-800">
+                                <select id="pur-quality" class="w-full p-2.5 text-xs border border-slate-300 bg-white rounded-lg font-bold text-slate-800">
                                     <option value="Excellent">Excellent</option>
                                     <option value="Good">Good</option>
                                     <option value="Normal">Normal</option>
                                     <option value="Poor">Poor</option>
                                 </select>
                             </div>
+                            <div class="purpose-cooking-only hidden">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Small Size, &lt;5cm (kg)</label>
+                                <input type="number" step="0.01" id="pur-small-kg" placeholder="0.00" oninput="calculatePurchasingMetricsLive()" class="w-full p-2.5 text-xs border border-slate-300 rounded-lg bg-amber-50 text-amber-900 font-bold focus:ring-2 focus:ring-amber-500/30">
+                            </div>
+                            <div class="purpose-cooking-only hidden">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Small Size Ratio (%)</label>
+                                <input type="text" id="pur-small-pct" readonly placeholder="0.00%" class="w-full p-2.5 text-sm bg-slate-200 text-amber-700 border border-slate-300 rounded-lg font-black text-center shadow-inner">
+                            </div>
+                            <div class="purpose-cooking-only hidden">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Price per Kg (RM)</label>
+                                <input type="number" step="0.01" id="pur-price-per-kg" placeholder="0.00" oninput="calculatePurchasingMetricsLive()" class="w-full p-2.5 text-xs border border-slate-300 rounded-lg bg-white font-bold text-slate-800 focus:ring-2 focus:ring-teal-500/30">
+                            </div>
+                            <div class="purpose-cooking-only hidden">
+                                <label class="block text-xs font-extrabold text-slate-700 mb-1.5">Total Cost (RM)</label>
+                                <input type="text" id="pur-total-cost" readonly placeholder="0.00" class="w-full p-2.5 text-sm bg-slate-200 text-teal-700 border border-slate-300 rounded-lg font-black text-center shadow-inner">
+                            </div>
                         </div>
                     </div>
 
-                    <hr class="border-slate-200">
+                    <hr class="border-slate-200 purpose-broodstock-only">
 
-                    <div>
+                    <div class="purpose-broodstock-only">
                         <span class="text-[10px] font-extrabold text-teal-900 bg-teal-100 px-2.5 py-1 rounded-md uppercase tracking-wider border border-teal-200">3. Matrix Distribution</span>
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-4">
                             <div class="border border-slate-200 rounded-xl p-4 bg-white space-y-4">
@@ -605,6 +628,7 @@
             calculateSpawningAverages(1);
             calculateSpawningAverages(2);
             loadUpcomingTasks();
+            togglePurchasePurpose(document.getElementById('pur-purpose').value);
         });
 
         function applyTimeBasedTheme() {
@@ -728,6 +752,13 @@
             } else {
                 document.getElementById('pur-dead-pct').value = "0.00%";
             }
+            const smallKgEl = document.getElementById('pur-small-kg');
+            if (smallKgEl) {
+                const smallKg = parseFloat(smallKgEl.value) || 0;
+                document.getElementById('pur-small-pct').value = total > 0 ? ((smallKg/total)*100).toFixed(2) + "%" : "0.00%";
+                const pricePerKg = parseFloat(document.getElementById('pur-price-per-kg').value) || 0;
+                document.getElementById('pur-total-cost').value = (pricePerKg * total).toFixed(2);
+            }
             let fPcs=0, fKg=0;
             ['50','60','70','80','90'].forEach(pct => {
                 fPcs += parseInt(document.getElementById(`pf-${pct}-pcs`).value) || 0;
@@ -741,6 +772,13 @@
             document.getElementById('m-sum-pcs').textContent = mPcs;
             document.getElementById('m-sum-kg').textContent = mKg.toFixed(2);
             document.getElementById('m-sum-ratio').textContent = total > 0 ? ((mKg/total)*100).toFixed(2) + "%" : "0.00%";
+        }
+
+        function togglePurchasePurpose(val) {
+            const isCooking = val === 'Cooking';
+            document.querySelectorAll('.purpose-broodstock-only').forEach(el => el.classList.toggle('hidden', isCooking));
+            document.querySelectorAll('.purpose-cooking-only').forEach(el => el.classList.toggle('hidden', !isCooking));
+            calculatePurchasingMetricsLive();
         }
 
         function evaluateDoLimit(el) {
@@ -938,8 +976,10 @@
             e.preventDefault();
             const url = getGasUrl();
             if(!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
+            const purpose = document.getElementById('pur-purpose').value;
             const payload = {
                 action: 'addPurchasing',
+                purpose: purpose,
                 date: document.getElementById('pur-date').value,
                 supplierCat: document.getElementById('pur-supplier-cat').value,
                 moon: document.getElementById('pur-moon').value,
@@ -947,6 +987,10 @@
                 deadKg: document.getElementById('pur-dead-kg').value,
                 deadPct: document.getElementById('pur-dead-pct').value,
                 quality: document.getElementById('pur-quality').value,
+                smallSizeKg: document.getElementById('pur-small-kg').value || 0,
+                smallSizePct: document.getElementById('pur-small-pct').value,
+                pricePerKg: document.getElementById('pur-price-per-kg').value || 0,
+                totalCost: document.getElementById('pur-total-cost').value || 0,
                 f50Pcs: document.getElementById('pf-50-pcs').value || 0, f50Kg: document.getElementById('pf-50-kg').value || 0,
                 f60Pcs: document.getElementById('pf-60-pcs').value || 0, f60Kg: document.getElementById('pf-60-kg').value || 0,
                 f70Pcs: document.getElementById('pf-70-pcs').value || 0, f70Kg: document.getElementById('pf-70-kg').value || 0,
@@ -992,7 +1036,8 @@
                 calculateTotalSpawnersLive(); 
                 loadUpcomingTasks();
             } else {
-                calculatePurchasingMetricsLive();
+                document.getElementById('pur-purpose').value = 'Broodstock';
+                togglePurchasePurpose('Broodstock');
             }
         }
 

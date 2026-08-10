@@ -1171,8 +1171,16 @@
                     </div>
                     <button onclick="submitSpatCount('${isConfirm ? 'Confirmed' : 'Estimated'}')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Save ${isConfirm ? 'Confirmed' : 'Estimated'} Count</button>`;
             }
+            body.innerHTML += `<button onclick="skipCurrentTask()" class="w-full py-2.5 mt-2 text-slate-400 hover:text-slate-600 text-xs font-bold">Skip this step — can't complete it, stop reminding me</button>`;
             document.getElementById('task-modal-overlay').classList.remove('hidden');
             lucide.createIcons();
+        }
+
+        function skipCurrentTask() {
+            const t = upcomingTasks[currentTaskIndex];
+            if (!t) return;
+            if (!confirm(`Skip "${t.label}" for Trial ${t.trialId}?\n\nThis stops it from showing as a pending task. Nothing already logged for this trial is affected, and you can still see it in the Trial Lifecycle Monitor.`)) return;
+            sendTaskAction({ action: 'skipLifecycleStep', trialId: t.trialId }, 'Step skipped.');
         }
 
         function closeTaskModal() {
@@ -1272,7 +1280,9 @@
             'Awaiting Water On': 'bg-cyan-100 text-cyan-700',
             'Awaiting Spat Count': 'bg-indigo-100 text-indigo-700',
             'Estimated — Awaiting Confirmation': 'bg-orange-100 text-orange-700',
-            'Confirmed': 'bg-emerald-100 text-emerald-700'
+            'Confirmed': 'bg-emerald-100 text-emerald-700',
+            'Skipped': 'bg-slate-200 text-slate-500',
+            'Discarded': 'bg-rose-100 text-rose-500'
         };
 
         function loadLifecycleMonitor() {

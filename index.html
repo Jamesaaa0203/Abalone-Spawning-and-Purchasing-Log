@@ -580,6 +580,30 @@
         function generateClientId() {
             return 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
         }
+                // Local YYYY-MM-DD — never toISOString(), which converts to UTC and rolls back a day before 8am MYT
+        function localDateStr(d) {
+            d = d || new Date();
+            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        }
+        function addDaysStr(dateStr, n) {
+            const p = dateStr.split('-').map(Number);
+            return localDateStr(new Date(p[0], p[1]-1, p[2] + n));
+        }
+        function toLocalDate(dateStr, timeStr) {
+            if (!dateStr || !timeStr) return null;
+            const p = dateStr.split('-').map(Number), t = timeStr.split(':').map(Number);
+            return new Date(p[0], p[1]-1, p[2], t[0], t[1]);
+        }
+        // Night shifts cross midnight: any time earlier than the shift start belongs to the next day.
+        function syncNightShiftDates() {
+            const trialDate = document.getElementById('spawn-date').value;
+            const startTime = document.getElementById('spawn-start-time').value;
+            if (!trialDate) return;
+            [['sperm-release-time','sperm-release-date'],['egg-laying-from','egg-laying-date'],['fert-time','fert-date']].forEach(([t, d]) => {
+                const tv = document.getElementById(t).value;
+                if (tv) document.getElementById(d).value = (startTime && tv < startTime) ? addDaysStr(trialDate, 1) : trialDate;
+            });
+        }
         let spawningClientId = generateClientId();
         let purchasingClientId = generateClientId();
         
@@ -619,7 +643,7 @@
                 document.getElementById('draft-indicator').classList.remove('hidden');
                 toggleOutcomeLockState(document.getElementById('spawn-status-outcome').value);
             } else {
-                const today = new Date().toISOString().split('T')[0];
+                const today = localDateStr();
                 ['spawn-date','pur-date','sperm-release-date','egg-laying-date','fert-date'].forEach(id => {
                     const el = document.getElementById(id);
                     if(el) el.value = today;
@@ -632,9 +656,12 @@
                 document.getElementById('egg-laying-from').value = "02:30";
                 document.getElementById('egg-laying-to').value = "03:30";
                 document.getElementById('fert-time').value = "03:35";
+                syncNightShiftDates();
             }
 
             document.getElementById('spawning-form').addEventListener('input', () => saveDraft('spawning-form', 'spawningDraft'));
+            ['spawn-date','spawn-start-time','sperm-release-time','egg-laying-from','fert-time'].forEach(id =>
+                document.getElementById(id).addEventListener('change', () => { syncNightShiftDates(); saveDraft('spawning-form', 'spawningDraft'); }));
 
             calculateSpawningAverages(1);
             calculateSpawningAverages(2);
@@ -935,11 +962,18 @@
             const startTime = document.getElementById('spawn-start-time').value;
             const endTime = document.getElementById('spawn-end-time').value;
             const shiftStart = `${trialDate} ${startTime}`;
-            const endDateObj = new Date(`${trialDate}T${endTime || '00:00'}`);
-            if (endTime && startTime && endTime <= startTime) {
-                endDateObj.setDate(endDateObj.getDate() + 1);
+            const shiftEndDateStr = (endTime && startTime && endTime <= startTime) ? addDaysStr(trialDate, 1) : trialDate;
+
+            if (outcomeVal === 'successful') {
+                const fertDT = toLocalDate(document.getElementById('fert-date').value, document.getElementById('fert-time').value);
+                const shiftStartDT = toLocalDate(trialDate, startTime);
+                if (!fertDT || !shiftStartDT || fertDT < shiftStartDT || (fertDT - shiftStartDT) > 24 * 3600000) {
+                    showSystemToast('error', 'Check Fertilisation Date', 'Fertilisation must be within 24 hours after the shift start. Please check the date.');
+                    return;
+                }
+                const eggFromDT = toLocalDate(document.getElementById('egg-laying-date').value, document.getElementById('egg-laying-from').value);
+                if (eggFromDT && eggFromDT > fertDT && !confirm('Fertilisation time is earlier than egg laying. Submit anyway?')) return;
             }
-            const shiftEndDateStr = endDateObj.toISOString().split('T')[0];
             const shiftEnd = `${shiftEndDateStr} ${endTime}`;
 
             const compiledSpermRelease = document.getElementById('sperm-release-date').value + ' ' + document.getElementById('sperm-release-time').value;

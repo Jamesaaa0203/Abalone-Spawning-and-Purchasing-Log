@@ -1093,8 +1093,11 @@
         /* ── Upcoming Tasks (post-spawning lifecycle checklist) ──────────────── */
         let upcomingTasks = [];
         let currentTaskIndex = null;
-        let selectedTanks = [];
-        let densityMode = 'same';
+        let sopGroups = null;
+        let taskClientId = null;
+        function newSopGroups() {
+            return { old: { tanks: [], mode: 'same', same: '', per: {} }, new: { tanks: [], mode: 'same', same: '', per: {} } };
+        }
 
         function loadUpcomingTasks() {
             const url = getGasUrl();
@@ -1153,38 +1156,25 @@
 
         function openTaskAction(i) {
             currentTaskIndex = i;
+            taskClientId = generateClientId();
             const t = upcomingTasks[i];
             document.getElementById('task-modal-title').textContent = `Trial ${t.trialId}`;
             const body = document.getElementById('task-modal-body');
 
             if (t.step === 'Awaiting Tank Assignment') {
+                sopGroups = newSopGroups();
                 body.innerHTML = `
                     <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
-                    <p class="text-xs text-slate-500 mb-4">Add which tanks received this batch, and how the veligers were split.</p>
-                    <div class="flex bg-slate-100 p-1 rounded-xl mb-4">
-                        <button type="button" onclick="setDensityMode('same')" id="density-same-btn" class="flex-1 py-2 rounded-lg text-xs font-bold bg-white shadow-sm">Same density</button>
-                        <button type="button" onclick="setDensityMode('different')" id="density-diff-btn" class="flex-1 py-2 rounded-lg text-xs font-bold text-slate-500">Different density</button>
-                    </div>
-                    <p class="text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Add Tanks (1–80)</p>
-                    <div class="flex gap-2 mb-2">
-                        <input type="number" id="tank-number-input" min="1" max="80" placeholder="Tank #" onkeydown="if(event.key==='Enter'){event.preventDefault();addTankNumber();}" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
-                        <button type="button" onclick="addTankNumber()" class="px-4 py-2.5 bg-slate-800 text-white rounded-lg text-xs font-bold whitespace-nowrap">+ Add</button>
-                    </div>
-                    <div id="tank-chips" class="flex flex-wrap gap-1.5 mb-4"></div>
-                    <div id="density-same-input" class="mb-3">
-                        <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Veligers per tank</label>
-                        <input type="number" id="density-same-value" placeholder="e.g. 300000" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
-                    </div>
-                    <div id="density-diff-inputs" class="hidden space-y-2 mb-3"></div>
+                    <p class="text-xs text-slate-500 mb-4">Add each tank under the SOP it uses. One trial can use both.</p>
+                    ${sopGroupHtml('old')}${sopGroupHtml('new')}
                     <div class="mb-3">
-                        <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Diatom plates timing (hours after spawning)</label>
+                        <label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Diatom plate timing (hours after fertilisation)</label>
                         <input type="number" id="diatom-offset-input" value="42" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
-                        <p class="text-[10px] text-slate-400 mt-1">Default is 42h — only change this if the protocol calls for different timing this trial.</p>
+                        <p class="text-[10px] text-slate-400 mt-1">Default 42h. Old SOP: plates reminder at this time. New SOP: water-on reminder at this time + 48h.</p>
                     </div>
                     <button onclick="submitTankAssignment()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black mt-2">Save Tank Assignment</button>`;
-                selectedTanks = [];
-                densityMode = 'same';
-                renderTankChips();
+                renderSopBody('old');
+                renderSopBody('new');
             } else if (t.step === 'Awaiting Diatom Plates') {
                 body.innerHTML = `
                     <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
@@ -1196,14 +1186,13 @@
                     <p class="text-xs text-slate-500 mb-4">Confirm the water has been turned back on for Tanks ${t.tanks.join(', ')}.</p>
                     <button onclick="submitSimpleStep('logWaterOnStep')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Confirm — Water Back On</button>`;
             } else if (t.step === 'Awaiting Spat Count' || t.step === 'Estimated — Awaiting Confirmation') {
-                const isConfirm = t.step === 'Estimated — Awaiting Confirmation';
                 body.innerHTML = `
                     <p class="text-sm font-bold text-slate-800 mb-1">${t.label}</p>
-                    <p class="text-xs text-slate-500 mb-4">${isConfirm ? 'Enter the confirmed count (week 4 — exact count).' : 'Enter the estimated count (week 3 — estimation is fine).'} Use 0 if no spat were found in that tank.</p>
+                    <p class="text-xs text-slate-500 mb-4">Enter the confirmed spat count for each tank (1 month after fertilisation). Use 0 if no spat were found.</p>
                     <div class="space-y-2 mb-3">
                         ${t.tanks.map(tk => `<div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span><input type="number" id="spat-count-${tk}" placeholder="0 if none found" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('')}
                     </div>
-                    <button onclick="submitSpatCount('${isConfirm ? 'Confirmed' : 'Estimated'}')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Save ${isConfirm ? 'Confirmed' : 'Estimated'} Count</button>`;
+                    <button onclick="submitSpatCount('Confirmed')" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-sm font-black">Save Confirmed Count</button>`;
             }
             body.innerHTML += `<button onclick="skipCurrentTask()" class="w-full py-2.5 mt-2 text-slate-400 hover:text-slate-600 text-xs font-bold">Skip this step — can't complete it, stop reminding me</button>`;
             document.getElementById('task-modal-overlay').classList.remove('hidden');
@@ -1214,74 +1203,91 @@
             const t = upcomingTasks[currentTaskIndex];
             if (!t) return;
             if (!confirm(`Skip "${t.label}" for Trial ${t.trialId}?\n\nThis stops it from showing as a pending task. Nothing already logged for this trial is affected, and you can still see it in the Trial Lifecycle Monitor.`)) return;
-            sendTaskAction({ action: 'skipLifecycleStep', trialId: t.trialId }, 'Step skipped.');
+            sendTaskAction({ action: 'skipLifecycleStep', trialId: t.trialId, step: t.step, sop: t.sop || '' }, 'Step skipped.');
         }
 
         function closeTaskModal() {
             document.getElementById('task-modal-overlay').classList.add('hidden');
         }
 
-        function setDensityMode(mode) {
-            densityMode = mode;
-            document.getElementById('density-same-btn').className = mode === 'same' ? "flex-1 py-2 rounded-lg text-xs font-bold bg-white shadow-sm" : "flex-1 py-2 rounded-lg text-xs font-bold text-slate-500";
-            document.getElementById('density-diff-btn').className = mode === 'different' ? "flex-1 py-2 rounded-lg text-xs font-bold bg-white shadow-sm" : "flex-1 py-2 rounded-lg text-xs font-bold text-slate-500";
-            document.getElementById('density-same-input').classList.toggle('hidden', mode !== 'same');
-            document.getElementById('density-diff-inputs').classList.toggle('hidden', mode !== 'different');
-            renderDensityDiffInputs();
+        function sopGroupHtml(sop) {
+            const title = sop === 'old' ? 'Old SOP' : 'New SOP';
+            const sub = sop === 'old' ? 'Diatom plates added later' : 'Diatom plates already in the tank';
+            return `
+                <div class="border border-slate-200 rounded-xl p-3.5 mb-3">
+                    <div class="text-sm font-black text-slate-800">${title}</div>
+                    <div class="text-[11px] text-slate-500 mb-3">${sub}</div>
+                    <div class="flex gap-2 mb-2">
+                        <input type="number" id="tank-input-${sop}" min="1" max="80" placeholder="Tank #" onkeydown="if(event.key==='Enter'){event.preventDefault();addSopTank('${sop}');}" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold">
+                        <button type="button" onclick="addSopTank('${sop}')" class="px-4 py-2.5 bg-slate-800 text-white rounded-lg text-xs font-bold whitespace-nowrap">+ Add</button>
+                    </div>
+                    <div id="sop-body-${sop}"></div>
+                </div>`;
         }
 
-        function addTankNumber() {
-            const input = document.getElementById('tank-number-input');
+        function renderSopBody(sop) {
+            const g = sopGroups[sop];
+            const el = document.getElementById('sop-body-' + sop);
+            if (!el) return;
+            if (!g.tanks.length) { el.innerHTML = `<span class="text-xs text-slate-400">No tanks added</span>`; return; }
+            const chips = g.tanks.map(tk => `
+                <span class="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 bg-teal-50 border border-teal-200 text-teal-800 rounded-full text-xs font-bold">
+                    Tank ${tk} <button type="button" onclick="removeSopTank('${sop}','${tk}')" class="w-4 h-4 flex items-center justify-center text-teal-500 hover:text-teal-800">✕</button>
+                </span>`).join('');
+            const amount = g.mode === 'same'
+                ? `<label class="block text-[10px] font-extrabold text-slate-700 mb-1.5 uppercase">Veligers per tank</label>
+                   <input type="number" value="${g.same}" oninput="sopGroups['${sop}'].same=this.value" placeholder="e.g. 300000" class="w-full p-2.5 text-sm border border-slate-300 rounded-lg font-bold">`
+                : g.tanks.map(tk => `
+                   <div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span>
+                   <input type="number" value="${g.per[tk] || ''}" oninput="sopGroups['${sop}'].per['${tk}']=this.value" placeholder="veligers" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('');
+            const toggle = `<button type="button" onclick="toggleSopMode('${sop}')" class="text-[11px] font-bold text-teal-700 mt-2">${g.mode === 'same' ? 'Different amount per tank?' : 'Use same amount for all tanks'}</button>`;
+            el.innerHTML = `<div class="flex flex-wrap gap-1.5 mb-3">${chips}</div><div class="space-y-2">${amount}</div>${toggle}`;
+        }
+
+        function addSopTank(sop) {
+            const input = document.getElementById('tank-input-' + sop);
             const v = parseInt(input.value);
             if (!v || v < 1 || v > 80) { showSystemToast('error', 'Invalid Tank', 'Enter a tank number between 1 and 80.'); return; }
             const tk = String(v);
-            if (selectedTanks.includes(tk)) { showSystemToast('error', 'Already Added', `Tank ${tk} is already in the list.`); input.value = ''; return; }
-            selectedTanks.push(tk);
+            if (sopGroups.old.tanks.includes(tk) || sopGroups['new'].tanks.includes(tk)) {
+                showSystemToast('error', 'Already Added', `Tank ${tk} is already in the list.`); input.value = ''; return;
+            }
+            sopGroups[sop].tanks.push(tk);
             input.value = '';
             input.focus();
-            renderTankChips();
-            renderDensityDiffInputs();
+            renderSopBody(sop);
         }
 
-        function removeTankNumber(tk) {
-            selectedTanks = selectedTanks.filter(x => x !== tk);
-            renderTankChips();
-            renderDensityDiffInputs();
+        function removeSopTank(sop, tk) {
+            sopGroups[sop].tanks = sopGroups[sop].tanks.filter(x => x !== tk);
+            delete sopGroups[sop].per[tk];
+            renderSopBody(sop);
         }
 
-        function renderTankChips() {
-            const c = document.getElementById('tank-chips');
-            if (!c) return;
-            c.innerHTML = selectedTanks.length ? selectedTanks.map(tk => `
-                <span class="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 bg-teal-50 border border-teal-200 text-teal-800 rounded-full text-xs font-bold">
-                    Tank ${tk} <button type="button" onclick="removeTankNumber('${tk}')" class="w-4 h-4 flex items-center justify-center text-teal-500 hover:text-teal-800">✕</button>
-                </span>`).join('') : `<span class="text-xs text-slate-400">No tanks added yet</span>`;
-        }
-
-        function renderDensityDiffInputs() {
-            if (densityMode !== 'different') return;
-            const c = document.getElementById('density-diff-inputs');
-            if (!c) return;
-            c.innerHTML = selectedTanks.map(tk => `<div class="flex items-center gap-2"><span class="text-xs font-bold w-16">Tank ${tk}</span><input type="number" id="diff-density-${tk}" placeholder="veligers" class="flex-grow p-2.5 text-sm border border-slate-300 rounded-lg font-bold"></div>`).join('');
+        function toggleSopMode(sop) {
+            sopGroups[sop].mode = sopGroups[sop].mode === 'same' ? 'different' : 'same';
+            renderSopBody(sop);
         }
 
         function submitTankAssignment() {
-            if (!selectedTanks.length) { showSystemToast('error', 'No Tanks Added', 'Add at least one tank.'); return; }
-            let assignments = [];
-            if (densityMode === 'same') {
-                const v = parseInt(document.getElementById('density-same-value').value) || 0;
-                if (!v) { showSystemToast('error', 'Missing Count', 'Enter veligers per tank.'); return; }
-                assignments = selectedTanks.map(tk => ({ tank: tk, veligers: v }));
-            } else {
-                assignments = selectedTanks.map(tk => ({ tank: tk, veligers: parseInt(document.getElementById(`diff-density-${tk}`).value) || 0 }));
-                if (assignments.some(a => !a.veligers)) { showSystemToast('error', 'Missing Count', 'Enter veligers for every added tank.'); return; }
+            const assignments = [];
+            for (const sop of ['old', 'new']) {
+                const g = sopGroups[sop];
+                for (const tk of g.tanks) {
+                    const v = parseInt(g.mode === 'same' ? g.same : g.per[tk]) || 0;
+                    if (!v) { showSystemToast('error', 'Missing Count', `Enter veligers for ${sop === 'old' ? 'Old' : 'New'} SOP Tank ${tk}.`); return; }
+                    assignments.push({ tank: tk, veligers: v, sop: sop });
+                }
             }
+            if (!assignments.length) { showSystemToast('error', 'No Tanks Added', 'Add at least one tank.'); return; }
+            const densityMode = ['old', 'new'].some(s => sopGroups[s].tanks.length && sopGroups[s].mode === 'different') ? 'different' : 'same';
             const diatomOffsetHours = parseFloat(document.getElementById('diatom-offset-input').value) || 42;
             sendTaskAction({ action: 'logTankAssignment', trialId: upcomingTasks[currentTaskIndex].trialId, densityMode, assignments, diatomOffsetHours }, 'Tank assignment logged.');
         }
 
         function submitSimpleStep(action) {
-            sendTaskAction({ action, trialId: upcomingTasks[currentTaskIndex].trialId }, 'Step confirmed.');
+            const t = upcomingTasks[currentTaskIndex];
+            sendTaskAction({ action, trialId: t.trialId, sop: t.sop || 'old' }, 'Step confirmed.');
         }
 
         function submitSpatCount(countType) {
@@ -1297,6 +1303,7 @@
         function sendTaskAction(payload, successMsg) {
             const url = getGasUrl();
             if (!url) { showSystemToast('error', 'Offline Warning', 'Save an operational Web App endpoint first.'); return; }
+            payload.clientId = taskClientId;
             const param = new URLSearchParams({ payload: JSON.stringify(payload) }).toString();
             fetch(`${url}?${param}`, { method: 'GET', mode: 'cors' })
             .then(res => res.json())
@@ -1333,7 +1340,7 @@
                 container.innerHTML = trials.map(r => {
                     const colorCls = LIFECYCLE_STATUS_COLOR[r.spatStatus] || 'bg-slate-100 text-slate-700';
                     let tanks = [];
-                    try { tanks = r.tankAssignments ? JSON.parse(r.tankAssignments).map(a => `${a.tank}:${a.veligers}`) : []; } catch(e) {}
+                    try { tanks = r.tankAssignments ? JSON.parse(r.tankAssignments).map(a => `${a.tank}:${a.veligers} (${a.sop === 'new' ? 'New' : 'Old'})`) : []; } catch(e) {}
                     let counts = [];
                     try { counts = r.spatCountJson ? JSON.parse(r.spatCountJson).map(c => `${c.tank}:${c.count}`) : []; } catch(e) {}
                     return `
@@ -1345,7 +1352,8 @@
                         <div class="text-slate-500 space-y-0.5">
                             ${tanks.length ? `<div>Tanks: ${tanks.join(', ')}</div>` : ''}
                             ${r.diatomPlatesTime ? `<div>Diatom plates: ${r.diatomPlatesTime}</div>` : ''}
-                            ${r.waterOnTime ? `<div>Water on: ${r.waterOnTime}</div>` : ''}
+                            ${r.waterOnTime ? `<div>Water on (Old SOP): ${r.waterOnTime}</div>` : ''}
+                            ${r.newSopWaterOnTime ? `<div>Water on (New SOP): ${r.newSopWaterOnTime}</div>` : ''}
                             ${counts.length ? `<div>Spat count: ${counts.join(', ')}</div>` : ''}
                         </div>
                     </div>`;
